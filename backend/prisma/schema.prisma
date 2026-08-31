@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  nome      String
+  senha     String?  // Opcional por causa do login social
+  googleId  String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usuarios")
+}
+
+model Estado {
+  id         String      @id @default(uuid())
+  uf         String      @unique
+  nome       String
+  municipios Municipio[]
+
+  @@map("estados")
+}
+
+model Municipio {
+  id       String @id @default(uuid())
+  nome     String
+  estadoId String
+  estado   Estado @relation(fields: [estadoId], references: [id])
+
+  @@map("municipios")
+}
+
+model Genero {
+  id   String @id @default(uuid())
+  nome String @unique
+
+  @@map("generos")
+}
+
+model Filme {
+  id             String   @id @default(uuid())
+  titulo         String
+  videoUrl       String?
+  dominioPublico Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("filmes")
+}
