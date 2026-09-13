@@ -21,7 +21,7 @@ rolliude-play/
 
 ## 2. Stack Técnica por Módulo
 
-### `rolliude-play-frontend` — Plataforma Web (React + Vite)
+### `rolliude-play-frontend` — Plataforma Web (React + Vite) !
 
 | Tecnologia | Versão | Papel |
 |---|---|---|
