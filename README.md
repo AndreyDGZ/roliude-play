@@ -23,6 +23,7 @@ rolliude-play/
 
 ### `rolliude-play-frontend` — Plataforma Web (React + Vite) !
 
+
 | Tecnologia | Versão | Papel |
 |---|---|---|
 | **React** | `19` | Framework de interface (UI) |
