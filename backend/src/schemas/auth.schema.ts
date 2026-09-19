@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const registerUserSchema = z.object({
+export const registerSchema = z.object({
   nome: z
     .string()
     .trim()
@@ -21,4 +21,16 @@ export const registerUserSchema = z.object({
     .regex(/[^A-Za-z0-9]/, 'A senha deve conter ao menos um caractere especial.')
 });
 
-export type RegisterUserInput = z.infer<typeof registerUserSchema>;
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .email('Formato de e-mail inválido.'),
+  senha: z
+    .string()
+    .min(1, 'A senha é obrigatória.')
+});
+
+export type RegisterInput = z.infer<typeof registerSchema>;
+export type LoginInput = z.infer<typeof loginSchema>;

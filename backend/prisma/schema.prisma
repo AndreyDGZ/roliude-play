@@ -11,7 +11,7 @@ model Usuario {
   id        String   @id @default(uuid())
   email     String   @unique
   nome      String
-  senha     String?  // Opcional por causa do login social
+  senha     String?
   googleId  String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
