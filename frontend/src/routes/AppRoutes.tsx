@@ -6,6 +6,7 @@ import { Catalogo } from '../pages/Catalogo';
 import { FilmeDetalhe } from '../pages/FilmeDetalhe';
 import { Login } from '../pages/Login';
 import { Cadastro } from '../pages/Cadastro';
+import { RecuperarSenha } from '../pages/RecuperarSenha';
 import { NotFound } from '../pages/NotFound';
 
 export const AppRoutes: React.FC = () => {
@@ -17,6 +18,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="filme/:id" element={<FilmeDetalhe />} />
         <Route path="login" element={<Login />} />
         <Route path="cadastro" element={<Cadastro />} />
+        <Route path="recuperar-senha" element={<RecuperarSenha />} />
+        <Route path="redefinir-senha/:token" element={<RecuperarSenha />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
