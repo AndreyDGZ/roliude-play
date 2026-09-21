@@ -1,0 +1,8 @@
+.field {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-small);
+  color: var(--color-text-primary);
+  padding: var(--space-2);
+  width: 100%;
+}

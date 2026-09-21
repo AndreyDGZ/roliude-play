@@ -1,29 +1,29 @@
 export const colors = {
-  backgroundBase: '#121212',
-  backgroundElevated: '#222',
-  borderMuted: '#444',
-  brandPrimary: '#e50914',
+  backgroundBase: 'var(--color-page-bg)',
+  backgroundElevated: 'var(--color-surface)',
+  borderMuted: 'var(--color-border-muted)',
+  brandPrimary: 'var(--color-action-primary-bg)',
   googleBlue: '#4285F4',
-  statusSuccess: '#22c55e',
-  statusWarning: '#facc15',
-  textMuted: '#888',
-  textPrimary: '#fff'
+  statusSuccess: 'var(--color-success-text)',
+  statusWarning: 'var(--brand-yellow)',
+  textMuted: 'var(--color-text-muted)',
+  textPrimary: 'var(--color-text-primary)'
 } as const;
 
 export const radii = {
-  medium: '8px',
-  small: '4px'
+  medium: 'var(--radius-medium)',
+  small: 'var(--radius-small)'
 } as const;
 
 export const space = {
-  large: '2rem',
-  small: '0.8rem',
-  medium: '1rem'
+  large: 'var(--space-5)',
+  small: 'var(--space-2)',
+  medium: 'var(--space-3)'
 } as const;
 
 export const layout = {
-  formMaxWidth: '400px',
-  authMaxWidth: '460px'
+  formMaxWidth: 'var(--layout-form-max)',
+  authMaxWidth: 'var(--layout-auth-max)'
 } as const;
 
 export const typography = {

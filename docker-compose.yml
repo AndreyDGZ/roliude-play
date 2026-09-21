@@ -20,6 +20,9 @@ services:
     environment:
       - PORT=3000
       - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/rolliude_play?schema=public
+      - JWT_SECRET=local_development_secret_with_32_chars
+      - CORS_ORIGIN=http://localhost:5173
+      - FRONTEND_URL=http://localhost:5173
     depends_on:
       - postgres
 

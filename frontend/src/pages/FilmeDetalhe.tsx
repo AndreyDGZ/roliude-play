@@ -1,14 +1,17 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import styles from './Page.module.css';
 
 export const FilmeDetalhe: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div>
-      <Link to="/catalogo" style={{ color: '#aaa', textDecoration: 'none' }}>&larr; Voltar ao Catálogo</Link>
-      <h1 style={{ marginTop: '1rem' }}>Detalhes do Filme #{id}</h1>
-      <p>Em breve: sinopse, ficha técnica integrada, bastidores e reprodução em vídeo.</p>
+    <div className={styles.stack}>
+      <Link to="/catalogo" className={styles.link}>Voltar ao catálogo</Link>
+      <section className={styles.surface}>
+        <h1>Detalhes do Filme #{id}</h1>
+        <p>Em breve: sinopse, ficha técnica integrada, bastidores e reprodução em vídeo.</p>
+      </section>
     </div>
   );
 };

@@ -1,11 +1,21 @@
 {
-  "name": "backend",
+  "name": "rolliude-play-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/app/server.js",
+  "packageManager": "yarn@1.22.22",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
+    "lint": "node ../scripts/quality-check.mjs src && tsc --noEmit",
+    "format:check": "node ../scripts/quality-check.mjs src",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc",
+    "prisma:validate": "prisma validate",
+    "test": "yarn typecheck"
+  },
+  "engines": {
+    "node": ">=20",
+    "yarn": "1.22.22"
   },
   "keywords": [],
   "author": "",

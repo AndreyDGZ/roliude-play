@@ -2,12 +2,12 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
-RUN npm install
+RUN corepack enable && yarn install --frozen-lockfile
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npx", "ts-node-dev", "--respawn", "--transpile-only", "src/server.ts"]
+CMD ["yarn", "dev"]

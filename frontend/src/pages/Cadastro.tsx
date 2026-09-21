@@ -1,17 +1,17 @@
 import React from 'react';
-import { colors, layout, radii, space } from '../styles/designTokens';
+import { Button } from '../components/ui/Button';
+import { TextField } from '../components/ui/TextField';
+import styles from './Page.module.css';
 
 export const Cadastro: React.FC = () => {
   return (
-    <div style={{ maxWidth: layout.formMaxWidth, margin: '0 auto' }}>
-      <h1>Criar Conta</h1>
-      <form onSubmit={(submitEvent) => submitEvent.preventDefault()} style={{ display: 'flex', flexDirection: 'column', gap: space.medium, marginTop: space.medium }}>
-        <input type="text" placeholder="Nome Completo" style={{ padding: space.small, borderRadius: radii.small, border: `1px solid ${colors.borderMuted}`, backgroundColor: colors.backgroundElevated, color: colors.textPrimary }} />
-        <input type="email" placeholder="E-mail" style={{ padding: space.small, borderRadius: radii.small, border: `1px solid ${colors.borderMuted}`, backgroundColor: colors.backgroundElevated, color: colors.textPrimary }} />
-        <input type="password" placeholder="Senha" style={{ padding: space.small, borderRadius: radii.small, border: `1px solid ${colors.borderMuted}`, backgroundColor: colors.backgroundElevated, color: colors.textPrimary }} />
-        <button type="submit" style={{ padding: space.small, backgroundColor: colors.brandPrimary, color: colors.textPrimary, border: 'none', borderRadius: radii.small, cursor: 'pointer', fontWeight: 'bold' }}>
-          Cadastrar
-        </button>
+    <div className={styles.formPage}>
+      <h1>Criar conta</h1>
+      <form className={styles.form} onSubmit={submitEvent => submitEvent.preventDefault()}>
+        <TextField type="text" placeholder="Nome completo" autoComplete="name" />
+        <TextField type="email" placeholder="E-mail" autoComplete="email" />
+        <TextField type="password" placeholder="Senha" autoComplete="new-password" />
+        <Button type="submit">Cadastrar</Button>
       </form>
     </div>
   );

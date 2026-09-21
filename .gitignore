@@ -4,3 +4,7 @@ build/
 .env
 .env.*.local
 .DS_Store
+coverage/
+.cache/
+*.tsbuildinfo
+*.zip

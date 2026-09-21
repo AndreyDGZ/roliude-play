@@ -1,0 +1,60 @@
+.stack {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.hero {
+  background: linear-gradient(120deg, rgba(36, 26, 16, 0.88), rgba(200, 75, 49, 0.74));
+  border-radius: var(--radius-large);
+  color: var(--brand-background);
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.heroTitle {
+  color: var(--brand-yellow);
+}
+
+.surface {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-large);
+  padding: var(--space-4);
+}
+
+.formPage {
+  margin: 0 auto;
+  max-width: var(--layout-form-max);
+}
+
+.authPage {
+  margin: 0 auto;
+  max-width: var(--layout-auth-max);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}
+
+.danger {
+  color: var(--color-danger-text);
+  font-weight: var(--font-weight-strong);
+}
+
+.success {
+  color: var(--color-success-text);
+  font-weight: var(--font-weight-strong);
+}
+
+.link {
+  color: var(--brand-terracotta);
+  font-weight: var(--font-weight-strong);
+  text-decoration: none;
+}

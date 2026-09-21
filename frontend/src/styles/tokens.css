@@ -1,0 +1,33 @@
+:root {
+  --brand-background: #f9f5eb;
+  --brand-ink: #241a10;
+  --brand-orange: #ff9200;
+  --brand-terracotta: #c84b31;
+  --brand-yellow: #ffd23f;
+  --color-page-bg: var(--brand-background);
+  --color-surface: #ffffff;
+  --color-surface-muted: rgba(36, 26, 16, 0.06);
+  --color-text-primary: var(--brand-ink);
+  --color-text-muted: rgba(36, 26, 16, 0.66);
+  --color-border-muted: rgba(36, 26, 16, 0.16);
+  --color-action-primary-bg: var(--brand-orange);
+  --color-action-primary-text: var(--brand-ink);
+  --color-action-secondary-bg: transparent;
+  --color-action-secondary-text: var(--brand-ink);
+  --color-danger-text: var(--brand-terracotta);
+  --color-success-text: #2f6f5e;
+  --font-display: Rye, Georgia, serif;
+  --font-body: Montserrat, Arial, sans-serif;
+  --font-weight-strong: 700;
+  --radius-small: 4px;
+  --radius-medium: 8px;
+  --radius-large: 12px;
+  --space-1: 0.5rem;
+  --space-2: 0.8rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --layout-content-max: 1240px;
+  --layout-form-max: 400px;
+  --layout-auth-max: 460px;
+}

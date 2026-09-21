@@ -7,7 +7,7 @@ on:
       - develop
 
 jobs:
-  build-and-test:
+  frontend-quality:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,23 +18,55 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
 
-      - name: Install dependencies (frontend)
+      - name: Install dependencies
         working-directory: ./frontend
-        run: npm install
+        run: yarn install --frozen-lockfile
 
-      - name: Type check (frontend)
+      - name: Format check
         working-directory: ./frontend
-        run: npx tsc --noEmit
+        run: yarn format:check
 
-      - name: Build (frontend)
+      - name: Type check
         working-directory: ./frontend
-        run: npm run build
+        run: yarn typecheck
 
-      - name: Install dependencies (backend)
+      - name: Build
+        working-directory: ./frontend
+        run: yarn build
+
+  backend-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+          cache-dependency-path: backend/yarn.lock
+
+      - name: Install dependencies
         working-directory: ./backend
-        run: npm install
+        run: yarn install --frozen-lockfile
 
-      - name: Type check (backend)
+      - name: Format check
         working-directory: ./backend
-        run: npx tsc --noEmit
+        run: yarn format:check
+
+      - name: Type check
+        working-directory: ./backend
+        run: yarn typecheck
+
+      - name: Prisma validate
+        working-directory: ./backend
+        run: yarn prisma:validate
+
+      - name: Build
+        working-directory: ./backend
+        run: yarn build
