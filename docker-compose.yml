@@ -14,7 +14,7 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./Rolliude-backend
     ports:
       - "3000:3000"
     environment:
@@ -28,13 +28,13 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./Rolliude-front
     ports:
       - "5173:5173"
     environment:
       - CHOKIDAR_USEPOLLING=true
     volumes:
-      - ./frontend:/app
+      - ./Rolliude-front:/app
       - /app/node_modules
 
 volumes:

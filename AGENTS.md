@@ -1,6 +1,6 @@
 # Rolliúde Play Agent Instructions
 
-Before changing this repository, read `project-standards/01-authority-map.md`, identify the affected area, then read the matching standard file and accepted ADRs.
+Before changing this repository, read `Rolliude-project/project-standards/01-authority-map.md`, identify the affected area, then read the matching standard file and accepted ADRs in `Rolliude-project/docs/architecture/adr/`.
 
 Mandatory rules:
 

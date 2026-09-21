@@ -6,8 +6,8 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "vite",
-    "lint": "node ../scripts/quality-check.mjs src && tsc -b --noEmit",
-    "format:check": "node ../scripts/quality-check.mjs src",
+    "lint": "node ../Rolliude-project/scripts/quality-check.mjs src && tsc -b --noEmit",
+    "format:check": "node ../Rolliude-project/scripts/quality-check.mjs src",
     "typecheck": "tsc -b --noEmit",
     "build": "tsc -b && vite build",
     "preview": "vite preview"

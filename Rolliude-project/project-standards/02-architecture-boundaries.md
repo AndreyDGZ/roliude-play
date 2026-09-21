@@ -1,6 +1,6 @@
 # Architecture Boundaries
 
-Keep the repository split into `frontend/` and `backend/`.
+Keep the repository split into `Rolliude-front/`, `Rolliude-backend/` and `Rolliude-project/`.
 
 Backend business code belongs in modules. Shared backend code is limited to cross-cutting infrastructure such as errors, middlewares, logger, HTTP utilities and generic helpers. Shared code must not depend on business modules.
 

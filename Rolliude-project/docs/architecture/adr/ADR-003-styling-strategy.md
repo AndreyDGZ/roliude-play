@@ -8,7 +8,7 @@ The UI needed one styling strategy aligned with the Rolliúde Play Design System
 
 Decision
 
-Use CSS Modules with CSS Custom Properties. Global brand tokens live in `frontend/src/styles/`.
+Use CSS Modules with CSS Custom Properties. Global brand tokens live in `Rolliude-front/src/styles/`.
 
 Alternatives considered
 

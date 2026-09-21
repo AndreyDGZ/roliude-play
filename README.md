@@ -32,7 +32,7 @@ Backend: `http://localhost:3000/api/health`
 Backend:
 
 ```bash
-cd backend
+cd Rolliude-backend
 cp .env.example .env
 yarn install --frozen-lockfile
 yarn prisma:validate
@@ -42,14 +42,14 @@ yarn dev
 Frontend:
 
 ```bash
-cd frontend
+cd Rolliude-front
 yarn install --frozen-lockfile
 yarn dev
 ```
 
 ## Checks
 
-Execute nas pastas `frontend/` e `backend/`:
+Execute nas pastas `Rolliude-front/` e `Rolliude-backend/`:
 
 ```bash
 yarn format:check
@@ -65,8 +65,8 @@ yarn prisma:validate
 
 ## Fontes canônicas
 
-- Regras de autoridade: `project-standards/01-authority-map.md`
-- Padrões do projeto: `project-standards/`
-- Decisões arquiteturais: `docs/architecture/adr/`
-- Contribuição: `CONTRIBUTING.md`
+- Regras de autoridade: `Rolliude-project/project-standards/01-authority-map.md`
+- Padrões do projeto: `Rolliude-project/project-standards/`
+- Decisões arquiteturais: `Rolliude-project/docs/architecture/adr/`
+- Contribuição: `Rolliude-project/CONTRIBUTING.md`
 - Instruções para agentes: `AGENTS.md`

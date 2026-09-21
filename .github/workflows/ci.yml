@@ -19,22 +19,22 @@ jobs:
         with:
           node-version: '20'
           cache: yarn
-          cache-dependency-path: frontend/yarn.lock
+          cache-dependency-path: Rolliude-front/yarn.lock
 
       - name: Install dependencies
-        working-directory: ./frontend
+        working-directory: ./Rolliude-front
         run: yarn install --frozen-lockfile
 
       - name: Format check
-        working-directory: ./frontend
+        working-directory: ./Rolliude-front
         run: yarn format:check
 
       - name: Type check
-        working-directory: ./frontend
+        working-directory: ./Rolliude-front
         run: yarn typecheck
 
       - name: Build
-        working-directory: ./frontend
+        working-directory: ./Rolliude-front
         run: yarn build
 
   backend-quality:
@@ -49,24 +49,24 @@ jobs:
         with:
           node-version: '20'
           cache: yarn
-          cache-dependency-path: backend/yarn.lock
+          cache-dependency-path: Rolliude-backend/yarn.lock
 
       - name: Install dependencies
-        working-directory: ./backend
+        working-directory: ./Rolliude-backend
         run: yarn install --frozen-lockfile
 
       - name: Format check
-        working-directory: ./backend
+        working-directory: ./Rolliude-backend
         run: yarn format:check
 
       - name: Type check
-        working-directory: ./backend
+        working-directory: ./Rolliude-backend
         run: yarn typecheck
 
       - name: Prisma validate
-        working-directory: ./backend
+        working-directory: ./Rolliude-backend
         run: yarn prisma:validate
 
       - name: Build
-        working-directory: ./backend
+        working-directory: ./Rolliude-backend
         run: yarn build

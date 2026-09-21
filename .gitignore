@@ -8,3 +8,7 @@ coverage/
 .cache/
 *.tsbuildinfo
 *.zip
+.claude/
+.agents/
+.cursor/
+.devin/

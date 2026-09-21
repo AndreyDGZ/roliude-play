@@ -6,8 +6,8 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
-    "lint": "node ../scripts/quality-check.mjs src && tsc --noEmit",
-    "format:check": "node ../scripts/quality-check.mjs src",
+    "lint": "node ../Rolliude-project/scripts/quality-check.mjs src && tsc --noEmit",
+    "format:check": "node ../Rolliude-project/scripts/quality-check.mjs src",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "prisma:validate": "prisma validate",
