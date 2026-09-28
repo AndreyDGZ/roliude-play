@@ -1,0 +1,6 @@
+{
+  "name": "Rolliúde Play - Cadastro",
+  "description": "Tela de cadastro e autenticação da plataforma Rolliúde Play, com identidade visual regional e componentes consistentes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
