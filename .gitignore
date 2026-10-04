@@ -1,14 +1,3 @@
 node_modules/
 dist/
-build/
 .env
-.env.*.local
-.DS_Store
-coverage/
-.cache/
-*.tsbuildinfo
-*.zip
-.claude/
-.agents/
-.cursor/
-.devin/
