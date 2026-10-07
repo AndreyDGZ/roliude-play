@@ -1,0 +1,73 @@
+{
+  "nodes": [
+    {
+      "id": "config:Rolliude-front/.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": "Rolliude-front/.env.example",
+      "summary": "Environment variable template for the Vite frontend, declaring the single VITE_API_BASE_URL setting used to point the app at the backend API.",
+      "tags": ["configuration", "environment-variables", "vite"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "Rolliude-front/index.html",
+      "summary": "Vite HTML entry point for the React application; mounts the app into a root div and loads the Montserrat/Rye Google Fonts before bootstrapping main.tsx as a module script.",
+      "tags": ["entry-point", "markup", "vite", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/login.html",
+      "type": "file",
+      "name": "login.html",
+      "filePath": "Rolliude-front/login.html",
+      "summary": "Standalone static login page with its own inline CSS color tokens and layout, unrelated to the Vite/React entry point and not wired into the main application bundle or routing; likely a legacy or mockup page kept outside the React app.",
+      "tags": ["markup", "legacy", "standalone-page", "login"],
+      "complexity": "complex",
+      "languageNotes": "Defines its own :root CSS variables (--cream, --ink, --clay, --amber, etc.) that duplicate concepts from the project's Design System rather than consuming shared tokens.css, and loads a different font pairing (Rye + Nunito Sans) than index.html (Montserrat + Rye). This file is not referenced from index.html and has no script src pointing at the app bundle, supporting the assessment that it is a disconnected legacy page not wired into the React app."
+    },
+    {
+      "id": "config:Rolliude-front/package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "Rolliude-front/package.json",
+      "summary": "NPM manifest for the Rolliúde Play frontend, declaring the Vite/React build scripts, runtime dependencies, dev dependencies, and the packageManager/engines constraints for the project.",
+      "tags": ["configuration", "build-system", "dependencies", "npm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Rolliude-front/tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "Rolliude-front/tsconfig.json",
+      "summary": "TypeScript compiler configuration for the frontend, defining compilerOptions and the include pattern that scopes type-checking to the project's source files.",
+      "tags": ["configuration", "typescript", "build-system"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:Rolliude-front/.env.example",
+      "target": "file:Rolliude-front/index.html",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Rolliude-front/tsconfig.json",
+      "target": "file:Rolliude-front/index.html",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Rolliude-front/package.json",
+      "target": "file:Rolliude-front/index.html",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

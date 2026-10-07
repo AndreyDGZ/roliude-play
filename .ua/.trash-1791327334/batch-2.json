@@ -1,0 +1,279 @@
+{
+  "nodes": [
+    {
+      "id": "file:Rolliude-backend/src/config/prisma.ts",
+      "type": "file",
+      "name": "prisma.ts",
+      "filePath": "Rolliude-backend/src/config/prisma.ts",
+      "summary": "Instantiates and exports the singleton Prisma client used for database access across the backend.",
+      "tags": ["singleton", "database", "config", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/auth/auth.controller.ts",
+      "type": "file",
+      "name": "auth.controller.ts",
+      "filePath": "Rolliude-backend/src/modules/auth/auth.controller.ts",
+      "summary": "HTTP controller exposing registration, login, and password-reset endpoints by validating request bodies with auth.schema and delegating business logic to AuthService.",
+      "tags": ["api-handler", "controller", "authentication", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:Rolliude-backend/src/modules/auth/auth.controller.ts:AuthController",
+      "type": "class",
+      "name": "AuthController",
+      "filePath": "Rolliude-backend/src/modules/auth/auth.controller.ts",
+      "lineRange": [5, 76],
+      "summary": "Controller class wiring HTTP routes for register, login, forgotPassword, validatePasswordResetToken, and resetPassword to the AuthService.",
+      "tags": ["api-handler", "controller", "authentication"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/auth/auth.schema.ts",
+      "type": "file",
+      "name": "auth.schema.ts",
+      "filePath": "Rolliude-backend/src/modules/auth/auth.schema.ts",
+      "summary": "Defines Zod validation schemas for registration, login, forgot-password, reset-password, and token-validation request payloads used by the auth module.",
+      "tags": ["validation", "type-definition", "authentication", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/auth/auth.service.ts",
+      "type": "file",
+      "name": "auth.service.ts",
+      "filePath": "Rolliude-backend/src/modules/auth/auth.service.ts",
+      "summary": "Core authentication business logic handling user registration, login, JWT issuance, and the full password-reset flow (token generation, validation, and consumption) against Prisma and email delivery.",
+      "tags": ["service", "authentication", "jwt", "password-reset"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService",
+      "type": "class",
+      "name": "AuthService",
+      "filePath": "Rolliude-backend/src/modules/auth/auth.service.ts",
+      "lineRange": [22, 195],
+      "summary": "Encapsulates authentication logic: user registration delegation, credential verification and JWT login, and a secure password-reset lifecycle using hashed single-use tokens inside a database transaction.",
+      "tags": ["service", "authentication", "jwt", "password-reset"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/users/user.controller.ts",
+      "type": "file",
+      "name": "user.controller.ts",
+      "filePath": "Rolliude-backend/src/modules/users/user.controller.ts",
+      "summary": "HTTP controller exposing a user registration endpoint, validating input with user.schema and delegating to UserService.",
+      "tags": ["api-handler", "controller", "user-management", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:Rolliude-backend/src/modules/users/user.controller.ts:UserController",
+      "type": "class",
+      "name": "UserController",
+      "filePath": "Rolliude-backend/src/modules/users/user.controller.ts",
+      "lineRange": [5, 25],
+      "summary": "Controller class wiring the HTTP register route to UserService.register.",
+      "tags": ["api-handler", "controller", "user-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/users/user.schema.ts",
+      "type": "file",
+      "name": "user.schema.ts",
+      "filePath": "Rolliude-backend/src/modules/users/user.schema.ts",
+      "summary": "Defines the Zod validation schema for user registration request payloads.",
+      "tags": ["validation", "type-definition", "user-management", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/users/user.service.ts",
+      "type": "file",
+      "name": "user.service.ts",
+      "filePath": "Rolliude-backend/src/modules/users/user.service.ts",
+      "summary": "User domain service that creates new user accounts, enforcing unique email constraints and hashing passwords before persisting via Prisma.",
+      "tags": ["service", "user-management", "database", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:Rolliude-backend/src/modules/users/user.service.ts:UserService",
+      "type": "class",
+      "name": "UserService",
+      "filePath": "Rolliude-backend/src/modules/users/user.service.ts",
+      "lineRange": [15, 44],
+      "summary": "Service class providing user registration: checks for existing accounts, hashes the password with bcrypt, and creates the user record.",
+      "tags": ["service", "user-management", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/services/email.service.ts",
+      "type": "file",
+      "name": "email.service.ts",
+      "filePath": "Rolliude-backend/src/services/email.service.ts",
+      "summary": "Builds mail transport settings from environment configuration and sends password-reset emails via nodemailer, rendering the plain-text reset message.",
+      "tags": ["service", "email", "password-reset", "integration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:Rolliude-backend/src/services/email.service.ts:getMailSettings",
+      "type": "function",
+      "name": "getMailSettings",
+      "filePath": "Rolliude-backend/src/services/email.service.ts",
+      "lineRange": [17, 35],
+      "summary": "Reads and validates SMTP connection settings (host, port, credentials) from environment variables.",
+      "tags": ["config", "email", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-backend/src/services/email.service.ts:renderPasswordResetText",
+      "type": "function",
+      "name": "renderPasswordResetText",
+      "filePath": "Rolliude-backend/src/services/email.service.ts",
+      "lineRange": [37, 47],
+      "summary": "Renders the plain-text body of the password-reset email, embedding the reset link and expiration time.",
+      "tags": ["utility", "email", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-backend/src/services/email.service.ts:sendPasswordResetEmail",
+      "type": "function",
+      "name": "sendPasswordResetEmail",
+      "filePath": "Rolliude-backend/src/services/email.service.ts",
+      "lineRange": [49, 71],
+      "summary": "Creates a nodemailer transporter from mail settings and sends the password-reset email to the target recipient.",
+      "tags": ["service", "email", "password-reset", "integration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-backend/src/shared/errors/app-error.ts",
+      "type": "file",
+      "name": "app-error.ts",
+      "filePath": "Rolliude-backend/src/shared/errors/app-error.ts",
+      "summary": "Defines the AppError class, a custom error carrying an HTTP status code for consistent error handling across the backend.",
+      "tags": ["error-handling", "data-model", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:Rolliude-backend/src/shared/errors/app-error.ts:AppError",
+      "type": "class",
+      "name": "AppError",
+      "filePath": "Rolliude-backend/src/shared/errors/app-error.ts",
+      "lineRange": [1, 8],
+      "summary": "Custom Error subclass that attaches an HTTP statusCode property, used to signal domain errors up to the error-handling middleware.",
+      "tags": ["error-handling", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/shared/errors/error-handler.ts",
+      "type": "file",
+      "name": "error-handler.ts",
+      "filePath": "Rolliude-backend/src/shared/errors/error-handler.ts",
+      "summary": "Express error-handling middleware that maps Zod validation errors and AppError instances to appropriate HTTP responses, falling back to a generic 500 for unknown errors.",
+      "tags": ["middleware", "error-handling", "api-handler", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:Rolliude-backend/src/shared/errors/error-handler.ts:mapValidationErrors",
+      "type": "function",
+      "name": "mapValidationErrors",
+      "filePath": "Rolliude-backend/src/shared/errors/error-handler.ts",
+      "lineRange": [15, 20],
+      "summary": "Transforms a Zod validation error into a simplified array of field path and message pairs.",
+      "tags": ["validation", "utility", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-backend/src/shared/errors/error-handler.ts:errorHandler",
+      "type": "function",
+      "name": "errorHandler",
+      "filePath": "Rolliude-backend/src/shared/errors/error-handler.ts",
+      "lineRange": [22, 39],
+      "summary": "Express error-handling middleware that inspects the thrown error type (Zod validation, AppError, or unknown) and returns the matching HTTP status and payload.",
+      "tags": ["middleware", "error-handling", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-backend/src/utils/reset-token.ts",
+      "type": "file",
+      "name": "reset-token.ts",
+      "filePath": "Rolliude-backend/src/utils/reset-token.ts",
+      "summary": "Utility functions for generating a random password-reset token and hashing it with SHA-256 for safe storage.",
+      "tags": ["utility", "security", "password-reset"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-backend/src/utils/reset-token.ts:generatePasswordResetToken",
+      "type": "function",
+      "name": "generatePasswordResetToken",
+      "filePath": "Rolliude-backend/src/utils/reset-token.ts",
+      "lineRange": [3, 5],
+      "summary": "Generates a cryptographically random hex token for password-reset flows.",
+      "tags": ["utility", "security", "password-reset"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-backend/src/utils/reset-token.ts:hashPasswordResetToken",
+      "type": "function",
+      "name": "hashPasswordResetToken",
+      "filePath": "Rolliude-backend/src/utils/reset-token.ts",
+      "lineRange": [7, 9],
+      "summary": "Hashes a password-reset token with SHA-256 so only the hash is persisted in the database.",
+      "tags": ["utility", "security", "password-reset"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.controller.ts", "target": "class:Rolliude-backend/src/modules/auth/auth.controller.ts:AuthController", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.controller.ts", "target": "class:Rolliude-backend/src/modules/auth/auth.controller.ts:AuthController", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.controller.ts", "target": "file:Rolliude-backend/src/modules/auth/auth.schema.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.controller.ts", "target": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "class:Rolliude-backend/src/modules/auth/auth.controller.ts:AuthController", "target": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/config/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/config/prisma.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/modules/auth/auth.schema.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/modules/users/user.service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/services/email.service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/shared/errors/app-error.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/auth/auth.service.ts", "target": "file:Rolliude-backend/src/utils/reset-token.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "target": "class:Rolliude-backend/src/modules/users/user.service.ts:UserService", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "target": "function:Rolliude-backend/src/services/email.service.ts:sendPasswordResetEmail", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "target": "function:Rolliude-backend/src/utils/reset-token.ts:generatePasswordResetToken", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "target": "function:Rolliude-backend/src/utils/reset-token.ts:hashPasswordResetToken", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "class:Rolliude-backend/src/modules/auth/auth.service.ts:AuthService", "target": "class:Rolliude-backend/src/shared/errors/app-error.ts:AppError", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.controller.ts", "target": "class:Rolliude-backend/src/modules/users/user.controller.ts:UserController", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.controller.ts", "target": "class:Rolliude-backend/src/modules/users/user.controller.ts:UserController", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.controller.ts", "target": "file:Rolliude-backend/src/modules/users/user.schema.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.controller.ts", "target": "file:Rolliude-backend/src/modules/users/user.service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "class:Rolliude-backend/src/modules/users/user.controller.ts:UserController", "target": "class:Rolliude-backend/src/modules/users/user.service.ts:UserService", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "file:Rolliude-backend/src/modules/users/user.service.ts", "target": "class:Rolliude-backend/src/modules/users/user.service.ts:UserService", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.service.ts", "target": "class:Rolliude-backend/src/modules/users/user.service.ts:UserService", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.service.ts", "target": "file:Rolliude-backend/src/config/prisma.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.service.ts", "target": "file:Rolliude-backend/src/modules/users/user.schema.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-backend/src/modules/users/user.service.ts", "target": "file:Rolliude-backend/src/shared/errors/app-error.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "class:Rolliude-backend/src/modules/users/user.service.ts:UserService", "target": "class:Rolliude-backend/src/shared/errors/app-error.ts:AppError", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "file:Rolliude-backend/src/services/email.service.ts", "target": "function:Rolliude-backend/src/services/email.service.ts:getMailSettings", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/services/email.service.ts", "target": "function:Rolliude-backend/src/services/email.service.ts:renderPasswordResetText", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/services/email.service.ts", "target": "function:Rolliude-backend/src/services/email.service.ts:sendPasswordResetEmail", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/services/email.service.ts", "target": "function:Rolliude-backend/src/services/email.service.ts:sendPasswordResetEmail", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "function:Rolliude-backend/src/services/email.service.ts:sendPasswordResetEmail", "target": "function:Rolliude-backend/src/services/email.service.ts:getMailSettings", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:Rolliude-backend/src/services/email.service.ts:sendPasswordResetEmail", "target": "function:Rolliude-backend/src/services/email.service.ts:renderPasswordResetText", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:Rolliude-backend/src/shared/errors/app-error.ts", "target": "class:Rolliude-backend/src/shared/errors/app-error.ts:AppError", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/shared/errors/app-error.ts", "target": "class:Rolliude-backend/src/shared/errors/app-error.ts:AppError", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:Rolliude-backend/src/shared/errors/error-handler.ts", "target": "function:Rolliude-backend/src/shared/errors/error-handler.ts:mapValidationErrors", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/shared/errors/error-handler.ts", "target": "function:Rolliude-backend/src/shared/errors/error-handler.ts:errorHandler", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/shared/errors/error-handler.ts", "target": "function:Rolliude-backend/src/shared/errors/error-handler.ts:errorHandler", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-backend/src/shared/errors/error-handler.ts", "target": "file:Rolliude-backend/src/shared/errors/app-error.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:Rolliude-backend/src/shared/errors/error-handler.ts:errorHandler", "target": "function:Rolliude-backend/src/shared/errors/error-handler.ts:mapValidationErrors", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:Rolliude-backend/src/shared/errors/error-handler.ts:errorHandler", "target": "class:Rolliude-backend/src/shared/errors/app-error.ts:AppError", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "file:Rolliude-backend/src/utils/reset-token.ts", "target": "function:Rolliude-backend/src/utils/reset-token.ts:generatePasswordResetToken", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/utils/reset-token.ts", "target": "function:Rolliude-backend/src/utils/reset-token.ts:hashPasswordResetToken", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-backend/src/utils/reset-token.ts", "target": "function:Rolliude-backend/src/utils/reset-token.ts:generatePasswordResetToken", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-backend/src/utils/reset-token.ts", "target": "function:Rolliude-backend/src/utils/reset-token.ts:hashPasswordResetToken", "type": "exports", "direction": "forward", "weight": 0.8 }
+  ]
+}

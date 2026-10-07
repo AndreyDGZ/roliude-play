@@ -1,0 +1,571 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 10,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 10,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 10,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "rolliúde-play tela cadastro/src/App.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 43,
+      "functions": [
+        {
+          "name": "App",
+          "startLine": 9,
+          "endLine": 48,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "App",
+          "line": 9,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "App",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "App",
+          "callee": "useState",
+          "lineNumber": 11
+        },
+        {
+          "caller": "App",
+          "callee": "setCurrentView",
+          "lineNumber": 18
+        },
+        {
+          "caller": "App",
+          "callee": "setCurrentView",
+          "lineNumber": 28
+        },
+        {
+          "caller": "App",
+          "callee": "setIsTermsOpen",
+          "lineNumber": 29
+        },
+        {
+          "caller": "App",
+          "callee": "setCurrentView",
+          "lineNumber": 33
+        },
+        {
+          "caller": "App",
+          "callee": "setIsTermsOpen",
+          "lineNumber": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/assets/logo.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "exports": [
+        {
+          "name": "ROLLIUDE_LOGO_SRC",
+          "line": 2,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/components/Footer.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 17,
+      "nonEmptyLines": 16,
+      "functions": [
+        {
+          "name": "Footer",
+          "startLine": 3,
+          "endLine": 17,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Footer",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/components/Header.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 64,
+      "nonEmptyLines": 61,
+      "functions": [
+        {
+          "name": "Header",
+          "startLine": 10,
+          "endLine": 64,
+          "params": [
+            "{ currentView, onSelectView }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Header",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Header",
+          "callee": "onSelectView",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Header",
+          "callee": "onSelectView",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Header",
+          "callee": "onSelectView",
+          "lineNumber": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/components/LoginForm.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 214,
+      "nonEmptyLines": 196,
+      "functions": [
+        {
+          "name": "LoginForm",
+          "startLine": 9,
+          "endLine": 214,
+          "params": [
+            "{ onNavigateToRegister }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "LoginForm",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "LoginForm",
+          "callee": "useState",
+          "lineNumber": 10
+        },
+        {
+          "caller": "LoginForm",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "LoginForm",
+          "callee": "useState",
+          "lineNumber": 17
+        },
+        {
+          "caller": "handleChange",
+          "callee": "setFormData",
+          "lineNumber": 21
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "e.preventDefault",
+          "lineNumber": 28
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.email.trim",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 33
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test",
+          "lineNumber": 40
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 42
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 49
+        },
+        {
+          "caller": "handleForgotPassword",
+          "callee": "e.preventDefault",
+          "lineNumber": 56
+        },
+        {
+          "caller": "handleForgotPassword",
+          "callee": "setStatus",
+          "lineNumber": 57
+        },
+        {
+          "caller": "LoginForm",
+          "callee": "setShowPassword",
+          "lineNumber": 145
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/components/RegisterForm.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 541,
+      "nonEmptyLines": 506,
+      "functions": [
+        {
+          "name": "RegisterForm",
+          "startLine": 11,
+          "endLine": 541,
+          "params": [
+            "{\r\n  onNavigateToLogin,\r\n  onOpenTerms,\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RegisterForm",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "RegisterForm",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "useState",
+          "lineNumber": 27
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "useState",
+          "lineNumber": 28
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "useState",
+          "lineNumber": 29
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "useState",
+          "lineNumber": 30
+        },
+        {
+          "caller": "handleChange",
+          "callee": "setFormData",
+          "lineNumber": 38
+        },
+        {
+          "caller": "calculatePasswordStrength",
+          "callee": "/[A-Z]/.test",
+          "lineNumber": 49
+        },
+        {
+          "caller": "calculatePasswordStrength",
+          "callee": "/[0-9]/.test",
+          "lineNumber": 49
+        },
+        {
+          "caller": "calculatePasswordStrength",
+          "callee": "/[^A-Za-z0-9]/.test",
+          "lineNumber": 50
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "calculatePasswordStrength",
+          "lineNumber": 54
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "e.preventDefault",
+          "lineNumber": 57
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 58
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.name.trim",
+          "lineNumber": 61
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 62
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.email.trim",
+          "lineNumber": 69
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 70
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test",
+          "lineNumber": 77
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.email.trim",
+          "lineNumber": 77
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 79
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.city.trim",
+          "lineNumber": 86
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 87
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 95
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 103
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 111
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 119
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setIsSuccess",
+          "lineNumber": 127
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "setStatus",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.name.trim().split",
+          "lineNumber": 130
+        },
+        {
+          "caller": "handleSubmit",
+          "callee": "formData.name.trim",
+          "lineNumber": 130
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "PROFILE_OPTIONS.find",
+          "lineNumber": 158
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "PROFILE_OPTIONS.map",
+          "lineNumber": 275
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "BRAZIL_STATES.map",
+          "lineNumber": 299
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "setShowPassword",
+          "lineNumber": 348
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "[1, 2, 3, 4].map",
+          "lineNumber": 382
+        },
+        {
+          "caller": "RegisterForm",
+          "callee": "setShowConfirmPassword",
+          "lineNumber": 440
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/components/TermsModal.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 94,
+      "nonEmptyLines": 86,
+      "functions": [
+        {
+          "name": "TermsModal",
+          "startLine": 9,
+          "endLine": 94,
+          "params": [
+            "{ isOpen, onClose }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TermsModal",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TermsModal",
+          "callee": "e.stopPropagation",
+          "lineNumber": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/data/regions.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 41,
+      "exports": [
+        {
+          "name": "BRAZIL_STATES",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "PROFILE_OPTIONS",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/main.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "rolliúde-play tela cadastro/src/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 27,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-front/src/components/ui/Button.tsx", "language": "typescript", "sizeLines": 18, "fileCategory": "code"},
+    {"path": "Rolliude-front/src/components/ui/TextField.tsx", "language": "typescript", "sizeLines": 6, "fileCategory": "code"},
+    {"path": "Rolliude-front/src/pages/Cadastro.tsx", "language": "typescript", "sizeLines": 18, "fileCategory": "code"},
+    {"path": "Rolliude-front/src/pages/Login.tsx", "language": "typescript", "sizeLines": 20, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "Rolliude-front/src/components/ui/Button.tsx": ["Rolliude-front/src/components/ui/Button.module.css"],
+    "Rolliude-front/src/components/ui/TextField.tsx": ["Rolliude-front/src/components/ui/TextField.module.css"],
+    "Rolliude-front/src/pages/Cadastro.tsx": ["Rolliude-front/src/components/ui/Button.tsx", "Rolliude-front/src/components/ui/TextField.tsx", "Rolliude-front/src/pages/Page.module.css"],
+    "Rolliude-front/src/pages/Login.tsx": ["Rolliude-front/src/components/ui/Button.tsx", "Rolliude-front/src/components/ui/TextField.tsx", "Rolliude-front/src/pages/Page.module.css"]
+  }
+}

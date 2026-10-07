@@ -1,0 +1,121 @@
+{
+  "nodes": [
+    {
+      "id": "config:.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": ".env.example",
+      "summary": "Template for environment variables covering server port, PostgreSQL connection settings, and JWT authentication secrets used by the backend.",
+      "tags": ["configuration", "environment-variables", "database", "authentication"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.prettierrc.json",
+      "type": "config",
+      "name": ".prettierrc.json",
+      "filePath": ".prettierrc.json",
+      "summary": "Prettier formatting configuration enforcing single quotes and trailing commas across the monorepo.",
+      "tags": ["configuration", "formatting", "code-style"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "Mandatory agent instructions for working in the Rolliúde Play repository, pointing to project standards and ADRs and listing hard rules such as no `any`, no comments in touched files, and no duplicate sources of truth.",
+      "tags": ["documentation", "development", "governance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Project overview describing the stack, requirements, how to run the app via Docker or manually, available checks, and canonical sources of truth for standards.",
+      "tags": ["documentation", "entry-point", "overview", "setup-guide"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:docker-compose.yml",
+      "type": "service",
+      "name": "docker-compose.yml",
+      "filePath": "docker-compose.yml",
+      "summary": "Docker Compose orchestration defining services (likely backend, frontend, and database) and a shared volume for local development of Rolliúde Play.",
+      "tags": ["containerization", "orchestration", "infrastructure", "deployment"],
+      "complexity": "moderate",
+      "languageNotes": "Defines a top-level services block alongside a volumes block, typical of a multi-container local dev setup coordinating backend, frontend, and database images."
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Root package manifest declaring the project name, scripts, and dependencies/devDependencies for the monorepo.",
+      "tags": ["configuration", "build-system", "dependencies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "tsconfig.json",
+      "summary": "Root TypeScript compiler configuration with compilerOptions and an include list controlling which files are type-checked.",
+      "tags": ["configuration", "typescript", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:usuarios.sql:usuarios",
+      "type": "table",
+      "name": "usuarios",
+      "filePath": "usuarios.sql",
+      "summary": "SQL definition of the usuarios (users) table with id, nome, email, senha_hash, tipo, and criado_em columns backing authentication and user records.",
+      "tags": ["database", "schema-definition", "users"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:README.md",
+      "target": "service:docker-compose.yml",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "config:package.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "document:README.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:package.json",
+      "target": "config:tsconfig.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "table:usuarios.sql:usuarios",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "service:docker-compose.yml",
+      "target": "config:.env.example",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

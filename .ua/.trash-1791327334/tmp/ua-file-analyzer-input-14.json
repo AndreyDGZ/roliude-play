@@ -1,0 +1,25 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-project/project-standards/01-authority-map.md", "language": "markdown", "sizeLines": 18, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/02-architecture-boundaries.md", "language": "markdown", "sizeLines": 9, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/03-frontend.md", "language": "markdown", "sizeLines": 9, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/04-backend.md", "language": "markdown", "sizeLines": 11, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/05-database.md", "language": "markdown", "sizeLines": 7, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/06-api-auth.md", "language": "markdown", "sizeLines": 7, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/07-ui-accessibility.md", "language": "markdown", "sizeLines": 15, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/08-quality-security.md", "language": "markdown", "sizeLines": 12, "fileCategory": "docs"},
+    {"path": "Rolliude-project/project-standards/09-git-documentation.md", "language": "markdown", "sizeLines": 9, "fileCategory": "docs"}
+  ],
+  "batchImportData": {
+    "Rolliude-project/project-standards/01-authority-map.md": [],
+    "Rolliude-project/project-standards/02-architecture-boundaries.md": [],
+    "Rolliude-project/project-standards/03-frontend.md": [],
+    "Rolliude-project/project-standards/04-backend.md": [],
+    "Rolliude-project/project-standards/05-database.md": [],
+    "Rolliude-project/project-standards/06-api-auth.md": [],
+    "Rolliude-project/project-standards/07-ui-accessibility.md": [],
+    "Rolliude-project/project-standards/08-quality-security.md": [],
+    "Rolliude-project/project-standards/09-git-documentation.md": []
+  }
+}

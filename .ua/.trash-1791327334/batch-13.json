@@ -1,0 +1,90 @@
+{
+  "nodes": [
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-001-brand-naming.md",
+      "type": "document",
+      "name": "ADR-001-brand-naming.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-001-brand-naming.md",
+      "summary": "Accepted ADR establishing the official brand display name Rolliúde Play and the technical slug rolliude-play, resolving inconsistent naming across project materials.",
+      "tags": ["documentation", "adr", "architecture-decision", "branding", "naming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-002-runtime-package-manager.md",
+      "type": "document",
+      "name": "ADR-002-runtime-package-manager.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-002-runtime-package-manager.md",
+      "summary": "Accepted ADR mandating Node >=20 and Yarn 1.22.22 as the sole runtime and package manager for frontend and backend, deprecating npm lockfiles.",
+      "tags": ["documentation", "adr", "architecture-decision", "tooling", "package-manager"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-003-styling-strategy.md",
+      "type": "document",
+      "name": "ADR-003-styling-strategy.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-003-styling-strategy.md",
+      "summary": "Accepted ADR mandating CSS Modules with CSS Custom Properties as the UI styling strategy, with global brand tokens in Rolliude-front/src/styles/, rejecting Tailwind and inline styles.",
+      "tags": ["documentation", "adr", "architecture-decision", "styling", "design-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-004-database-baseline.md",
+      "type": "document",
+      "name": "ADR-004-database-baseline.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-004-database-baseline.md",
+      "summary": "Accepted ADR declaring the current Prisma schema and migrations the executable database baseline until a dedicated reconciliation PR expands it to match the Sprint 1 database report.",
+      "tags": ["documentation", "adr", "architecture-decision", "database", "prisma"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-005-api-contract-strategy.md",
+      "type": "document",
+      "name": "ADR-005-api-contract-strategy.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-005-api-contract-strategy.md",
+      "summary": "Accepted ADR requiring generated OpenAPI specs and frontend API types to be derived from backend schemas and route metadata, prohibiting manual edits to generated API types.",
+      "tags": ["documentation", "adr", "architecture-decision", "api-contract", "openapi"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-006-auth-strategy.md",
+      "type": "document",
+      "name": "ADR-006-auth-strategy.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-006-auth-strategy.md",
+      "summary": "Accepted ADR defining the MVP authentication strategy: email/password with bcrypt hashing, JWT bearer tokens, and single-use expiring password reset tokens sourced from environment variables.",
+      "tags": ["documentation", "adr", "architecture-decision", "authentication", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/docs/architecture/adr/ADR-007-media-storage-streaming.md",
+      "type": "document",
+      "name": "ADR-007-media-storage-streaming.md",
+      "filePath": "Rolliude-project/docs/architecture/adr/ADR-007-media-storage-streaming.md",
+      "summary": "Accepted ADR limiting the MVP to storing media URLs, deferring large media upload, authorization and streaming to a future dedicated ADR rather than serving large files through the Node process.",
+      "tags": ["documentation", "adr", "architecture-decision", "media", "streaming"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:Rolliude-project/docs/architecture/adr/ADR-004-database-baseline.md",
+      "target": "document:Rolliude-project/docs/architecture/adr/ADR-005-api-contract-strategy.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/docs/architecture/adr/ADR-006-auth-strategy.md",
+      "target": "document:Rolliude-project/docs/architecture/adr/ADR-005-api-contract-strategy.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/docs/architecture/adr/ADR-007-media-storage-streaming.md",
+      "target": "document:Rolliude-project/docs/architecture/adr/ADR-004-database-baseline.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

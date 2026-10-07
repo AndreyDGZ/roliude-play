@@ -1,0 +1,62 @@
+{
+  "nodes": [
+    {
+      "id": "file:Rolliude-front/src/styles/tokens.css",
+      "type": "file",
+      "name": "tokens.css",
+      "filePath": "Rolliude-front/src/styles/tokens.css",
+      "summary": "Design System source of truth defining canonical CSS custom properties: brand colors, semantic color aliases, typography font stacks, border radii, spacing scale, and layout max-widths used across the frontend.",
+      "tags": ["design-system", "css-variables", "tokens", "styling"],
+      "complexity": "simple",
+      "languageNotes": "Uses a two-tier variable pattern: raw brand values (--brand-orange, --brand-ink) feed semantic aliases (--color-action-primary-bg) so components reference intent rather than raw color."
+    },
+    {
+      "id": "file:Rolliude-front/src/styles/globals.css",
+      "type": "file",
+      "name": "globals.css",
+      "filePath": "Rolliude-front/src/styles/globals.css",
+      "summary": "Global stylesheet imported by the app entry point that resets box-sizing and base element styles, applies the brand background/text/font tokens to body, and defines a focus-visible outline using the brand yellow accent.",
+      "tags": ["global-styles", "css-reset", "entry-point", "styling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/styles/typography.css",
+      "type": "file",
+      "name": "typography.css",
+      "filePath": "Rolliude-front/src/styles/typography.css",
+      "summary": "Typography rules for headings, paragraphs, and links, applying the Rye display font to headings and the terracotta brand color, with spacing driven by the design token scale.",
+      "tags": ["typography", "design-system", "styling"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:Rolliude-front/src/styles/globals.css",
+      "target": "file:Rolliude-front/src/styles/tokens.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-front/src/styles/globals.css",
+      "target": "file:Rolliude-front/src/styles/typography.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-front/src/styles/typography.css",
+      "target": "file:Rolliude-front/src/styles/tokens.css",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:Rolliude-front/src/main.tsx",
+      "target": "file:Rolliude-front/src/styles/globals.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

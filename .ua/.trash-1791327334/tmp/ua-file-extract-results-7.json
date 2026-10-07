@@ -1,0 +1,82 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 1,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 1,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "Rolliude-front/Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 13,
+      "nonEmptyLines": 7,
+      "services": [
+        {
+          "name": "node",
+          "image": "node:20-alpine",
+          "ports": [
+            5173
+          ],
+          "startLine": 1,
+          "endLine": 14
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM node:20-alpine",
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "COPY package.json yarn.lock ./",
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "RUN corepack enable && yarn install --frozen-lockfile",
+          "startLine": 7,
+          "endLine": 7
+        },
+        {
+          "name": "COPY . .",
+          "startLine": 9,
+          "endLine": 9
+        },
+        {
+          "name": "EXPOSE 5173",
+          "startLine": 11,
+          "endLine": 11
+        },
+        {
+          "name": "CMD [\"yarn\", \"dev\", \"--host\"]",
+          "startLine": 13,
+          "endLine": 13
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 1,
+        "stepCount": 7
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-backend/.env.example", "language": "config", "sizeLines": 7, "fileCategory": "config"},
+    {"path": "Rolliude-backend/package.json", "language": "json", "sizeLines": 47, "fileCategory": "config"},
+    {"path": "Rolliude-backend/tsconfig.json", "language": "json", "sizeLines": 19, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "Rolliude-backend/.env.example": [],
+    "Rolliude-backend/package.json": [],
+    "Rolliude-backend/tsconfig.json": []
+  }
+}

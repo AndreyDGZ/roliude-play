@@ -1,0 +1,50 @@
+{
+  "nodes": [
+    {
+      "id": "pipeline:.github/workflows/ci.yml",
+      "type": "pipeline",
+      "name": "ci.yml",
+      "filePath": ".github/workflows/ci.yml",
+      "summary": "GitHub Actions CI workflow that runs on pull requests targeting main or develop, validating both the frontend and backend packages with format, type, Prisma schema, and build checks.",
+      "tags": ["ci-cd", "infrastructure", "quality-gate", "pull-request", "monorepo"],
+      "complexity": "simple",
+      "languageNotes": "Two parallel jobs (frontend-quality, backend-quality) each run yarn install, format check, type check, and build in their respective package directories; the backend job adds a Prisma schema validation step."
+    },
+    {
+      "id": "step:.github/workflows/ci.yml:frontend-quality",
+      "type": "pipeline",
+      "name": "frontend-quality",
+      "filePath": ".github/workflows/ci.yml",
+      "lineRange": [10, 38],
+      "summary": "CI job that checks out the repo, installs frontend dependencies, and runs format, type-check, and build steps for the Rolliude-front package.",
+      "tags": ["ci-cd", "frontend", "quality-gate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:.github/workflows/ci.yml:backend-quality",
+      "type": "pipeline",
+      "name": "backend-quality",
+      "filePath": ".github/workflows/ci.yml",
+      "lineRange": [40, 72],
+      "summary": "CI job that checks out the repo, installs backend dependencies, and runs format, type-check, Prisma schema validation, and build steps for the Rolliude-backend package.",
+      "tags": ["ci-cd", "backend", "quality-gate", "prisma"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "pipeline:.github/workflows/ci.yml",
+      "target": "step:.github/workflows/ci.yml:frontend-quality",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "pipeline:.github/workflows/ci.yml",
+      "target": "step:.github/workflows/ci.yml:backend-quality",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

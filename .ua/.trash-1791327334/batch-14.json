@@ -1,0 +1,185 @@
+{
+  "nodes": [
+    {
+      "id": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "type": "document",
+      "name": "01-authority-map.md",
+      "filePath": "Rolliude-project/project-standards/01-authority-map.md",
+      "summary": "Entry-point standard mapping each subject (product vision, database, HTTP contract, UI tokens, dependencies, git flow, agent instructions) to its single canonical source of truth and explicitly naming non-canonical alternatives, with a conflict-resolution procedure when sources diverge.",
+      "tags": ["documentation", "entry-point", "governance", "source-of-truth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/02-architecture-boundaries.md",
+      "type": "document",
+      "name": "02-architecture-boundaries.md",
+      "filePath": "Rolliude-project/project-standards/02-architecture-boundaries.md",
+      "summary": "Defines the repository split between Rolliude-front, Rolliude-backend and Rolliude-project, and sets boundaries for shared backend infrastructure versus business modules and frontend feature code versus generic UI/HTTP layers.",
+      "tags": ["documentation", "architecture", "governance", "boundaries"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/03-frontend.md",
+      "type": "document",
+      "name": "03-frontend.md",
+      "filePath": "Rolliude-project/project-standards/03-frontend.md",
+      "summary": "Frontend standard mandating React, Vite, TypeScript strict mode, CSS Modules and CSS Custom Properties, with feature code under src/features/, generic layout and UI primitives in dedicated folders, and all API calls routed through src/lib/http/.",
+      "tags": ["documentation", "frontend", "governance", "standards"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/04-backend.md",
+      "type": "document",
+      "name": "04-backend.md",
+      "filePath": "Rolliude-project/project-standards/04-backend.md",
+      "summary": "Backend standard requiring Express, TypeScript strict mode, Prisma and Zod, with app setup and server startup separated into distinct files, validated configuration, a central error handler, and no raw Prisma entities with sensitive fields returned.",
+      "tags": ["documentation", "backend", "governance", "standards"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/05-database.md",
+      "type": "document",
+      "name": "05-database.md",
+      "filePath": "Rolliude-project/project-standards/05-database.md",
+      "summary": "Database standard establishing Prisma schema and migrations as canonical post-reconciliation, requiring ADR-recorded baseline strategy and validation against a disposable PostgreSQL database before new migrations, and scoping MVP entities to users, password reset tokens, states, municipalities, genres and movies.",
+      "tags": ["documentation", "database", "governance", "standards"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/06-api-auth.md",
+      "type": "document",
+      "name": "06-api-auth.md",
+      "filePath": "Rolliude-project/project-standards/06-api-auth.md",
+      "summary": "API and auth standard making backend Zod schemas and route metadata the source for the HTTP contract (generated OpenAPI allowed, manual OpenAPI forbidden), and defining MVP authentication as email/password with JWT bearer tokens and single-use password reset tokens.",
+      "tags": ["documentation", "api", "authentication", "governance", "standards"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/07-ui-accessibility.md",
+      "type": "document",
+      "name": "07-ui-accessibility.md",
+      "filePath": "Rolliude-project/project-standards/07-ui-accessibility.md",
+      "summary": "UI and accessibility standard naming the official brand (Rolliúde Play) and palette (Camurça, Tinta, Laranja, Terracota, Amarelo), requiring semantic design tokens over raw colors, and mandating visible focus states, keyboard access and sufficient contrast for interactive controls.",
+      "tags": ["documentation", "design-system", "accessibility", "governance", "standards"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/08-quality-security.md",
+      "type": "document",
+      "name": "08-quality-security.md",
+      "filePath": "Rolliude-project/project-standards/08-quality-security.md",
+      "summary": "Mandatory quality and security rules covering banned TypeScript escapes (any, as any, @ts-ignore, @ts-expect-error), no comments in touched files, no one-letter variables, no dead code or console.log, no secrets in source or logs, input validation, and Design System token usage.",
+      "tags": ["documentation", "security", "quality", "governance", "standards"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/project-standards/09-git-documentation.md",
+      "type": "document",
+      "name": "09-git-documentation.md",
+      "filePath": "Rolliude-project/project-standards/09-git-documentation.md",
+      "summary": "Git and documentation standard requiring Conventional Commits, focused pull requests, branches from develop using prefixed names, canonical documentation updates in the same PR as the related change, and explicit labeling of historical documents.",
+      "tags": ["documentation", "git-workflow", "governance", "standards"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/02-architecture-boundaries.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/03-frontend.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/04-backend.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/05-database.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/06-api-auth.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/07-ui-accessibility.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/08-quality-security.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/01-authority-map.md",
+      "target": "document:Rolliude-project/project-standards/09-git-documentation.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/02-architecture-boundaries.md",
+      "target": "document:Rolliude-project/project-standards/03-frontend.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/02-architecture-boundaries.md",
+      "target": "document:Rolliude-project/project-standards/04-backend.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/04-backend.md",
+      "target": "document:Rolliude-project/project-standards/05-database.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/04-backend.md",
+      "target": "document:Rolliude-project/project-standards/06-api-auth.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/03-frontend.md",
+      "target": "document:Rolliude-project/project-standards/07-ui-accessibility.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:Rolliude-project/project-standards/08-quality-security.md",
+      "target": "document:Rolliude-project/project-standards/07-ui-accessibility.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

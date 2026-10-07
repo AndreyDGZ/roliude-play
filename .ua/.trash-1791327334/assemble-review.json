@@ -1,0 +1,19 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 0,
+  "crossBatchEdgesAdded": 0,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "notes": [
+    "All 118 scanned files have at least one corresponding node (file-level or sub-structure); no missing-node gaps.",
+    "No nodes with missing id, no unknown complexity values, 0 dangling edges after merge.",
+    "Node type 'schema' (used for Rolliude-backend/prisma/schema.prisma) is outside the common file/function/class/service/pipeline/config/document/table/resource set, but is a legitimate domain-specific type for a Prisma schema file, not a typo or LLM error -- left as-is.",
+    "Prisma schema <-> migration table edges verified present (schema.prisma --defines_schema--> each of usuarios/password_reset_tokens/estados/municipios/generos/filmes tables), plus config->schema 'configures' edges from prisma.config.ts and migration_lock.toml.",
+    "CSS Module <-> component edges verified present and bidirectional in effect: component--imports-->*.module.css plus *.module.css--related-->component (Layout, Button, TextField, Page.module.css fan-out to Cadastro/Catalogo/FilmeDetalhe/Home/Login, and the legacy-prototype index.css<->main.tsx).",
+    "Legacy-duplicate flags verified: all 7 files under Rolliude-backend/src/{controllers,routes,schemas,services}/*.ts and database.ts (the stub/duplicate versions, each 1 line in the scan except database.ts) carry tags ['legacy','deprecated','dead-code','duplicate-source']. The real (non-legacy) files under src/modules/** and src/services/email.service.ts correctly do NOT carry these tags.",
+    "Cross-checked every importMap entry (118 files, 64 resolved internal edges) against the assembled graph's edges: zero missing edges -- every import relationship is backed by an imports/related/depends_on edge between the corresponding file nodes.",
+    "Merge script report showed Input 166 nodes/229 edges -> Output 166/228 (one duplicate edge collapsed by dedup), which is expected and not a data-loss concern.",
+    "No 'Fixed' pattern dominated suspiciously and no single pattern affected >30% of nodes based on the report counts; nothing flagged as an upstream pipeline issue."
+  ]
+}

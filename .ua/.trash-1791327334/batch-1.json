@@ -1,0 +1,293 @@
+{
+  "nodes": [
+    {
+      "id": "file:Rolliude-front/src/App.tsx",
+      "type": "file",
+      "name": "App.tsx",
+      "filePath": "Rolliude-front/src/App.tsx",
+      "summary": "Root React component that renders the application's route tree.",
+      "tags": ["entry-point", "component", "routing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/App.tsx:App",
+      "type": "function",
+      "name": "App",
+      "filePath": "Rolliude-front/src/App.tsx",
+      "lineRange": [5, 11],
+      "summary": "Top-level component that mounts AppRoutes to drive client-side navigation.",
+      "tags": ["component", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/components/layout/Layout.tsx",
+      "type": "file",
+      "name": "Layout.tsx",
+      "filePath": "Rolliude-front/src/components/layout/Layout.tsx",
+      "summary": "Shared page layout component providing consistent header/footer structure and styling for all pages.",
+      "tags": ["component", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/components/layout/Layout.tsx:Layout",
+      "type": "function",
+      "name": "Layout",
+      "filePath": "Rolliude-front/src/components/layout/Layout.tsx",
+      "lineRange": [5, 27],
+      "summary": "Renders the common page scaffold, including a dynamic copyright year, wrapping page content.",
+      "tags": ["component", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/lib/http/httpClient.ts",
+      "type": "file",
+      "name": "httpClient.ts",
+      "filePath": "Rolliude-front/src/lib/http/httpClient.ts",
+      "summary": "Low-level HTTP client wrapping fetch with base URL resolution and JSON/void request helpers used by the API service layer.",
+      "tags": ["utility", "http-client", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/lib/http/httpClient.ts:getApiBaseUrl",
+      "type": "function",
+      "name": "getApiBaseUrl",
+      "filePath": "Rolliude-front/src/lib/http/httpClient.ts",
+      "lineRange": [8, 10],
+      "summary": "Resolves the backend API base URL from environment configuration.",
+      "tags": ["utility", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/lib/http/httpClient.ts:requestJson",
+      "type": "function",
+      "name": "requestJson",
+      "filePath": "Rolliude-front/src/lib/http/httpClient.ts",
+      "lineRange": [12, 20],
+      "summary": "Performs an HTTP request against the API base URL and parses the response body as JSON.",
+      "tags": ["utility", "http-client", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/lib/http/httpClient.ts:requestVoid",
+      "type": "function",
+      "name": "requestVoid",
+      "filePath": "Rolliude-front/src/lib/http/httpClient.ts",
+      "lineRange": [22, 28],
+      "summary": "Performs an HTTP request against the API base URL without expecting a parsed response body.",
+      "tags": ["utility", "http-client", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/main.tsx",
+      "type": "file",
+      "name": "main.tsx",
+      "filePath": "Rolliude-front/src/main.tsx",
+      "summary": "Application bootstrap file that mounts the React tree into the DOM and loads global styles.",
+      "tags": ["entry-point", "bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/Catalogo.tsx",
+      "type": "file",
+      "name": "Catalogo.tsx",
+      "filePath": "Rolliude-front/src/pages/Catalogo.tsx",
+      "summary": "Catalog page component displaying the movie catalog listing view.",
+      "tags": ["component", "page"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/Catalogo.tsx:Catalogo",
+      "type": "function",
+      "name": "Catalogo",
+      "filePath": "Rolliude-front/src/pages/Catalogo.tsx",
+      "lineRange": [5, 15],
+      "summary": "Renders the catalog page shell using shared page styling.",
+      "tags": ["component", "page"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/FilmeDetalhe.tsx",
+      "type": "file",
+      "name": "FilmeDetalhe.tsx",
+      "filePath": "Rolliude-front/src/pages/FilmeDetalhe.tsx",
+      "summary": "Movie detail page component that reads a route parameter to display information about a single film.",
+      "tags": ["component", "page"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/FilmeDetalhe.tsx:FilmeDetalhe",
+      "type": "function",
+      "name": "FilmeDetalhe",
+      "filePath": "Rolliude-front/src/pages/FilmeDetalhe.tsx",
+      "lineRange": [5, 17],
+      "summary": "Reads the movie id from the route via useParams and renders the detail page shell.",
+      "tags": ["component", "page", "routing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/Home.tsx",
+      "type": "file",
+      "name": "Home.tsx",
+      "filePath": "Rolliude-front/src/pages/Home.tsx",
+      "summary": "Home page component that checks backend health status on mount and displays it to the user.",
+      "tags": ["component", "page", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/Home.tsx:Home",
+      "type": "function",
+      "name": "Home",
+      "filePath": "Rolliude-front/src/pages/Home.tsx",
+      "lineRange": [5, 26],
+      "summary": "Fetches backend health status via the API service on mount and renders it alongside the home page content.",
+      "tags": ["component", "page", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/NotFound.tsx",
+      "type": "file",
+      "name": "NotFound.tsx",
+      "filePath": "Rolliude-front/src/pages/NotFound.tsx",
+      "summary": "404 fallback page component shown when no route matches the current URL.",
+      "tags": ["component", "page", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/NotFound.tsx:NotFound",
+      "type": "function",
+      "name": "NotFound",
+      "filePath": "Rolliude-front/src/pages/NotFound.tsx",
+      "lineRange": [4, 12],
+      "summary": "Renders a simple not-found message for unmatched routes.",
+      "tags": ["component", "page"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/RecuperarSenha.tsx",
+      "type": "file",
+      "name": "RecuperarSenha.tsx",
+      "filePath": "Rolliude-front/src/pages/RecuperarSenha.tsx",
+      "summary": "Password recovery page handling both requesting a reset email and submitting a new password with token validation and strength checks.",
+      "tags": ["component", "page", "validation", "api-handler"],
+      "complexity": "complex",
+      "languageNotes": "Combines a multi-step form state machine (request, invalid, reset) with password-strength validation driven by regex checks and a memoized validator."
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:validatePassword",
+      "type": "function",
+      "name": "validatePassword",
+      "filePath": "Rolliude-front/src/pages/RecuperarSenha.tsx",
+      "lineRange": [74, 96],
+      "summary": "Validates password strength against uppercase, lowercase, digit, and special character rules.",
+      "tags": ["validation", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:RecuperarSenha",
+      "type": "function",
+      "name": "RecuperarSenha",
+      "filePath": "Rolliude-front/src/pages/RecuperarSenha.tsx",
+      "lineRange": [98, 262],
+      "summary": "Manages the password recovery flow: validates the reset token from the route, lets the user request a reset email, and submits a new password with validation feedback.",
+      "tags": ["component", "page", "validation", "api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:Rolliude-front/src/routes/AppRoutes.tsx",
+      "type": "file",
+      "name": "AppRoutes.tsx",
+      "filePath": "Rolliude-front/src/routes/AppRoutes.tsx",
+      "summary": "Central route configuration mapping URL paths to page components within the shared Layout.",
+      "tags": ["routing", "entry-point", "barrel"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/routes/AppRoutes.tsx:AppRoutes",
+      "type": "function",
+      "name": "AppRoutes",
+      "filePath": "Rolliude-front/src/routes/AppRoutes.tsx",
+      "lineRange": [12, 27],
+      "summary": "Defines the application's route table, wiring each page component (Home, Catalogo, FilmeDetalhe, Login, Cadastro, RecuperarSenha, NotFound) to its path inside Layout.",
+      "tags": ["routing", "component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-front/src/services/api.ts",
+      "type": "file",
+      "name": "api.ts",
+      "filePath": "Rolliude-front/src/services/api.ts",
+      "summary": "API service module exposing health check and password recovery operations by delegating to the shared HTTP client.",
+      "tags": ["service", "api-handler", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-front/src/styles/designTokens.ts",
+      "type": "file",
+      "name": "designTokens.ts",
+      "filePath": "Rolliude-front/src/styles/designTokens.ts",
+      "summary": "Design token definitions (colors, radii, spacing, layout, typography) providing the canonical values for the application's visual design system.",
+      "tags": ["design-system", "configuration", "type-definition"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    { "source": "file:Rolliude-front/src/App.tsx", "target": "function:Rolliude-front/src/App.tsx:App", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/App.tsx", "target": "function:Rolliude-front/src/App.tsx:App", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/App.tsx", "target": "file:Rolliude-front/src/routes/AppRoutes.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:Rolliude-front/src/components/layout/Layout.tsx", "target": "function:Rolliude-front/src/components/layout/Layout.tsx:Layout", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/components/layout/Layout.tsx", "target": "function:Rolliude-front/src/components/layout/Layout.tsx:Layout", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/components/layout/Layout.tsx", "target": "file:Rolliude-front/src/components/layout/Layout.module.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:Rolliude-front/src/lib/http/httpClient.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:getApiBaseUrl", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/lib/http/httpClient.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:requestJson", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/lib/http/httpClient.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:requestVoid", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/lib/http/httpClient.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:requestJson", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/lib/http/httpClient.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:requestVoid", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "function:Rolliude-front/src/lib/http/httpClient.ts:requestJson", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:getApiBaseUrl", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:Rolliude-front/src/lib/http/httpClient.ts:requestVoid", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:getApiBaseUrl", "type": "calls", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:Rolliude-front/src/main.tsx", "target": "file:Rolliude-front/src/App.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/main.tsx", "target": "file:Rolliude-front/src/styles/globals.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:Rolliude-front/src/pages/Catalogo.tsx", "target": "function:Rolliude-front/src/pages/Catalogo.tsx:Catalogo", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/pages/Catalogo.tsx", "target": "function:Rolliude-front/src/pages/Catalogo.tsx:Catalogo", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/pages/Catalogo.tsx", "target": "file:Rolliude-front/src/pages/Page.module.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:Rolliude-front/src/pages/FilmeDetalhe.tsx", "target": "function:Rolliude-front/src/pages/FilmeDetalhe.tsx:FilmeDetalhe", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/pages/FilmeDetalhe.tsx", "target": "function:Rolliude-front/src/pages/FilmeDetalhe.tsx:FilmeDetalhe", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/pages/FilmeDetalhe.tsx", "target": "file:Rolliude-front/src/pages/Page.module.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:Rolliude-front/src/pages/Home.tsx", "target": "function:Rolliude-front/src/pages/Home.tsx:Home", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/pages/Home.tsx", "target": "function:Rolliude-front/src/pages/Home.tsx:Home", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/pages/Home.tsx", "target": "file:Rolliude-front/src/pages/Page.module.css", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/pages/Home.tsx", "target": "file:Rolliude-front/src/services/api.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:Rolliude-front/src/pages/Home.tsx:Home", "target": "file:Rolliude-front/src/services/api.ts", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "file:Rolliude-front/src/pages/NotFound.tsx", "target": "function:Rolliude-front/src/pages/NotFound.tsx:NotFound", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/pages/NotFound.tsx", "target": "function:Rolliude-front/src/pages/NotFound.tsx:NotFound", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:Rolliude-front/src/pages/RecuperarSenha.tsx", "target": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:validatePassword", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/pages/RecuperarSenha.tsx", "target": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:RecuperarSenha", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/pages/RecuperarSenha.tsx", "target": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:RecuperarSenha", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/pages/RecuperarSenha.tsx", "target": "file:Rolliude-front/src/services/api.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/pages/RecuperarSenha.tsx", "target": "file:Rolliude-front/src/styles/designTokens.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:RecuperarSenha", "target": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:validatePassword", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "function:Rolliude-front/src/pages/RecuperarSenha.tsx:RecuperarSenha", "target": "file:Rolliude-front/src/services/api.ts", "type": "depends_on", "direction": "forward", "weight": 0.6 },
+
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "function:Rolliude-front/src/routes/AppRoutes.tsx:AppRoutes", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "function:Rolliude-front/src/routes/AppRoutes.tsx:AppRoutes", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/components/layout/Layout.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/Cadastro.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/Catalogo.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/FilmeDetalhe.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/Home.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/Login.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/NotFound.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/routes/AppRoutes.tsx", "target": "file:Rolliude-front/src/pages/RecuperarSenha.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:Rolliude-front/src/services/api.ts", "target": "file:Rolliude-front/src/lib/http/httpClient.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:Rolliude-front/src/services/api.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:requestJson", "type": "calls", "direction": "forward", "weight": 0.8 },
+    { "source": "file:Rolliude-front/src/services/api.ts", "target": "function:Rolliude-front/src/lib/http/httpClient.ts:requestVoid", "type": "calls", "direction": "forward", "weight": 0.8 }
+  ]
+}

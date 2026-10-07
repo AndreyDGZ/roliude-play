@@ -1,0 +1,47 @@
+{
+  "nodes": [
+    {
+      "id": "config:Rolliude-backend/.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": "Rolliude-backend/.env.example",
+      "summary": "Template listing the environment variables required to run the backend, including server port, database connection string, JWT secret/expiry, password reset token expiry, and CORS/frontend URL settings.",
+      "tags": ["configuration", "environment-variables", "security", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Rolliude-backend/package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "Rolliude-backend/package.json",
+      "summary": "Node/Express backend package manifest defining dependencies (Express, Prisma, AWS S3 SDK, bcrypt, JWT, Zod, Nodemailer), dev scripts, and the shared quality-check lint/format tooling.",
+      "tags": ["configuration", "build-system", "dependencies", "node"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Rolliude-backend/tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "Rolliude-backend/tsconfig.json",
+      "summary": "TypeScript compiler configuration for the backend, controlling compilation target, module resolution, and included source paths.",
+      "tags": ["configuration", "typescript", "build-system"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:Rolliude-backend/tsconfig.json",
+      "target": "config:Rolliude-backend/package.json",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Rolliude-backend/.env.example",
+      "target": "config:Rolliude-backend/package.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

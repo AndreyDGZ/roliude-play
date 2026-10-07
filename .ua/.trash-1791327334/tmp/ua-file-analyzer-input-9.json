@@ -1,0 +1,17 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": ".env.example", "language": "config", "sizeLines": 9, "fileCategory": "config"},
+    {"path": ".prettierrc.json", "language": "json", "sizeLines": 4, "fileCategory": "config"},
+    {"path": "AGENTS.md", "language": "markdown", "sizeLines": 13, "fileCategory": "docs"},
+    {"path": "README.md", "language": "markdown", "sizeLines": 72, "fileCategory": "docs"},
+    {"path": "docker-compose.yml", "language": "yaml", "sizeLines": 41, "fileCategory": "infra"},
+    {"path": "package.json", "language": "json", "sizeLines": 26, "fileCategory": "config"},
+    {"path": "tsconfig.json", "language": "json", "sizeLines": 12, "fileCategory": "config"},
+    {"path": "usuarios.sql", "language": "sql", "sizeLines": 9, "fileCategory": "data"}
+  ],
+  "batchImportData": {
+    ".env.example": [], ".prettierrc.json": [], "AGENTS.md": [], "README.md": [],
+    "docker-compose.yml": [], "package.json": [], "tsconfig.json": [], "usuarios.sql": []
+  }
+}
