@@ -1,0 +1,21 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-001-brand-naming.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"},
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-002-runtime-package-manager.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"},
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-003-styling-strategy.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"},
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-004-database-baseline.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"},
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-005-api-contract-strategy.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"},
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-006-auth-strategy.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"},
+    {"path": "Rolliude-project/docs/architecture/adr/ADR-007-media-storage-streaming.md", "language": "markdown", "sizeLines": 23, "fileCategory": "docs"}
+  ],
+  "batchImportData": {
+    "Rolliude-project/docs/architecture/adr/ADR-001-brand-naming.md": [],
+    "Rolliude-project/docs/architecture/adr/ADR-002-runtime-package-manager.md": [],
+    "Rolliude-project/docs/architecture/adr/ADR-003-styling-strategy.md": [],
+    "Rolliude-project/docs/architecture/adr/ADR-004-database-baseline.md": [],
+    "Rolliude-project/docs/architecture/adr/ADR-005-api-contract-strategy.md": [],
+    "Rolliude-project/docs/architecture/adr/ADR-006-auth-strategy.md": [],
+    "Rolliude-project/docs/architecture/adr/ADR-007-media-storage-streaming.md": []
+  }
+}

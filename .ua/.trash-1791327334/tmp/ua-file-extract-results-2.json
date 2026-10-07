@@ -1,0 +1,692 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 11,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 11,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 11,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "Rolliude-backend/src/config/prisma.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "exports": [
+        {
+          "name": "prisma",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/modules/auth/auth.controller.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 64,
+      "classes": [
+        {
+          "name": "AuthController",
+          "startLine": 5,
+          "endLine": 76,
+          "methods": [
+            "constructor"
+          ],
+          "properties": [
+            "authService",
+            "register",
+            "login",
+            "forgotPassword",
+            "validatePasswordResetToken",
+            "resetPassword"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AuthController",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/modules/auth/auth.schema.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 60,
+      "exports": [
+        {
+          "name": "registerSchema",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "loginSchema",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "forgotPasswordSchema",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "resetPasswordSchema",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "validatePasswordResetTokenSchema",
+          "line": 56,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/modules/auth/auth.service.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 197,
+      "nonEmptyLines": 158,
+      "classes": [
+        {
+          "name": "AuthService",
+          "startLine": 22,
+          "endLine": 195,
+          "methods": [
+            "constructor",
+            "register",
+            "login",
+            "forgotPassword",
+            "validatePasswordResetToken",
+            "resetPassword",
+            "invalidateActivePasswordResetTokens",
+            "generateToken",
+            "getJwtExpiresIn",
+            "getFrontendUrl",
+            "getPasswordResetExpiresMinutes"
+          ],
+          "properties": [
+            "userService"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AuthService",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "AppError",
+          "line": 197,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "register",
+          "callee": "this.userService.register",
+          "lineNumber": 30
+        },
+        {
+          "caller": "register",
+          "callee": "this.generateToken",
+          "lineNumber": 31
+        },
+        {
+          "caller": "login",
+          "callee": "prisma.usuario.findUnique",
+          "lineNumber": 40
+        },
+        {
+          "caller": "login",
+          "callee": "bcrypt.compare",
+          "lineNumber": 48
+        },
+        {
+          "caller": "login",
+          "callee": "this.generateToken",
+          "lineNumber": 54
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "prisma.usuario.findUnique",
+          "lineNumber": 68
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "this.invalidateActivePasswordResetTokens",
+          "lineNumber": 80
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "generatePasswordResetToken",
+          "lineNumber": 82
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "hashPasswordResetToken",
+          "lineNumber": 83
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "this.getPasswordResetExpiresMinutes",
+          "lineNumber": 84
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "Date.now",
+          "lineNumber": 85
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "prisma.passwordResetToken.create",
+          "lineNumber": 87
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "sendPasswordResetEmail",
+          "lineNumber": 95
+        },
+        {
+          "caller": "forgotPassword",
+          "callee": "this.getFrontendUrl",
+          "lineNumber": 97
+        },
+        {
+          "caller": "validatePasswordResetToken",
+          "callee": "hashPasswordResetToken",
+          "lineNumber": 103
+        },
+        {
+          "caller": "validatePasswordResetToken",
+          "callee": "prisma.passwordResetToken.findUnique",
+          "lineNumber": 104
+        },
+        {
+          "caller": "validatePasswordResetToken",
+          "callee": "Boolean",
+          "lineNumber": 109
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "hashPasswordResetToken",
+          "lineNumber": 114
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "prisma.$transaction",
+          "lineNumber": 116
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "transaction.passwordResetToken.findUnique",
+          "lineNumber": 117
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "bcrypt.hash",
+          "lineNumber": 125
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "transaction.usuario.update",
+          "lineNumber": 127
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "transaction.passwordResetToken.update",
+          "lineNumber": 134
+        },
+        {
+          "caller": "resetPassword",
+          "callee": "transaction.passwordResetToken.updateMany",
+          "lineNumber": 139
+        },
+        {
+          "caller": "invalidateActivePasswordResetTokens",
+          "callee": "prisma.passwordResetToken.updateMany",
+          "lineNumber": 150
+        },
+        {
+          "caller": "generateToken",
+          "callee": "jwt.sign",
+          "lineNumber": 165
+        },
+        {
+          "caller": "generateToken",
+          "callee": "this.getJwtExpiresIn",
+          "lineNumber": 168
+        },
+        {
+          "caller": "getJwtExpiresIn",
+          "callee": "Number",
+          "lineNumber": 179
+        },
+        {
+          "caller": "getJwtExpiresIn",
+          "callee": "Number.isInteger",
+          "lineNumber": 181
+        }
+      ],
+      "metrics": {
+        "importCount": 7,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/modules/users/user.controller.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 21,
+      "classes": [
+        {
+          "name": "UserController",
+          "startLine": 5,
+          "endLine": 25,
+          "methods": [
+            "constructor"
+          ],
+          "properties": [
+            "userService",
+            "register"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "UserController",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/modules/users/user.schema.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 22,
+      "exports": [
+        {
+          "name": "registerUserSchema",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/modules/users/user.service.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 37,
+      "classes": [
+        {
+          "name": "UserService",
+          "startLine": 15,
+          "endLine": 44,
+          "methods": [
+            "register"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "UserService",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "register",
+          "callee": "prisma.usuario.findUnique",
+          "lineNumber": 17
+        },
+        {
+          "caller": "register",
+          "callee": "bcrypt.hash",
+          "lineNumber": 26
+        },
+        {
+          "caller": "register",
+          "callee": "prisma.usuario.create",
+          "lineNumber": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/services/email.service.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 71,
+      "nonEmptyLines": 61,
+      "functions": [
+        {
+          "name": "getMailSettings",
+          "startLine": 17,
+          "endLine": 35,
+          "params": []
+        },
+        {
+          "name": "renderPasswordResetText",
+          "startLine": 37,
+          "endLine": 47,
+          "params": [
+            "resetLink",
+            "expiresInMinutes"
+          ]
+        },
+        {
+          "name": "sendPasswordResetEmail",
+          "startLine": 49,
+          "endLine": 71,
+          "params": [
+            "input"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "sendPasswordResetEmail",
+          "line": 49,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getMailSettings",
+          "callee": "Number",
+          "lineNumber": 19
+        },
+        {
+          "caller": "getMailSettings",
+          "callee": "Number.isInteger",
+          "lineNumber": 24
+        },
+        {
+          "caller": "renderPasswordResetText",
+          "callee": "[\n    'Olá,',\n    '',\n    'Recebemos uma solicitação para redefinir a senha da sua conta no Rolliude Play.',\n    `Acesse o link abaixo para criar uma nova senha: ${resetLink}`,\n    '',\n    `Este link expira em ${expiresInMinutes} minutos e só pode ser usado uma vez.`,\n    'Se você não pediu essa redefinição, ignore este e-mail.'\n  ].join",
+          "lineNumber": 38
+        },
+        {
+          "caller": "sendPasswordResetEmail",
+          "callee": "getMailSettings",
+          "lineNumber": 50
+        },
+        {
+          "caller": "sendPasswordResetEmail",
+          "callee": "nodemailer.createTransport",
+          "lineNumber": 56
+        },
+        {
+          "caller": "sendPasswordResetEmail",
+          "callee": "transporter.sendMail",
+          "lineNumber": 65
+        },
+        {
+          "caller": "sendPasswordResetEmail",
+          "callee": "renderPasswordResetText",
+          "lineNumber": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/shared/errors/app-error.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 7,
+      "classes": [
+        {
+          "name": "AppError",
+          "startLine": 1,
+          "endLine": 8,
+          "methods": [
+            "constructor"
+          ],
+          "properties": [
+            "statusCode"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AppError",
+          "line": 1,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/shared/errors/error-handler.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "mapValidationErrors",
+          "startLine": 15,
+          "endLine": 20,
+          "params": [
+            "error"
+          ]
+        },
+        {
+          "name": "errorHandler",
+          "startLine": 22,
+          "endLine": 39,
+          "params": [
+            "error",
+            "_request",
+            "response",
+            "_next"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "errorHandler",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "mapValidationErrors",
+          "callee": "error.issues.map",
+          "lineNumber": 16
+        },
+        {
+          "caller": "mapValidationErrors",
+          "callee": "issue.path.join",
+          "lineNumber": 17
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "response.status(400).json",
+          "lineNumber": 24
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "response.status",
+          "lineNumber": 24
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "mapValidationErrors",
+          "lineNumber": 26
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "response.status(error.statusCode).json",
+          "lineNumber": 31
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "response.status",
+          "lineNumber": 31
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "response.status(500).json",
+          "lineNumber": 36
+        },
+        {
+          "caller": "errorHandler",
+          "callee": "response.status",
+          "lineNumber": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "Rolliude-backend/src/utils/reset-token.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 7,
+      "functions": [
+        {
+          "name": "generatePasswordResetToken",
+          "startLine": 3,
+          "endLine": 5,
+          "params": []
+        },
+        {
+          "name": "hashPasswordResetToken",
+          "startLine": 7,
+          "endLine": 9,
+          "params": [
+            "token"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "generatePasswordResetToken",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "hashPasswordResetToken",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "generatePasswordResetToken",
+          "callee": "randomBytes(32).toString",
+          "lineNumber": 4
+        },
+        {
+          "caller": "generatePasswordResetToken",
+          "callee": "randomBytes",
+          "lineNumber": 4
+        },
+        {
+          "caller": "hashPasswordResetToken",
+          "callee": "createHash('sha256').update(token).digest",
+          "lineNumber": 8
+        },
+        {
+          "caller": "hashPasswordResetToken",
+          "callee": "createHash('sha256').update",
+          "lineNumber": 8
+        },
+        {
+          "caller": "hashPasswordResetToken",
+          "callee": "createHash",
+          "lineNumber": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    }
+  ]
+}

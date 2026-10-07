@@ -1,0 +1,17 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "rolliúde-play tela cadastro/README.md", "language": "markdown", "sizeLines": 20, "fileCategory": "docs"},
+    {"path": "rolliúde-play tela cadastro/index.html", "language": "html", "sizeLines": 21, "fileCategory": "markup"},
+    {"path": "rolliúde-play tela cadastro/metadata.json", "language": "json", "sizeLines": 6, "fileCategory": "config"},
+    {"path": "rolliúde-play tela cadastro/package.json", "language": "json", "sizeLines": 36, "fileCategory": "config"},
+    {"path": "rolliúde-play tela cadastro/tsconfig.json", "language": "json", "sizeLines": 27, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "rolliúde-play tela cadastro/README.md": [],
+    "rolliúde-play tela cadastro/index.html": [],
+    "rolliúde-play tela cadastro/metadata.json": [],
+    "rolliúde-play tela cadastro/package.json": [],
+    "rolliúde-play tela cadastro/tsconfig.json": []
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "nodes": [
+    {
+      "id": "file:Rolliude-front/vite.config.ts",
+      "type": "file",
+      "name": "vite.config.ts",
+      "filePath": "Rolliude-front/vite.config.ts",
+      "summary": "Vite build configuration for the Rolliude-front application, defining dev/build settings for the frontend bundler.",
+      "tags": ["configuration", "build-system", "frontend"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "Rolliude-project/CLAUDE.md",
+      "summary": "Short note titled 'Rolliúde Play AI Adapter', likely pointing agents to the project's AI-related instructions or adapter notes.",
+      "tags": ["documentation", "ai-adapter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:Rolliude-project/CONTRIBUTING.md",
+      "type": "document",
+      "name": "CONTRIBUTING.md",
+      "filePath": "Rolliude-project/CONTRIBUTING.md",
+      "summary": "Contributing guidelines for the Rolliude-project, outlining expectations for contributors to the repository.",
+      "tags": ["documentation", "contributing", "development"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-project/scripts/quality-check.mjs",
+      "type": "file",
+      "name": "quality-check.mjs",
+      "filePath": "Rolliude-project/scripts/quality-check.mjs",
+      "summary": "Node script that recursively scans project source files for banned code patterns (e.g. forbidden constructs per AGENTS.md rules) and reports violations, likely backing the Yarn quality-check command.",
+      "tags": ["script", "quality-check", "linting", "build-system"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:Rolliude-project/scripts/quality-check.mjs:collectFiles",
+      "type": "function",
+      "name": "collectFiles",
+      "filePath": "Rolliude-project/scripts/quality-check.mjs",
+      "lineRange": [16, 21],
+      "summary": "Recursively reads a directory and gathers all nested file paths by delegating to collectEntry for each directory entry.",
+      "tags": ["utility", "filesystem", "recursion"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-project/scripts/quality-check.mjs:collectEntry",
+      "type": "function",
+      "name": "collectEntry",
+      "filePath": "Rolliude-project/scripts/quality-check.mjs",
+      "lineRange": [23, 35],
+      "summary": "Resolves a single directory entry, recursing into subdirectories or returning the file path if it matches a scanned extension.",
+      "tags": ["utility", "filesystem"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-project/scripts/quality-check.mjs:findViolations",
+      "type": "function",
+      "name": "findViolations",
+      "filePath": "Rolliude-project/scripts/quality-check.mjs",
+      "lineRange": [37, 46],
+      "summary": "Reads a file's contents and checks each line against a set of banned patterns, returning matched violations for reporting.",
+      "tags": ["validation", "linting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:database.ts",
+      "type": "file",
+      "name": "database.ts",
+      "filePath": "database.ts",
+      "summary": "Standalone PostgreSQL connection pool setup using the 'pg' package, configured from environment variables. This appears to be a separate/legacy auth-module database connector distinct from the canonical Rolliude-backend Prisma setup.",
+      "tags": ["database", "postgres", "legacy", "configuration"],
+      "complexity": "simple",
+      "languageNotes": "Uses raw 'pg' Pool rather than the project's canonical Prisma ORM, suggesting this file belongs to a separate 'rolliude-play-auth' module rather than the main backend."
+    },
+    {
+      "id": "file:rolliúde-play tela cadastro/src/index.css",
+      "type": "file",
+      "name": "index.css",
+      "filePath": "rolliúde-play tela cadastro/src/index.css",
+      "summary": "Global stylesheet for the 'tela cadastro' (registration screen) prototype app, defining base styles and resets for the React entry point.",
+      "tags": ["stylesheet", "global-styles", "css"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:rolliúde-play tela cadastro/vite.config.ts",
+      "type": "file",
+      "name": "vite.config.ts",
+      "filePath": "rolliúde-play tela cadastro/vite.config.ts",
+      "summary": "Vite build configuration for the 'tela cadastro' (registration screen) standalone prototype application.",
+      "tags": ["configuration", "build-system", "frontend"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:Rolliude-project/scripts/quality-check.mjs",
+      "target": "function:Rolliude-project/scripts/quality-check.mjs:collectFiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:Rolliude-project/scripts/quality-check.mjs",
+      "target": "function:Rolliude-project/scripts/quality-check.mjs:collectEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:Rolliude-project/scripts/quality-check.mjs",
+      "target": "function:Rolliude-project/scripts/quality-check.mjs:findViolations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:rolliúde-play tela cadastro/src/index.css",
+      "target": "file:rolliúde-play tela cadastro/src/main.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

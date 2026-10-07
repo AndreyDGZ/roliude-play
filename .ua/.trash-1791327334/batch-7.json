@@ -1,0 +1,32 @@
+{
+  "nodes": [
+    {
+      "id": "service:Rolliude-front/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "Rolliude-front/Dockerfile",
+      "summary": "Development-mode Docker image for the Rolliúde Play frontend, built on node:20-alpine, installing dependencies via Yarn with a frozen lockfile and running the Vite dev server on port 5173.",
+      "tags": ["containerization", "infrastructure", "frontend", "development"],
+      "complexity": "simple",
+      "languageNotes": "Single-stage build intended for local/dev usage rather than production (runs `yarn dev --host` instead of a production build/serve step)."
+    },
+    {
+      "id": "service:Rolliude-front/Dockerfile:node",
+      "type": "service",
+      "name": "node",
+      "filePath": "Rolliude-front/Dockerfile",
+      "summary": "The sole build/runtime stage of the frontend Dockerfile, based on node:20-alpine, exposing port 5173 for the Vite development server.",
+      "tags": ["containerization", "node", "vite", "dev-server"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "service:Rolliude-front/Dockerfile",
+      "target": "service:Rolliude-front/Dockerfile:node",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

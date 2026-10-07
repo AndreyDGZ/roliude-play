@@ -1,0 +1,61 @@
+{
+  "nodes": [
+    {
+      "id": "service:Rolliude-backend/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "Rolliude-backend/Dockerfile",
+      "summary": "Single-stage Docker build for the Rolliúde Play backend, based on node:20-alpine, installing dependencies with Yarn and running the dev server on port 3000.",
+      "tags": ["containerization", "infrastructure", "deployment", "backend"],
+      "complexity": "simple",
+      "languageNotes": "Single-stage build (no multi-stage separation of build and runtime); uses corepack to enable Yarn and runs `yarn dev`, which suggests this image targets local/dev usage rather than an optimized production build."
+    },
+    {
+      "id": "step:Rolliude-backend/Dockerfile:FROM node:20-alpine",
+      "type": "resource",
+      "name": "FROM node:20-alpine",
+      "summary": "Base image stage pulling Node.js 20 on Alpine Linux as the runtime foundation for the backend container.",
+      "tags": ["containerization", "base-image"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:Rolliude-backend/Dockerfile:RUN corepack enable && yarn install --frozen-lockfile",
+      "type": "resource",
+      "name": "RUN corepack enable && yarn install --frozen-lockfile",
+      "summary": "Enables Corepack and installs backend dependencies with a frozen Yarn lockfile to ensure reproducible builds.",
+      "tags": ["containerization", "dependency-install", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "step:Rolliude-backend/Dockerfile:CMD [\"yarn\", \"dev\"]",
+      "type": "resource",
+      "name": "CMD [\"yarn\", \"dev\"]",
+      "summary": "Default container command that starts the backend in development mode via the `yarn dev` script.",
+      "tags": ["containerization", "entry-point", "dev-server"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "service:Rolliude-backend/Dockerfile",
+      "target": "step:Rolliude-backend/Dockerfile:FROM node:20-alpine",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:Rolliude-backend/Dockerfile",
+      "target": "step:Rolliude-backend/Dockerfile:RUN corepack enable && yarn install --frozen-lockfile",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:Rolliude-backend/Dockerfile",
+      "target": "step:Rolliude-backend/Dockerfile:CMD [\"yarn\", \"dev\"]",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

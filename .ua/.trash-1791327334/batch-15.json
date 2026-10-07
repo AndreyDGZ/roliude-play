@@ -1,0 +1,73 @@
+{
+  "nodes": [
+    {
+      "id": "document:rolliúde-play tela cadastro/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "rolliúde-play tela cadastro/README.md",
+      "summary": "Short setup guide for the standalone 'tela cadastro' AI Studio prototype app, covering running it locally.",
+      "tags": ["documentation", "entry-point", "prototype", "setup-guide"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:rolliúde-play tela cadastro/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "rolliúde-play tela cadastro/index.html",
+      "summary": "HTML entry page for the registration screen prototype, loading Google Fonts (Rye, Nunito Sans) and bootstrapping the React app via /src/main.tsx.",
+      "tags": ["entry-point", "markup", "html", "bootstrap"],
+      "complexity": "simple",
+      "languageNotes": "Vite-style module script tag loading the React/TypeScript app root."
+    },
+    {
+      "id": "config:rolliúde-play tela cadastro/metadata.json",
+      "type": "config",
+      "name": "metadata.json",
+      "filePath": "rolliúde-play tela cadastro/metadata.json",
+      "summary": "AI Studio app metadata file declaring the app name, description, frame permissions, and major capabilities for the registration screen prototype.",
+      "tags": ["configuration", "metadata", "prototype"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:rolliúde-play tela cadastro/package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "rolliúde-play tela cadastro/package.json",
+      "summary": "NPM package manifest for the standalone registration screen prototype, defining build/dev scripts and its dependencies and devDependencies.",
+      "tags": ["configuration", "build-system", "dependencies", "prototype"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:rolliúde-play tela cadastro/tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "rolliúde-play tela cadastro/tsconfig.json",
+      "summary": "TypeScript compiler configuration for the registration screen prototype app.",
+      "tags": ["configuration", "typescript", "build-system"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:rolliúde-play tela cadastro/package.json",
+      "target": "file:rolliúde-play tela cadastro/index.html",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:rolliúde-play tela cadastro/tsconfig.json",
+      "target": "file:rolliúde-play tela cadastro/index.html",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:rolliúde-play tela cadastro/README.md",
+      "target": "file:rolliúde-play tela cadastro/index.html",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

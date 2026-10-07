@@ -1,0 +1,130 @@
+{
+  "nodes": [
+    {
+      "id": "file:Rolliude-backend/src/app/app.ts",
+      "type": "file",
+      "name": "app.ts",
+      "filePath": "Rolliude-backend/src/app/app.ts",
+      "summary": "Builds and configures the Express application instance, wiring environment config, auth and user route modules, and the global error handler.",
+      "tags": ["entry-point", "api-handler", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/app/server.ts",
+      "type": "file",
+      "name": "server.ts",
+      "filePath": "Rolliude-backend/src/app/server.ts",
+      "summary": "Bootstraps the HTTP server process by starting the Express app with the configured port from environment settings.",
+      "tags": ["entry-point", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/config/env.ts",
+      "type": "file",
+      "name": "env.ts",
+      "filePath": "Rolliude-backend/src/config/env.ts",
+      "summary": "Centralizes and exports validated environment configuration values used across the backend application.",
+      "tags": ["config", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/middlewares/rate-limit.ts",
+      "type": "file",
+      "name": "rate-limit.ts",
+      "filePath": "Rolliude-backend/src/middlewares/rate-limit.ts",
+      "summary": "Defines rate-limiting middleware for sensitive auth flows, exporting limiters for forgot-password and reset-password endpoints to prevent abuse.",
+      "tags": ["middleware", "security", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/auth/auth.routes.ts",
+      "type": "file",
+      "name": "auth.routes.ts",
+      "filePath": "Rolliude-backend/src/modules/auth/auth.routes.ts",
+      "summary": "Declares the authentication route table, mapping auth endpoints to the auth controller and applying rate-limiting middleware.",
+      "tags": ["api-handler", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/modules/users/user.routes.ts",
+      "type": "file",
+      "name": "user.routes.ts",
+      "filePath": "Rolliude-backend/src/modules/users/user.routes.ts",
+      "summary": "Declares the user resource route table, mapping user endpoints to the user controller.",
+      "tags": ["api-handler"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:Rolliude-backend/src/app/app.ts",
+      "target": "file:Rolliude-backend/src/config/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/app/app.ts",
+      "target": "file:Rolliude-backend/src/modules/auth/auth.routes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/app/app.ts",
+      "target": "file:Rolliude-backend/src/modules/users/user.routes.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/app/app.ts",
+      "target": "file:Rolliude-backend/src/shared/errors/error-handler.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/app/server.ts",
+      "target": "file:Rolliude-backend/src/app/app.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/app/server.ts",
+      "target": "file:Rolliude-backend/src/config/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/modules/auth/auth.routes.ts",
+      "target": "file:Rolliude-backend/src/middlewares/rate-limit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/modules/auth/auth.routes.ts",
+      "target": "file:Rolliude-backend/src/modules/auth/auth.controller.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/modules/users/user.routes.ts",
+      "target": "file:Rolliude-backend/src/modules/users/user.controller.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:Rolliude-backend/src/app/app.ts",
+      "target": "file:Rolliude-backend/src/shared/errors/error-handler.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-front/.env.example", "language": "config", "sizeLines": 1, "fileCategory": "config"},
+    {"path": "Rolliude-front/index.html", "language": "html", "sizeLines": 16, "fileCategory": "markup"},
+    {"path": "Rolliude-front/login.html", "language": "html", "sizeLines": 429, "fileCategory": "markup"},
+    {"path": "Rolliude-front/package.json", "language": "json", "sizeLines": 33, "fileCategory": "config"},
+    {"path": "Rolliude-front/tsconfig.json", "language": "json", "sizeLines": 21, "fileCategory": "config"}
+  ],
+  "batchImportData": {
+    "Rolliude-front/.env.example": [], "Rolliude-front/index.html": [], "Rolliude-front/login.html": [],
+    "Rolliude-front/package.json": [], "Rolliude-front/tsconfig.json": []
+  }
+}

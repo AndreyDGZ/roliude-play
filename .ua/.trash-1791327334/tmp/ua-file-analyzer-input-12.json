@@ -1,0 +1,13 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-front/src/styles/globals.css", "language": "css", "sizeLines": 31, "fileCategory": "markup"},
+    {"path": "Rolliude-front/src/styles/tokens.css", "language": "css", "sizeLines": 33, "fileCategory": "markup"},
+    {"path": "Rolliude-front/src/styles/typography.css", "language": "css", "sizeLines": 18, "fileCategory": "markup"}
+  ],
+  "batchImportData": {
+    "Rolliude-front/src/styles/globals.css": [],
+    "Rolliude-front/src/styles/tokens.css": [],
+    "Rolliude-front/src/styles/typography.css": []
+  }
+}

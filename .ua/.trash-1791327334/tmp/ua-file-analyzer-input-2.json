@@ -1,0 +1,29 @@
+{
+  "projectRoot": "C:/Users/Andrey/Desktop/Rolíude play",
+  "batchFiles": [
+    {"path": "Rolliude-backend/src/config/prisma.ts", "language": "typescript", "sizeLines": 3, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/modules/auth/auth.controller.ts", "language": "typescript", "sizeLines": 76, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/modules/auth/auth.schema.ts", "language": "typescript", "sizeLines": 66, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/modules/auth/auth.service.ts", "language": "typescript", "sizeLines": 197, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/modules/users/user.controller.ts", "language": "typescript", "sizeLines": 25, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/modules/users/user.schema.ts", "language": "typescript", "sizeLines": 24, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/modules/users/user.service.ts", "language": "typescript", "sizeLines": 44, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/services/email.service.ts", "language": "typescript", "sizeLines": 71, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/shared/errors/app-error.ts", "language": "typescript", "sizeLines": 8, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/shared/errors/error-handler.ts", "language": "typescript", "sizeLines": 39, "fileCategory": "code"},
+    {"path": "Rolliude-backend/src/utils/reset-token.ts", "language": "typescript", "sizeLines": 9, "fileCategory": "code"}
+  ],
+  "batchImportData": {
+    "Rolliude-backend/src/config/prisma.ts": [],
+    "Rolliude-backend/src/modules/auth/auth.controller.ts": ["Rolliude-backend/src/modules/auth/auth.schema.ts", "Rolliude-backend/src/modules/auth/auth.service.ts"],
+    "Rolliude-backend/src/modules/auth/auth.schema.ts": [],
+    "Rolliude-backend/src/modules/auth/auth.service.ts": ["Rolliude-backend/src/config/env.ts", "Rolliude-backend/src/config/prisma.ts", "Rolliude-backend/src/modules/auth/auth.schema.ts", "Rolliude-backend/src/modules/users/user.service.ts", "Rolliude-backend/src/services/email.service.ts", "Rolliude-backend/src/shared/errors/app-error.ts", "Rolliude-backend/src/utils/reset-token.ts"],
+    "Rolliude-backend/src/modules/users/user.controller.ts": ["Rolliude-backend/src/modules/users/user.schema.ts", "Rolliude-backend/src/modules/users/user.service.ts"],
+    "Rolliude-backend/src/modules/users/user.schema.ts": [],
+    "Rolliude-backend/src/modules/users/user.service.ts": ["Rolliude-backend/src/config/prisma.ts", "Rolliude-backend/src/modules/users/user.schema.ts", "Rolliude-backend/src/shared/errors/app-error.ts"],
+    "Rolliude-backend/src/services/email.service.ts": [],
+    "Rolliude-backend/src/shared/errors/app-error.ts": [],
+    "Rolliude-backend/src/shared/errors/error-handler.ts": ["Rolliude-backend/src/shared/errors/app-error.ts"],
+    "Rolliude-backend/src/utils/reset-token.ts": []
+  }
+}

@@ -1,0 +1,139 @@
+[
+  {
+    "order": 1,
+    "title": "Project Overview",
+    "description": "README.md introduces Rolliúde Play as a platform for discovering and showcasing Brazilian and regional cinema, built with a React/Vite/TypeScript frontend, a Node/Express/TypeScript/Prisma backend, and PostgreSQL, all orchestrated through Docker Compose. It also points to the canonical sources of truth for standards, which the next step expands on before diving into code.",
+    "nodeIds": [
+      "document:README.md"
+    ]
+  },
+  {
+    "order": 2,
+    "title": "Governance and Standards",
+    "description": "AGENTS.md and the authority map establish the ground rules every change in this repository must follow: no `any`/`as any`/`@ts-ignore`, no comments in touched files, no duplicate sources of truth, and a single canonical location for each concern (database, HTTP contract, UI tokens, dependencies). The accepted ADRs record binding decisions, such as mandating Yarn and Node >=20, CSS Modules over Tailwind, and the current Prisma schema as the database baseline, that explain many of the patterns you will see later in the tour.",
+    "nodeIds": [
+      "document:AGENTS.md",
+      "document:Rolliude-project/project-standards/01-authority-map.md",
+      "document:Rolliude-project/docs/architecture/adr/ADR-002-runtime-package-manager.md",
+      "document:Rolliude-project/docs/architecture/adr/ADR-003-styling-strategy.md"
+    ]
+  },
+  {
+    "order": 3,
+    "title": "Backend Bootstrap",
+    "description": "app.ts builds and configures the Express application, wiring in validated environment config, the auth and user route modules, and a global error handler, while server.ts simply starts that app on the configured port. This split, with app construction separated from process startup, is required by the backend standard and is the canonical entry point the whole backend module tree branches from, as shown by the BFS traversal starting here.",
+    "nodeIds": [
+      "file:Rolliude-backend/src/app/app.ts",
+      "file:Rolliude-backend/src/app/server.ts",
+      "file:Rolliude-backend/src/config/env.ts"
+    ]
+  },
+  {
+    "order": 4,
+    "title": "Authentication Module",
+    "description": "Building on the app bootstrap from Step 3, auth.routes.ts maps HTTP endpoints to auth.controller.ts, which validates requests with Zod schemas in auth.schema.ts before delegating to auth.service.ts, the highest fan-out file in the backend. The service handles registration, login, JWT issuance, and the full password-reset flow, using rate-limit.ts to throttle sensitive endpoints and the shared AppError/error-handler pair for consistent failure responses.",
+    "nodeIds": [
+      "file:Rolliude-backend/src/modules/auth/auth.routes.ts",
+      "file:Rolliude-backend/src/modules/auth/auth.controller.ts",
+      "file:Rolliude-backend/src/modules/auth/auth.schema.ts",
+      "file:Rolliude-backend/src/modules/auth/auth.service.ts",
+      "file:Rolliude-backend/src/middlewares/rate-limit.ts"
+    ],
+    "languageLesson": "Zod schemas (auth.schema.ts) double as both runtime validators and TypeScript type sources via `z.infer`, giving compile-time types and request validation from one definition instead of two duplicated sources of truth."
+  },
+  {
+    "order": 5,
+    "title": "User Module and Supporting Services",
+    "description": "The user module follows the same controller/schema/service pattern as auth: user.controller.ts validates with user.schema.ts and delegates to user.service.ts, which enforces unique emails and hashes passwords before persisting through Prisma. email.service.ts and reset-token.ts are shared utilities the auth service depends on to deliver password-reset emails and generate single-use hashed tokens, as mandated by ADR-006's auth strategy.",
+    "nodeIds": [
+      "file:Rolliude-backend/src/modules/users/user.controller.ts",
+      "file:Rolliude-backend/src/modules/users/user.schema.ts",
+      "file:Rolliude-backend/src/modules/users/user.service.ts",
+      "file:Rolliude-backend/src/services/email.service.ts",
+      "file:Rolliude-backend/src/utils/reset-token.ts"
+    ]
+  },
+  {
+    "order": 6,
+    "title": "Legacy Dead Code Warning",
+    "description": "Alongside the canonical src/modules/ structure, the backend still contains a flat src/controllers/, src/routes/, src/schemas/, src/services/, and a stub src/server.ts, each reduced to one-line stub exports left over from before the migration to the modular pattern. This is a textbook duplicate-source-of-truth violation that AGENTS.md explicitly forbids, and the layer analysis flags it as dead code that should be removed rather than extended.",
+    "nodeIds": [
+      "file:Rolliude-backend/src/server.ts",
+      "file:Rolliude-backend/src/controllers/auth.controller.ts",
+      "file:Rolliude-backend/src/routes/auth.routes.ts",
+      "file:Rolliude-backend/src/schemas/auth.schema.ts",
+      "file:Rolliude-backend/src/services/auth.service.ts"
+    ]
+  },
+  {
+    "order": 7,
+    "title": "Data Layer: Prisma Schema and Migrations",
+    "description": "schema.prisma is the single valid source of truth for the database, defining Usuario, PasswordResetToken, Estado, Municipio, Genero, and Filme models that back the auth and user services introduced in Steps 4 and 5. The generated migration creates matching tables (usuarios, password_reset_tokens, estados, municipios, generos, filmes) in PostgreSQL, while prisma.ts exposes the singleton client every service queries through.",
+    "nodeIds": [
+      "schema:Rolliude-backend/prisma/schema.prisma",
+      "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:usuarios",
+      "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:password_reset_tokens",
+      "file:Rolliude-backend/src/config/prisma.ts"
+    ],
+    "languageLesson": "Prisma migrations are generated SQL files meant to be applied sequentially and never hand-edited; the schema.prisma file is the editable source, and `prisma migrate` derives the SQL from it, keeping one canonical definition instead of two."
+  },
+  {
+    "order": 8,
+    "title": "Frontend Application Shell",
+    "description": "On the frontend, index.html loads the Montserrat/Rye fonts and bootstraps main.tsx, which mounts the React tree and imports global styles. AppRoutes.tsx is the highest fan-out file in the whole frontend, mapping every URL path to a page component inside the shared Layout, giving you a map of the entire user-facing application.",
+    "nodeIds": [
+      "file:Rolliude-front/index.html",
+      "file:Rolliude-front/src/main.tsx",
+      "file:Rolliude-front/src/routes/AppRoutes.tsx",
+      "file:Rolliude-front/src/components/layout/Layout.tsx"
+    ]
+  },
+  {
+    "order": 9,
+    "title": "Pages, API Client, and Shared Types",
+    "description": "Pages like Home.tsx, Catalogo.tsx, FilmeDetalhe.tsx, Login.tsx, and RecuperarSenha.tsx consume httpClient.ts and api.ts to talk to the backend endpoints built in Steps 4 and 5, while domain.ts mirrors the backend's Prisma models (Usuario, Estado, Municipio, Genero, Filme) on the frontend side. Routing all API calls through src/lib/http/ is a frontend standard requirement, keeping network logic out of individual page components.",
+    "nodeIds": [
+      "file:Rolliude-front/src/pages/Home.tsx",
+      "file:Rolliude-front/src/pages/RecuperarSenha.tsx",
+      "file:Rolliude-front/src/lib/http/httpClient.ts",
+      "file:Rolliude-front/src/services/api.ts",
+      "file:Rolliude-front/src/types/domain.ts"
+    ]
+  },
+  {
+    "order": 10,
+    "title": "Design System and UI Primitives",
+    "description": "tokens.css is the Design System's canonical source of truth, defining brand colors, typography font stacks, radii, and spacing as CSS Custom Properties, which globals.css and typography.css apply globally and Button.tsx and TextField.tsx consume through CSS Modules. ADR-003 explicitly rejected Tailwind and inline styles in favor of this token-driven CSS Modules approach, so every new component is expected to reuse these tokens rather than inventing new colors or spacing values.",
+    "nodeIds": [
+      "file:Rolliude-front/src/styles/tokens.css",
+      "file:Rolliude-front/src/styles/globals.css",
+      "file:Rolliude-front/src/components/ui/Button.tsx",
+      "file:Rolliude-front/src/components/ui/TextField.tsx"
+    ],
+    "languageLesson": "CSS Modules scope class names per file at build time (e.g. `styles.button`), avoiding global collisions, while CSS Custom Properties (`var(--brand-orange)`) defined once in tokens.css let every module reference the same semantic values instead of hardcoding colors."
+  },
+  {
+    "order": 11,
+    "title": "Infrastructure and CI/CD",
+    "description": "Each app has its own Dockerfile: the backend's single-stage node:20-alpine image installs dependencies with a frozen Yarn lockfile and runs `yarn dev`, while the frontend's equivalent exposes the Vite dev server on port 5173; docker-compose.yml orchestrates both alongside the database for local development, matching the commands described in the README. The GitHub Actions pipeline in ci.yml then runs frontend-quality and backend-quality jobs on every pull request, enforcing format, type-check, Prisma validation, and build steps before merge.",
+    "nodeIds": [
+      "service:Rolliude-backend/Dockerfile",
+      "service:Rolliude-front/Dockerfile",
+      "service:docker-compose.yml",
+      "pipeline:.github/workflows/ci.yml"
+    ],
+    "languageLesson": "GitHub Actions workflows trigger on `on:` events (here, pull requests to main/develop), run independent `jobs` in parallel for speed, and each job's `steps` execute sequentially, so a failing type-check step stops that job without blocking the other package's checks."
+  },
+  {
+    "order": 12,
+    "title": "Disconnected Signup Prototype",
+    "description": "The standalone 'rolliúde-play tela cadastro' app is a separate Vite+React project with its own App.tsx, LoginForm.tsx, RegisterForm.tsx, and mock regions.ts data, built independently of Rolliude-front and never imported by or wired into the production frontend from Step 8. Despite exploring similar signup/login UI ideas, it duplicates logic the canonical frontend and backend already implement, making it an architecturally isolated prototype rather than part of the shipped platform.",
+    "nodeIds": [
+      "file:rolliúde-play tela cadastro/src/App.tsx",
+      "file:rolliúde-play tela cadastro/src/components/RegisterForm.tsx",
+      "file:rolliúde-play tela cadastro/src/components/LoginForm.tsx",
+      "file:rolliúde-play tela cadastro/src/data/regions.ts",
+      "document:rolliúde-play tela cadastro/README.md"
+    ]
+  }
+]

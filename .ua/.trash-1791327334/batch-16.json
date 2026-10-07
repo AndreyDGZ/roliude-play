@@ -1,0 +1,465 @@
+{
+  "nodes": [
+    {
+      "id": "document:.claude/skills/rolliude-play/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": ".claude/skills/rolliude-play/SKILL.md",
+      "summary": "Agent skill describing how to work inside the Rolliúde Play repository without reinventing conventions: points to the authority map, mandatory AGENTS.md rules, real Design System tokens, frontend/backend folder patterns, Prisma as the schema source of truth, and the sprint/ClickUp workflow.",
+      "tags": ["documentation", "agent-skill", "conventions", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:.github/ISSUE_TEMPLATE/bug_report.md",
+      "type": "document",
+      "name": "bug_report.md",
+      "filePath": ".github/ISSUE_TEMPLATE/bug_report.md",
+      "summary": "GitHub issue template for reporting bugs, prompting reporters for reproduction steps, expected behavior, and environment details.",
+      "tags": ["documentation", "github", "issue-template"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:.github/ISSUE_TEMPLATE/feature_request.md",
+      "type": "document",
+      "name": "feature_request.md",
+      "filePath": ".github/ISSUE_TEMPLATE/feature_request.md",
+      "summary": "GitHub issue template for proposing new features, structuring the problem statement and desired solution.",
+      "tags": ["documentation", "github", "issue-template"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:.github/PULL_REQUEST_TEMPLATE.md",
+      "type": "document",
+      "name": "PULL_REQUEST_TEMPLATE.md",
+      "filePath": ".github/PULL_REQUEST_TEMPLATE.md",
+      "summary": "Pull request template with sections for description, related issue, changes made, tests performed, screenshots, and a review checklist.",
+      "tags": ["documentation", "github", "pull-request-template"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.nvmrc",
+      "type": "config",
+      "name": ".nvmrc",
+      "filePath": ".nvmrc",
+      "summary": "Pins the Node.js version used at the repository root for consistent local and CI tooling.",
+      "tags": ["configuration", "node-version", "tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Rolliude-backend/.nvmrc",
+      "type": "config",
+      "name": ".nvmrc",
+      "filePath": "Rolliude-backend/.nvmrc",
+      "summary": "Pins the Node.js version required to run and build the backend service.",
+      "tags": ["configuration", "node-version", "backend"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Rolliude-backend/prisma.config.ts",
+      "type": "config",
+      "name": "prisma.config.ts",
+      "filePath": "Rolliude-backend/prisma.config.ts",
+      "summary": "Prisma CLI configuration file for the backend, directing Prisma tooling to the canonical schema and migrations.",
+      "tags": ["configuration", "prisma", "database", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:usuarios",
+      "type": "table",
+      "name": "usuarios",
+      "filePath": "Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql",
+      "lineRange": [2, 12],
+      "summary": "Initial migration table storing user accounts with email, name, password hash, optional Google id, and audit timestamps.",
+      "tags": ["database", "migration", "users", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:password_reset_tokens",
+      "type": "table",
+      "name": "password_reset_tokens",
+      "filePath": "Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql",
+      "lineRange": [15, 24],
+      "summary": "Initial migration table holding hashed password reset tokens linked to a user, with expiry and usage timestamps.",
+      "tags": ["database", "migration", "authentication", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:estados",
+      "type": "table",
+      "name": "estados",
+      "filePath": "Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql",
+      "lineRange": [27, 33],
+      "summary": "Initial migration table listing Brazilian states with UF code and name, used as a lookup for municipalities.",
+      "tags": ["database", "migration", "reference-data", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:municipios",
+      "type": "table",
+      "name": "municipios",
+      "filePath": "Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql",
+      "lineRange": [36, 42],
+      "summary": "Initial migration table for municipalities, each linked to a parent state via a foreign key.",
+      "tags": ["database", "migration", "reference-data", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:generos",
+      "type": "table",
+      "name": "generos",
+      "filePath": "Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql",
+      "lineRange": [45, 50],
+      "summary": "Initial migration table of unique movie genres used to categorize films in the catalog.",
+      "tags": ["database", "migration", "catalog", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:filmes",
+      "type": "table",
+      "name": "filmes",
+      "filePath": "Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql",
+      "lineRange": [53, 62],
+      "summary": "Initial migration table storing films with title, video URL, public-domain flag, and audit timestamps for the catalog feature.",
+      "tags": ["database", "migration", "catalog", "canonical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Rolliude-backend/prisma/migrations/migration_lock.toml",
+      "type": "config",
+      "name": "migration_lock.toml",
+      "filePath": "Rolliude-backend/prisma/migrations/migration_lock.toml",
+      "summary": "Prisma migration lock file recording the active database provider (PostgreSQL) to prevent accidental provider drift between migrations.",
+      "tags": ["configuration", "prisma", "database", "migration-lock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "schema:Rolliude-backend/prisma/schema.prisma",
+      "type": "schema",
+      "name": "schema.prisma",
+      "filePath": "Rolliude-backend/prisma/schema.prisma",
+      "summary": "Canonical Prisma schema defining the PostgreSQL data model (Usuario, PasswordResetToken, Estado, Municipio, Genero, Filme) with relations and mapped table names; this is the single valid source of truth for the database schema and migrations per project standards.",
+      "tags": ["database", "schema-definition", "prisma", "canonical", "source-of-truth"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Prisma's @map/@@map directives to translate camelCase model fields to the snake_case table/column names seen in the raw SQL migration, and @relation to express foreign keys."
+    },
+    {
+      "id": "file:Rolliude-backend/src/controllers/auth.controller.ts",
+      "type": "file",
+      "name": "auth.controller.ts",
+      "filePath": "Rolliude-backend/src/controllers/auth.controller.ts",
+      "summary": "One-line legacy controller file exporting a stub `AuthController` under the deprecated flat `src/controllers/` layout, superseded by the canonical `src/modules/auth/` structure; its continued presence alongside the new module is a duplicate-source-of-truth violation per AGENTS.md.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/controllers/user.controller.ts",
+      "type": "file",
+      "name": "user.controller.ts",
+      "filePath": "Rolliude-backend/src/controllers/user.controller.ts",
+      "summary": "One-line legacy controller file exporting a stub `UserController` under the deprecated flat `src/controllers/` layout, superseded by the canonical `src/modules/users/` structure; a duplicate-source-of-truth remnant that should be removed.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/routes/auth.routes.ts",
+      "type": "file",
+      "name": "auth.routes.ts",
+      "filePath": "Rolliude-backend/src/routes/auth.routes.ts",
+      "summary": "One-line legacy route file exporting a stub `authRoutes` under the deprecated flat `src/routes/` layout, superseded by the canonical `src/modules/auth/` structure.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/routes/user.routes.ts",
+      "type": "file",
+      "name": "user.routes.ts",
+      "filePath": "Rolliude-backend/src/routes/user.routes.ts",
+      "summary": "One-line legacy route file exporting a stub `userRoutes` under the deprecated flat `src/routes/` layout, superseded by the canonical `src/modules/users/` structure.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/schemas/auth.schema.ts",
+      "type": "file",
+      "name": "auth.schema.ts",
+      "filePath": "Rolliude-backend/src/schemas/auth.schema.ts",
+      "summary": "Empty one-line legacy validation schema file under the deprecated flat `src/schemas/` layout, superseded by the canonical `src/modules/auth/` structure.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/schemas/user.schema.ts",
+      "type": "file",
+      "name": "user.schema.ts",
+      "filePath": "Rolliude-backend/src/schemas/user.schema.ts",
+      "summary": "Empty one-line legacy validation schema file under the deprecated flat `src/schemas/` layout, superseded by the canonical `src/modules/users/` structure.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/server.ts",
+      "type": "file",
+      "name": "server.ts",
+      "filePath": "Rolliude-backend/src/server.ts",
+      "summary": "One-line legacy server entry file with a default export stub at the old flat `src/` layout; likely a dead duplicate of the actual server bootstrap now living under the modular structure, and worth removing to avoid a second source of truth for startup logic.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/services/auth.service.ts",
+      "type": "file",
+      "name": "auth.service.ts",
+      "filePath": "Rolliude-backend/src/services/auth.service.ts",
+      "summary": "Empty one-line legacy service file under the deprecated flat `src/services/` layout, superseded by the canonical `src/modules/auth/` structure.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-backend/src/services/user.service.ts",
+      "type": "file",
+      "name": "user.service.ts",
+      "filePath": "Rolliude-backend/src/services/user.service.ts",
+      "summary": "Empty one-line legacy service file under the deprecated flat `src/services/` layout, superseded by the canonical `src/modules/users/` structure.",
+      "tags": ["legacy", "deprecated", "dead-code", "duplicate-source"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/components/layout/Layout.module.css",
+      "type": "file",
+      "name": "Layout.module.css",
+      "filePath": "Rolliude-front/src/components/layout/Layout.module.css",
+      "summary": "CSS Module stylesheet defining the page shell layout (header, content area, spacing) consumed by the shared Layout component.",
+      "tags": ["css-module", "styling", "layout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-front/src/components/ui/Button.module.css",
+      "type": "file",
+      "name": "Button.module.css",
+      "filePath": "Rolliude-front/src/components/ui/Button.module.css",
+      "summary": "CSS Module stylesheet providing the visual variants and states for the shared Button UI component, using Design System tokens.",
+      "tags": ["css-module", "styling", "ui-component", "design-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/components/ui/TextField.module.css",
+      "type": "file",
+      "name": "TextField.module.css",
+      "filePath": "Rolliude-front/src/components/ui/TextField.module.css",
+      "summary": "Small CSS Module stylesheet styling the shared TextField input component.",
+      "tags": ["css-module", "styling", "ui-component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/Page.module.css",
+      "type": "file",
+      "name": "Page.module.css",
+      "filePath": "Rolliude-front/src/pages/Page.module.css",
+      "summary": "Shared CSS Module stylesheet with generic page-level styling reused across multiple route pages (Cadastro, Catalogo, FilmeDetalhe, Home, Login).",
+      "tags": ["css-module", "styling", "page-layout", "shared"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-front/src/types/domain.ts",
+      "type": "file",
+      "name": "domain.ts",
+      "filePath": "Rolliude-front/src/types/domain.ts",
+      "summary": "Frontend TypeScript domain type definitions (Usuario, Estado, Municipio, Genero, Profissional, Filme, CuradoriaDestaque, ConteudoBastidores) mirroring the backend Prisma models for use across components and pages.",
+      "tags": ["type-definition", "domain-model", "frontend"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:Rolliude-front/tsconfig.tsbuildinfo",
+      "type": "file",
+      "name": "tsconfig.tsbuildinfo",
+      "filePath": "Rolliude-front/tsconfig.tsbuildinfo",
+      "summary": "Auto-generated TypeScript incremental build cache file produced by `tsc`; not hand-authored and carries no semantic project structure.",
+      "tags": ["build-artifact", "generated", "typescript"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:.claude/skills/rolliude-play/SKILL.md",
+      "target": "schema:Rolliude-backend/prisma/schema.prisma",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:Rolliude-backend/prisma.config.ts",
+      "target": "schema:Rolliude-backend/prisma/schema.prisma",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Rolliude-backend/prisma/migrations/migration_lock.toml",
+      "target": "schema:Rolliude-backend/prisma/schema.prisma",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "schema:Rolliude-backend/prisma/schema.prisma",
+      "target": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:usuarios",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "schema:Rolliude-backend/prisma/schema.prisma",
+      "target": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:password_reset_tokens",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "schema:Rolliude-backend/prisma/schema.prisma",
+      "target": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:estados",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "schema:Rolliude-backend/prisma/schema.prisma",
+      "target": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:municipios",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "schema:Rolliude-backend/prisma/schema.prisma",
+      "target": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:generos",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "schema:Rolliude-backend/prisma/schema.prisma",
+      "target": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:filmes",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:usuarios",
+      "target": "file:Rolliude-front/src/types/domain.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:estados",
+      "target": "file:Rolliude-front/src/types/domain.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:municipios",
+      "target": "file:Rolliude-front/src/types/domain.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:generos",
+      "target": "file:Rolliude-front/src/types/domain.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "table:Rolliude-backend/prisma/migrations/20260920024836_init/migration.sql:filmes",
+      "target": "file:Rolliude-front/src/types/domain.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-front/src/components/layout/Layout.module.css",
+      "target": "file:Rolliude-front/src/components/layout/Layout.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:Rolliude-front/src/components/ui/Button.module.css",
+      "target": "file:Rolliude-front/src/components/ui/Button.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:Rolliude-front/src/components/ui/TextField.module.css",
+      "target": "file:Rolliude-front/src/components/ui/TextField.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:Rolliude-front/src/pages/Page.module.css",
+      "target": "file:Rolliude-front/src/pages/Cadastro.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-front/src/pages/Page.module.css",
+      "target": "file:Rolliude-front/src/pages/Catalogo.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-front/src/pages/Page.module.css",
+      "target": "file:Rolliude-front/src/pages/FilmeDetalhe.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-front/src/pages/Page.module.css",
+      "target": "file:Rolliude-front/src/pages/Home.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-front/src/pages/Page.module.css",
+      "target": "file:Rolliude-front/src/pages/Login.tsx",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-backend/src/controllers/auth.controller.ts",
+      "target": "file:Rolliude-backend/src/routes/auth.routes.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-backend/src/controllers/user.controller.ts",
+      "target": "file:Rolliude-backend/src/routes/user.routes.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-backend/src/routes/auth.routes.ts",
+      "target": "file:Rolliude-backend/src/server.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:Rolliude-backend/src/routes/user.routes.ts",
+      "target": "file:Rolliude-backend/src/server.ts",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

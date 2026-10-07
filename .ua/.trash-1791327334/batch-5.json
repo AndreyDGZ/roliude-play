@@ -1,0 +1,104 @@
+{
+  "nodes": [
+    {
+      "id": "file:Rolliude-front/src/components/ui/Button.tsx",
+      "type": "file",
+      "name": "Button.tsx",
+      "filePath": "Rolliude-front/src/components/ui/Button.tsx",
+      "summary": "Reusable button component supporting a 'variant' prop (defaulting to 'primary') and passing through native button attributes, styled via CSS Modules.",
+      "tags": ["component", "ui", "design-system", "button"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/components/ui/Button.tsx:Button",
+      "type": "function",
+      "name": "Button",
+      "filePath": "Rolliude-front/src/components/ui/Button.tsx",
+      "lineRange": [10, 18],
+      "summary": "Renders a styled button element, applying a variant-based CSS class and spreading remaining button props.",
+      "tags": ["component", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/components/ui/TextField.tsx",
+      "type": "file",
+      "name": "TextField.tsx",
+      "filePath": "Rolliude-front/src/components/ui/TextField.tsx",
+      "summary": "Minimal reusable text input component that forwards props to a styled input element via CSS Modules.",
+      "tags": ["component", "ui", "design-system", "form"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/components/ui/TextField.tsx:TextField",
+      "type": "function",
+      "name": "TextField",
+      "filePath": "Rolliude-front/src/components/ui/TextField.tsx",
+      "lineRange": [4, 6],
+      "summary": "Renders a styled text input, forwarding all received props directly to the underlying input element.",
+      "tags": ["component", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/Cadastro.tsx",
+      "type": "file",
+      "name": "Cadastro.tsx",
+      "filePath": "Rolliude-front/src/pages/Cadastro.tsx",
+      "summary": "Registration (signup) page composing the shared Button and TextField components inside a form, using shared page layout styles.",
+      "tags": ["page", "component", "form", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/Cadastro.tsx:Cadastro",
+      "type": "function",
+      "name": "Cadastro",
+      "filePath": "Rolliude-front/src/pages/Cadastro.tsx",
+      "lineRange": [6, 18],
+      "summary": "Renders the signup form UI and handles form submission by preventing the default browser submit event.",
+      "tags": ["page", "form-handler", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:Rolliude-front/src/pages/Login.tsx",
+      "type": "file",
+      "name": "Login.tsx",
+      "filePath": "Rolliude-front/src/pages/Login.tsx",
+      "summary": "Login page composing the shared Button and TextField components inside a form, using shared page layout styles.",
+      "tags": ["page", "component", "form", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:Rolliude-front/src/pages/Login.tsx:Login",
+      "type": "function",
+      "name": "Login",
+      "filePath": "Rolliude-front/src/pages/Login.tsx",
+      "lineRange": [7, 20],
+      "summary": "Renders the login form UI and handles form submission by preventing the default browser submit event.",
+      "tags": ["page", "form-handler", "auth"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:Rolliude-front/src/components/ui/Button.tsx", "target": "file:Rolliude-front/src/components/ui/Button.module.css", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/components/ui/TextField.tsx", "target": "file:Rolliude-front/src/components/ui/TextField.module.css", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/pages/Cadastro.tsx", "target": "file:Rolliude-front/src/components/ui/Button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/pages/Cadastro.tsx", "target": "file:Rolliude-front/src/components/ui/TextField.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/pages/Cadastro.tsx", "target": "file:Rolliude-front/src/pages/Page.module.css", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/pages/Login.tsx", "target": "file:Rolliude-front/src/components/ui/Button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/pages/Login.tsx", "target": "file:Rolliude-front/src/components/ui/TextField.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/pages/Login.tsx", "target": "file:Rolliude-front/src/pages/Page.module.css", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:Rolliude-front/src/components/ui/Button.tsx", "target": "function:Rolliude-front/src/components/ui/Button.tsx:Button", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:Rolliude-front/src/components/ui/Button.tsx", "target": "function:Rolliude-front/src/components/ui/Button.tsx:Button", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:Rolliude-front/src/components/ui/TextField.tsx", "target": "function:Rolliude-front/src/components/ui/TextField.tsx:TextField", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:Rolliude-front/src/components/ui/TextField.tsx", "target": "function:Rolliude-front/src/components/ui/TextField.tsx:TextField", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:Rolliude-front/src/pages/Cadastro.tsx", "target": "function:Rolliude-front/src/pages/Cadastro.tsx:Cadastro", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:Rolliude-front/src/pages/Cadastro.tsx", "target": "function:Rolliude-front/src/pages/Cadastro.tsx:Cadastro", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:Rolliude-front/src/pages/Login.tsx", "target": "function:Rolliude-front/src/pages/Login.tsx:Login", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:Rolliude-front/src/pages/Login.tsx", "target": "function:Rolliude-front/src/pages/Login.tsx:Login", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "function:Rolliude-front/src/pages/Cadastro.tsx:Cadastro", "target": "function:Rolliude-front/src/components/ui/Button.tsx:Button", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:Rolliude-front/src/pages/Cadastro.tsx:Cadastro", "target": "function:Rolliude-front/src/components/ui/TextField.tsx:TextField", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:Rolliude-front/src/pages/Login.tsx:Login", "target": "function:Rolliude-front/src/components/ui/Button.tsx:Button", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:Rolliude-front/src/pages/Login.tsx:Login", "target": "function:Rolliude-front/src/components/ui/TextField.tsx:TextField", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "file:Rolliude-front/src/pages/Cadastro.tsx", "target": "file:Rolliude-front/src/routes/AppRoutes.tsx", "type": "related", "direction": "forward", "weight": 0.5},
+    {"source": "file:Rolliude-front/src/pages/Login.tsx", "target": "file:Rolliude-front/src/routes/AppRoutes.tsx", "type": "related", "direction": "forward", "weight": 0.5}
+  ]
+}
