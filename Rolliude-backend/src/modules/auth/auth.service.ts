@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { env } from '../../config/env';
 import { prisma } from '../../config/prisma';
-import { sendPasswordResetEmail } from '../../services/email.service';
+import { sendPasswordResetEmail } from '../notifications/email.service';
 import { AppError } from '../../shared/errors/app-error';
 import { generatePasswordResetToken, hashPasswordResetToken } from '../../utils/reset-token';
 import { UserResponseDTO, UserService } from '../users/user.service';
