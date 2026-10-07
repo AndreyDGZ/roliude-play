@@ -65,6 +65,8 @@ jobs:
 
       - name: Prisma validate
         working-directory: ./Rolliude-backend
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/db
         run: yarn prisma:validate
 
       - name: Build
