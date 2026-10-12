@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------
+// USUÁRIOS
+// ---------------------------------------------------------------------
+
+model Usuario {
+  id                  String                  @id @default(uuid())
+  email               String                  @unique
+  nome                String
+  senha               String?
+  googleId            String?                 @unique
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
+  passwordResetTokens PasswordResetToken[]
+  avaliacoes          Avaliacao[]
+  favoritos           Favorito[]
+  historico           HistoricoVisualizacao[]
+
+  @@map("usuarios")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  usuarioId String    @map("usuario_id")
+  tokenHash String    @unique @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
+}
+
+// ---------------------------------------------------------------------
+// LOCALIDADES
+// ---------------------------------------------------------------------
+
+model Estado {
+  id         String      @id @default(uuid())
+  uf         String      @unique
+  nome       String
+  municipios Municipio[]
+
+  @@map("estados")
+}
+
+model Municipio {
+  id       String  @id @default(uuid())
+  nome     String
+  estadoId String
+  estado   Estado  @relation(fields: [estadoId], references: [id])
+  filmes   Filme[]
+
+  @@map("municipios")
+}
+
+// ---------------------------------------------------------------------
+// FILMES
+// ---------------------------------------------------------------------
+
+enum ClassificacaoIndicativa {
+  L
+  DEZ        @map("10")
+  DOZE       @map("12")
+  QUATORZE   @map("14")
+  DEZESSEIS  @map("16")
+  DEZOITO    @map("18")
+
+  @@map("classificacao_indicativa")
+}
+
+model Genero {
+  id     String        @id @default(uuid())
+  nome   String        @unique
+  filmes FilmeGenero[]
+
+  @@map("generos")
+}
+
+model Filme {
+  id             String   @id @default(uuid())
+  titulo         String
+  videoUrl       String?
+  dominioPublico Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // novos campos (opcionais ou com default, para não quebrar linhas existentes)
+  tituloOriginal          String?                 @map("titulo_original")
+  sinopse                 String?
+  anoLancamento           Int?                    @map("ano_lancamento")
+  duracaoMin              Int?                    @map("duracao_min")
+  classificacaoIndicativa ClassificacaoIndicativa @default(L) @map("classificacao_indicativa")
+  idiomaOriginal          String?                 @map("idioma_original")
+  posterUrl               String?                 @map("poster_url")
+  trailerUrl              String?                 @map("trailer_url")
+  publicado               Boolean                 @default(false)
+
+  // município de origem/produção (opcional)
+  municipioId String?    @map("municipio_id")
+  municipio   Municipio? @relation(fields: [municipioId], references: [id])
+
+  generos     FilmeGenero[]
+  diretores   FilmeDiretor[]
+  elenco      FilmeElenco[]
+  avaliacoes  Avaliacao[]
+  favoritos   Favorito[]
+  historico   HistoricoVisualizacao[]
+
+  @@index([titulo])
+  @@index([anoLancamento])
+  @@index([publicado])
+  @@index([municipioId])
+  @@map("filmes")
+}
+
+model Diretor {
+  id     String         @id @default(uuid())
+  nome   String
+  filmes FilmeDiretor[]
+
+  @@map("diretores")
+}
+
+model Ator {
+  id     String        @id @default(uuid())
+  nome   String
+  filmes FilmeElenco[]
+
+  @@map("atores")
+}
+
+// ---------------------------------------------------------------------
+// RELACIONAMENTOS N:N
+// ---------------------------------------------------------------------
+
+model FilmeGenero {
+  filmeId  String @map("filme_id")
+  generoId String @map("genero_id")
+  filme    Filme  @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  genero   Genero @relation(fields: [generoId], references: [id], onDelete: Restrict)
+
+  @@id([filmeId, generoId])
+  @@index([generoId])
+  @@map("filme_genero")
+}
+
+model FilmeDiretor {
+  filmeId   String  @map("filme_id")
+  diretorId String  @map("diretor_id")
+  filme     Filme   @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  diretor   Diretor @relation(fields: [diretorId], references: [id], onDelete: Restrict)
+
+  @@id([filmeId, diretorId])
+  @@index([diretorId])
+  @@map("filme_diretor")
+}
+
+model FilmeElenco {
+  filmeId    String  @map("filme_id")
+  atorId     String  @map("ator_id")
+  personagem String?
+  ordem      Int     @default(0)
+  filme      Filme   @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  ator       Ator    @relation(fields: [atorId], references: [id], onDelete: Restrict)
+
+  @@id([filmeId, atorId])
+  @@index([atorId])
+  @@map("filme_elenco")
+}
+
+// ---------------------------------------------------------------------
+// INTERAÇÕES DO USUÁRIO COM FILMES
+// ---------------------------------------------------------------------
+
+model Avaliacao {
+  id         String   @id @default(uuid())
+  usuarioId  String   @map("usuario_id")
+  filmeId    String   @map("filme_id")
+  nota       Int // 1 a 5 (validar na aplicação ou via CHECK na migration)
+  comentario String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  filme      Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, filmeId])
+  @@index([filmeId])
+  @@map("avaliacoes")
+}
+
+model Favorito {
+  usuarioId   String   @map("usuario_id")
+  filmeId     String   @map("filme_id")
+  adicionadoEm DateTime @default(now()) @map("adicionado_em")
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  filme       Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, filmeId])
+  @@index([filmeId])
+  @@map("favoritos")
+}
+
+model HistoricoVisualizacao {
+  id              String   @id @default(uuid())
+  usuarioId       String   @map("usuario_id")
+  filmeId         String   @map("filme_id")
+  progressoSeg    Int      @default(0) @map("progresso_seg")
+  concluido       Boolean  @default(false)
+  ultimaExibicao  DateTime @default(now()) @map("ultima_exibicao")
+  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  filme           Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, filmeId])
+  @@index([usuarioId, ultimaExibicao])
+  @@map("historico_visualizacao")
+}
+else:
