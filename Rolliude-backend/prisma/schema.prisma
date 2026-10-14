@@ -1,10 +1,20 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pg_trgm]
+}
+
+enum PapelUsuario {
+  USUARIO
+  CURADOR
+  ADMINISTRADOR
+
+  @@map("papel_usuario")
 }
 
 model Usuario {
@@ -13,6 +23,7 @@ model Usuario {
   nome                String
   senha               String?
   googleId            String?              @unique
+  papel               PapelUsuario         @default(USUARIO)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   passwordResetTokens PasswordResetToken[]
@@ -34,38 +45,93 @@ model PasswordResetToken {
   @@map("password_reset_tokens")
 }
 
+enum RegiaoBrasil {
+  NORTE
+  NORDESTE
+  CENTRO_OESTE
+  SUDESTE
+  SUL
+
+  @@map("regiao_brasil")
+}
+
+enum ClassificacaoIndicativa {
+  L
+  DEZ       @map("10")
+  DOZE      @map("12")
+  QUATORZE  @map("14")
+  DEZESSEIS @map("16")
+  DEZOITO   @map("18")
+
+  @@map("classificacao_indicativa")
+}
+
 model Estado {
-  id         String      @id @default(uuid())
-  uf         String      @unique
+  id         String       @id @default(uuid())
+  uf         String       @unique
   nome       String
+  regiao     RegiaoBrasil
   municipios Municipio[]
 
+  @@index([regiao])
   @@map("estados")
 }
 
 model Municipio {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   nome     String
   estadoId String
-  estado   Estado @relation(fields: [estadoId], references: [id])
+  estado   Estado  @relation(fields: [estadoId], references: [id])
+  filmes   Filme[]
 
+  @@unique([estadoId, nome])
   @@map("municipios")
 }
 
 model Genero {
-  id   String @id @default(uuid())
-  nome String @unique
+  id     String        @id @default(uuid())
+  nome   String        @unique
+  filmes FilmeGenero[]
 
   @@map("generos")
 }
 
 model Filme {
-  id             String   @id @default(uuid())
-  titulo         String
-  videoUrl       String?
-  dominioPublico Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                      String                  @id @default(uuid())
+  titulo                  String
+  tituloOriginal          String?                 @map("titulo_original")
+  tituloBusca             String                  @default("") @map("titulo_busca")
+  sinopse                 String?
+  anoLancamento           Int?                    @map("ano_lancamento")
+  duracaoMin              Int?                    @map("duracao_min")
+  classificacaoIndicativa ClassificacaoIndicativa @default(L) @map("classificacao_indicativa")
+  idiomaOriginal          String?                 @map("idioma_original")
+  posterUrl               String?                 @map("poster_url")
+  trailerUrl              String?                 @map("trailer_url")
+  videoUrl                String?
+  dominioPublico          Boolean                 @default(false)
+  publicado               Boolean                 @default(false)
+  municipioId             String?                 @map("municipio_id")
+  municipio               Municipio?              @relation(fields: [municipioId], references: [id])
+  generos                 FilmeGenero[]
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
 
+  @@index([titulo])
+  @@index([anoLancamento])
+  @@index([publicado, createdAt(sort: Desc)])
+  @@index([municipioId])
+  @@index([tituloBusca(ops: raw("gin_trgm_ops"))], type: Gin)
   @@map("filmes")
+}
+
+model FilmeGenero {
+  filmeId  String @map("filme_id")
+  generoId String @map("genero_id")
+  filme    Filme  @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  genero   Genero @relation(fields: [generoId], references: [id], onDelete: Restrict)
+
+  @@id([filmeId, generoId])
+  @@index([generoId])
+  @@map("filme_genero")
 }
