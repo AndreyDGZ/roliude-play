@@ -47,6 +47,19 @@ yarn install --frozen-lockfile
 yarn dev
 ```
 
+## Dados iniciais e documentação da API
+
+No backend, depois de aplicar as migrations:
+
+```bash
+yarn prisma migrate deploy
+yarn db:seed
+```
+
+O seed carrega gêneros, estados com região e alguns municípios. Defina `SEED_ADMIN_EMAIL` e `SEED_ADMIN_PASSWORD` no `.env` para criar um administrador.
+
+O contrato da API é gerado dos schemas do backend e fica em `http://localhost:3000/api/docs/openapi.json`. O guia de uso está em `Rolliude-project/docs/api/catalog.md`.
+
 ## Checks
 
 Execute nas pastas `Rolliude-front/` e `Rolliude-backend/`:
