@@ -9,7 +9,8 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('1d'),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET deve ter pelo menos 32 caracteres.'),
   PASSWORD_RESET_TOKEN_EXPIRES_MIN: z.coerce.number().int().positive().default(30),
-  PORT: z.coerce.number().int().positive().default(3000)
+  PORT: z.coerce.number().int().positive().default(3000),
+  ADMIN_API_KEY: z.string().min(16),
 });
 
 export const env = envSchema.parse(process.env);
