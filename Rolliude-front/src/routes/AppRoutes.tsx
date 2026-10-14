@@ -1,3 +1,4 @@
+import AdminMoviesPage from '../features/admin-movies/AdminMoviesPage';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
@@ -20,6 +21,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="cadastro" element={<Cadastro />} />
         <Route path="recuperar-senha" element={<RecuperarSenha />} />
         <Route path="redefinir-senha/:token" element={<RecuperarSenha />} />
+        <Route path="/admin/filmes" element={<AdminMoviesPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

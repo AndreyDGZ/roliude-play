@@ -53,19 +53,38 @@ model Municipio {
 }
 
 model Genero {
-  id   String @id @default(uuid())
-  nome String @unique
+  id     String  @id @default(uuid())
+  nome   String  @unique
+  filmes Filme[]
 
   @@map("generos")
 }
 
-model Filme {
-  id             String   @id @default(uuid())
-  titulo         String
-  videoUrl       String?
-  dominioPublico Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+enum StatusFilme {
+  RASCUNHO
+  PUBLICADO
+  ARQUIVADO
+}
 
+model Filme {
+  id                      String      @id @default(uuid())
+  titulo                  String
+  sinopse                 String?
+  diretor                 String?
+  anoLancamento           Int?
+  duracaoMinutos          Int?
+  idioma                  String      @default("pt-BR")
+  classificacaoIndicativa String?
+  posterUrl               String?
+  trailerUrl              String?
+  videoUrl                String?
+  dominioPublico          Boolean     @default(false)
+  status                  StatusFilme @default(RASCUNHO)
+  generos                 Genero[]
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+
+  @@index([status])
+  @@index([anoLancamento])
   @@map("filmes")
 }
