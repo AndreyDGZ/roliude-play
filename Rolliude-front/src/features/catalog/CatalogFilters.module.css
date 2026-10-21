@@ -1,0 +1,57 @@
+.filters {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-large);
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.searchRow {
+  align-items: end;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 160px) auto;
+}
+
+.searchField,
+.yearField,
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.label {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-strong);
+}
+
+.selects {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(var(--layout-field-min), 1fr));
+}
+
+.warning {
+  color: var(--color-danger-text);
+  font-weight: var(--font-weight-strong);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 720px) {
+  .searchRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .selects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

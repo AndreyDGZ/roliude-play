@@ -1,0 +1,84 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-muted);
+  border-radius: var(--radius-large);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.link {
+  color: inherit;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  text-decoration: none;
+}
+
+.poster {
+  aspect-ratio: 2 / 3;
+  background: var(--color-surface-muted);
+  overflow: hidden;
+  width: 100%;
+}
+
+.posterImage {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.posterPlaceholder {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: flex;
+  font-family: var(--font-display);
+  height: 100%;
+  justify-content: center;
+  padding: var(--space-3);
+  text-align: center;
+}
+
+.body {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+
+.title {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.meta,
+.location {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.location {
+  font-weight: var(--font-weight-strong);
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--space-3) var(--space-3);
+}
+
+.genre {
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-small);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-strong);
+  padding: 2px var(--space-1);
+}
+
+.link:focus-visible {
+  outline-offset: -3px;
+}

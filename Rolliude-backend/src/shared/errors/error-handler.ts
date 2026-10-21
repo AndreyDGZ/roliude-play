@@ -1,18 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from './app-error';
+import { ErrorResponse } from './error-response.schema';
 
-interface ValidationErrorResponse {
-  field: string;
-  message: string;
-}
-
-interface ErrorResponse {
-  message: string;
-  errors?: ValidationErrorResponse[];
-}
-
-function mapValidationErrors(error: ZodError): ValidationErrorResponse[] {
+function mapValidationErrors(error: ZodError): NonNullable<ErrorResponse['errors']> {
   return error.issues.map(issue => ({
     field: issue.path.join('.'),
     message: issue.message

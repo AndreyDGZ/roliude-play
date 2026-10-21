@@ -3,7 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { Home } from '../pages/Home';
-import { Catalogo } from '../pages/Catalogo';
+import { CatalogoPage } from '../features/catalog/CatalogoPage';
 import { FilmeDetalhe } from '../pages/FilmeDetalhe';
 import { Login } from '../pages/Login';
 import { Cadastro } from '../pages/Cadastro';
@@ -15,7 +15,7 @@ export const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="catalogo" element={<Catalogo />} />
+        <Route path="catalogo" element={<CatalogoPage />} />
         <Route path="filme/:id" element={<FilmeDetalhe />} />
         <Route path="login" element={<Login />} />
         <Route path="cadastro" element={<Cadastro />} />

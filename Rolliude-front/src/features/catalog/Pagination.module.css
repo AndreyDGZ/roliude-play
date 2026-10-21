@@ -1,0 +1,12 @@
+.pagination {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.status {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-strong);
+}
