@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { PapelUsuario } from '@prisma/client';
 import { authenticate, requireRole } from '../../middlewares/authenticate';
 import { FilmController } from './film.controller';
 
@@ -11,7 +12,7 @@ filmRoutes.get('/:id', filmController.getById);
 
 const filmAdminRoutes = Router();
 
-filmAdminRoutes.use(authenticate, requireRole('CURADOR', 'ADMINISTRADOR'));
+filmAdminRoutes.use(authenticate, requireRole(PapelUsuario.ADMIN));
 filmAdminRoutes.get('/', filmController.listAdmin);
 filmAdminRoutes.get('/:id', filmController.getByIdAdmin);
 filmAdminRoutes.post('/', filmController.create);

@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
+import { PapelUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
 import { GENRE_NAMES, STATE_SEEDS } from './reference-data';
 
@@ -9,7 +10,11 @@ const BCRYPT_SALT_ROUNDS = 12;
 
 async function seedGenres(): Promise<void> {
   for (const name of GENRE_NAMES) {
-    await prisma.genero.upsert({ where: { nome: name }, update: {}, create: { nome: name } });
+    await prisma.genero.upsert({
+      where: { nome: name },
+      update: {},
+      create: { nome: name }
+    });
   }
 }
 
@@ -22,11 +27,15 @@ async function seedStatesAndMunicipalities(): Promise<void> {
     });
 
     for (const municipalityName of stateSeed.municipios) {
-      await prisma.municipio.upsert({
-        where: { estadoId_nome: { estadoId: state.id, nome: municipalityName } },
-        update: {},
-        create: { estadoId: state.id, nome: municipalityName }
+      const existingMunicipality = await prisma.municipio.findFirst({
+        where: { estadoId: state.id, nome: municipalityName }
       });
+
+      if (!existingMunicipality) {
+        await prisma.municipio.create({
+          data: { estadoId: state.id, nome: municipalityName }
+        });
+      }
     }
   }
 }
@@ -43,12 +52,12 @@ async function seedAdministrator(): Promise<void> {
 
   await prisma.usuario.upsert({
     where: { email: email.toLowerCase() },
-    update: { papel: 'ADMINISTRADOR' },
+    update: { role: PapelUsuario.ADMIN },
     create: {
       email: email.toLowerCase(),
       nome: process.env.SEED_ADMIN_NAME ?? 'Administrador',
       senha: hashedPassword,
-      papel: 'ADMINISTRADOR'
+      role: PapelUsuario.ADMIN
     }
   });
 }

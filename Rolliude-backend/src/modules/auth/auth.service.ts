@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import { Prisma } from '@prisma/client';
 import { env } from '../../config/env';
 import { prisma } from '../../config/prisma';
 import { sendPasswordResetEmail } from '../notifications/email.service';
@@ -113,7 +114,7 @@ export class AuthService {
   async resetPassword(data: ResetPasswordInput): Promise<void> {
     const tokenHash = hashPasswordResetToken(data.token);
 
-    await prisma.$transaction(async transaction => {
+    await prisma.$transaction(async (transaction: Prisma.TransactionClient) => {
       const resetToken = await transaction.passwordResetToken.findUnique({
         where: { tokenHash }
       });

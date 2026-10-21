@@ -1,67 +1,141 @@
-import type { Prisma, StatusFilme } from '@prisma/client';
+import path from 'path';
+import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
-import type { MovieInput, MovieListQuery, MovieUpdateInput } from './movie.schema';
 
-const filmeInclude = { generos: true } satisfies Prisma.FilmeInclude;
+const videosDirectory = path.join(process.cwd(), 'uploads', 'videos');
 
-function connectGeneros(generoIds: string[]) {
-  return generoIds.map((generoId) => ({ id: generoId }));
+const filmeInclude = {
+  generos: {
+    select: {
+      genero: {
+        select: {
+          id: true,
+          nome: true
+        }
+      }
+    }
+  },
+  municipio: {
+    select: {
+      id: true,
+      nome: true,
+      estado: {
+        select: {
+          id: true,
+          uf: true,
+          nome: true
+        }
+      }
+    }
+  }
+} satisfies Prisma.FilmeInclude;
+
+export interface CreateMovieData {
+  titulo: string;
+  tituloOriginal?: string;
+  sinopse?: string;
+  anoLancamento?: number;
+  duracaoMin?: number;
+  posterUrl?: string;
+  trailerUrl?: string;
+  videoUrl?: string;
+  dominioPublico?: boolean;
+  publicado?: boolean;
+  municipioId?: string;
+  generoIds?: string[];
 }
 
-export const movieService = {
-  async list(query: MovieListQuery) {
-    const where: Prisma.FilmeWhereInput = {
-      ...(query.status ? { status: query.status } : {}),
-      ...(query.search
-        ? {
-            OR: [
-              { titulo: { contains: query.search, mode: 'insensitive' } },
-              { diretor: { contains: query.search, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
+export interface UpdateMovieData extends Partial<CreateMovieData> {}
+
+export class MovieService {
+  async findAll(query: { page?: number; pageSize?: number; search?: string; publicado?: boolean; generoId?: string }) {
+    const where: Prisma.FilmeWhereInput = {};
+
+    if (query.publicado !== undefined) {
+      where.publicado = query.publicado;
+    }
+
+    if (query.search) {
+      where.OR = [
+        { titulo: { contains: query.search, mode: 'insensitive' } },
+        { sinopse: { contains: query.search, mode: 'insensitive' } }
+      ];
+    }
+
+    if (query.generoId) {
+      where.generos = {
+        some: {
+          generoId: query.generoId
+        }
+      };
+    }
+
+    return prisma.filme.findMany({
+      where,
+      include: filmeInclude,
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+
+  async findById(id: string) {
+    return prisma.filme.findUnique({
+      where: { id },
+      include: filmeInclude
+    });
+  }
+
+  async create(data: CreateMovieData) {
+    const { generoIds = [], ...filmeData } = data;
+
+    const createInput: Prisma.FilmeUncheckedCreateInput = {
+      ...filmeData,
+      generos: {
+        create: generoIds.map((generoId: string) => ({ generoId }))
+      }
     };
 
-    const [items, total] = await prisma.$transaction([
-      prisma.filme.findMany({
-        where,
-        include: filmeInclude,
-        orderBy: { createdAt: 'desc' },
-        skip: (query.page - 1) * query.pageSize,
-        take: query.pageSize,
-      }),
-      prisma.filme.count({ where }),
-    ]);
-
-    return { items, total, page: query.page, pageSize: query.pageSize };
-  },
-
-  findById: (id: string) => prisma.filme.findUnique({ where: { id }, include: filmeInclude }),
-
-  create(data: MovieInput) {
-    const { generoIds, ...filmeData } = data;
     return prisma.filme.create({
-      data: { ...filmeData, generos: { connect: connectGeneros(generoIds) } },
-      include: filmeInclude,
+      data: createInput,
+      include: filmeInclude
     });
-  },
+  }
 
-  update(id: string, data: MovieUpdateInput) {
+  async update(id: string, data: UpdateMovieData) {
     const { generoIds, ...filmeData } = data;
+
+    const updateInput: Prisma.FilmeUncheckedUpdateInput = {
+      ...filmeData
+    };
+
+    if (generoIds) {
+      updateInput.generos = {
+        deleteMany: {},
+        create: generoIds.map((generoId: string) => ({ generoId }))
+      };
+    }
+
     return prisma.filme.update({
       where: { id },
-      data: {
-        ...filmeData,
-        ...(generoIds ? { generos: { set: connectGeneros(generoIds) } } : {}),
-      },
-      include: filmeInclude,
+      data: updateInput,
+      include: filmeInclude
     });
-  },
+  }
 
-  setStatus: (id: string, status: StatusFilme) =>
-    prisma.filme.update({ where: { id }, data: { status }, include: filmeInclude }),
+  async togglePublicado(id: string, publicado: boolean) {
+    return prisma.filme.update({
+      where: { id },
+      data: { publicado },
+      include: filmeInclude
+    });
+  }
 
-  remove: (id: string) => prisma.filme.delete({ where: { id } }),
+  async getStreamFilePath(id: string): Promise<string | null> {
+    const filme = await prisma.filme.findFirst({
+      where: { id, publicado: true },
+      select: { videoUrl: true }
+    });
 
-  listGeneros: () => prisma.genero.findMany({ orderBy: { nome: 'asc' } }),
-};
+    if (!filme?.videoUrl) return null;
+    return path.join(videosDirectory, path.basename(filme.videoUrl));
+  }
+}

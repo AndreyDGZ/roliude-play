@@ -11,6 +11,7 @@ const envSchema = z.object({
   PASSWORD_RESET_TOKEN_EXPIRES_MIN: z.coerce.number().int().positive().default(30),
   PORT: z.coerce.number().int().positive().default(3000),
   ADMIN_API_KEY: z.string().min(16),
+  VIDEOS_DIRECTORY: z.string().default('storage/videos'),
 });
 
 export const env = envSchema.parse(process.env);
