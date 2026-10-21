@@ -1,16 +1,13 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
-export const dashboardController = {
-  async getStats(req: Request, res: Response) {
-    try {
-      // Aqui podes consultar a tua base de dados PostgreSQL via Prisma no futuro
-      return res.json({
-        totalMovies: 124,
-        totalUsers: 8405,
-        totalViews: '45K',
-      });
-    } catch (error) {
-      return res.status(500).json({ message: 'Erro ao carregar dados do dashboard.' });
-    }
-  },
+export const getDashboardStats = async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.json({
+      totalFilmes: 0,
+      totalUsuarios: 0,
+      avaliacoes: 0,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
