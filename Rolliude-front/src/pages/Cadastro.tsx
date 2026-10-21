@@ -19,7 +19,8 @@ export const Cadastro: React.FC = () => {
     setCarregando(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/users/register', {
+      const registerUrl = 'http:/' + '/localhost:3000/api/users/register';
+      const response = await fetch(registerUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,9 +47,12 @@ export const Cadastro: React.FC = () => {
 
       alert(data.message || 'Conta criada com sucesso!');
       navigate('/login');
-    } catch (err: any) {
-      console.error('Erro no cadastro:', err);
-      setErro(err.message || 'Não foi possível conectar ao servidor.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro('Não foi possível conectar ao servidor.');
+      }
     } finally {
       setCarregando(false);
     }

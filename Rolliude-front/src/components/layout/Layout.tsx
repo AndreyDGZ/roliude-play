@@ -1,88 +1,88 @@
 import React, { useEffect, useState } from 'react';
-import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Layout.module.css';
 
+interface UserData {
+  nome: string;
+  email?: string;
+  role?: string;
+  tipo?: string;
+}
+
 export const Layout: React.FC = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserData | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const checkUserSession = () => {
-      // 🔍 Lê do sessionStorage em vez do localStorage
-      const rawUser = sessionStorage.getItem('user') || sessionStorage.getItem('@Rolliude:user');
-      if (rawUser && rawUser !== 'undefined') {
-        try {
-          setUser(JSON.parse(rawUser));
-        } catch (error) {
-          console.error('Erro ao ler usuário do sessionStorage:', error);
-          setUser(null);
-        }
-      } else {
+    const rawUser = sessionStorage.getItem('user') || sessionStorage.getItem('@Rolliude:user');
+    if (rawUser) {
+      try {
+        const parsedUser = JSON.parse(rawUser) as UserData;
+        setUser(parsedUser);
+      } catch {
         setUser(null);
       }
-    };
-
-    checkUserSession();
-  }, [location]);
+    } else {
+      setUser(null);
+    }
+  }, [location.pathname]);
 
   const handleLogout = () => {
-    // 🧹 Limpa os dados da sessão atual
-    sessionStorage.clear();
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('@Rolliude:user');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('@Rolliude:token');
     setUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
-  const nomeCompleto = user?.nome || user?.name || '';
-  const primeiroNome = nomeCompleto.split(' ')[0] || 'Usuário';
+  const getFirstName = (fullName: string) => {
+    return fullName.trim().split(' ')[0];
+  };
 
   return (
-    <div className={styles.shell}>
+    <div className={styles.appContainer}>
       <header className={styles.header}>
-        <Link to="/" className={styles.brand}>
-          Rolliúde Play
-        </Link>
-
-        <nav className={styles.centerNav}>
-          <Link to="/" className={styles.navLink}>
-            Início
+        <div className={styles.headerContent}>
+          <Link to="/" className={styles.logo}>
+            Rolliude
           </Link>
-          <Link to="/catalogo" className={styles.navLink}>
-            Catálogo
-          </Link>
-        </nav>
 
-        <div className={styles.rightNav}>
-          {user ? (
-            <>
+          <nav className={styles.navLinks}>
+            <Link to="/" className={styles.navItem}>
+              Início
+            </Link>
+            <Link to="/catalogo" className={styles.navItem}>
+              Catálogo
+            </Link>
+          </nav>
+
+          <div className={styles.authArea}>
+            {user ? (
               <div className={styles.userBadge}>
-                <span>👤</span>
-                <span>{primeiroNome}</span>
+                <span className={styles.userName}>👤 {getFirstName(user.nome)}</span>
+                <button onClick={handleLogout} className={styles.logoutBtn}>
+                  Sair
+                </button>
               </div>
-              <button onClick={handleLogout} className={styles.logoutBtn}>
-                Sair
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" className={styles.navLink}>
-                Login
-              </Link>
-              <Link to="/cadastro" className={styles.navLink}>
-                Cadastro
-              </Link>
-            </>
-          )}
+            ) : (
+              <>
+                <Link to="/login" className={styles.loginBtn}>
+                  Entrar
+                </Link>
+                <Link to="/cadastro" className={styles.registerBtn}>
+                  Cadastrar
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </header>
 
-      <main className={styles.main}>
+      <main className={styles.mainContent}>
         <Outlet />
       </main>
-
-      <footer className={styles.footer}>
-        <p>© 2026 Rolliúde Play - Streaming de Cinema Brasileiro e Regional</p>
-      </footer>
     </div>
   );
 };

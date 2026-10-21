@@ -1,7 +1,7 @@
 import { ClassificacaoIndicativa, Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
 import { AppError } from '../../shared/errors/app-error';
-import { classificationToDatabase, FilmClassification, filmSelect, toFilmResponse } from './film.mapper';
+import { classificationToDatabase, FilmClassification, FilmRecord, filmSelect, toFilmResponse } from './film.mapper';
 import {
   CreateFilmInput,
   FilmResponse,
@@ -65,7 +65,7 @@ export class FilmService {
       ...scalarFields,
       tituloBusca: buildSearchField(data.titulo, data.tituloOriginal),
       ...this.toClassificationField(classificacaoIndicativa),
-      generos: { create: generoIds.map(generoId => ({ generoId })) }
+      generos: { create: generoIds.map((generoId: string) => ({ generoId })) }
     };
 
     const created = await prisma.filme.create({ data: createData, select: filmSelect });
@@ -82,7 +82,7 @@ export class FilmService {
       ...scalarFields,
       ...this.toSearchField(data, current),
       ...this.toClassificationField(classificacaoIndicativa),
-      ...(generoIds ? { generos: { deleteMany: {}, create: generoIds.map(generoId => ({ generoId })) } } : {})
+      ...(generoIds ? { generos: { deleteMany: {}, create: generoIds.map((generoId: string) => ({ generoId })) } } : {})
     };
 
     const updated = await prisma.filme.update({ where: { id: filmId }, data: updateData, select: filmSelect });
@@ -113,7 +113,7 @@ export class FilmService {
     ]);
 
     return {
-      data: films.map(film => toFilmResponse(film, viewer)),
+      data: films.map((film: FilmRecord) => toFilmResponse(film, viewer)),
       meta: {
         pagina: query.pagina,
         limite: query.limite,
@@ -124,7 +124,7 @@ export class FilmService {
   }
 
   private buildCatalogFilters(query: ListFilmsQuery): Prisma.FilmeWhereInput[] {
-    const filters: Prisma.FilmeWhereInput[] = buildSearchTokens(query.busca).map(token => ({
+    const filters: Prisma.FilmeWhereInput[] = buildSearchTokens(query.busca).map((token: string) => ({
       tituloBusca: { contains: token }
     }));
 

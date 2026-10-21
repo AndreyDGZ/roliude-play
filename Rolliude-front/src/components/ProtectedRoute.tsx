@@ -1,27 +1,29 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-export const ProtectedRoute: React.FC = () => {
-  // 🔍 Verifica se o token existe no sessionStorage
-  const token =
-    sessionStorage.getItem('token') || sessionStorage.getItem('@Rolliude:token');
+interface StoredUser {
+  role?: string;
+  tipo?: string;
+  isAdmin?: boolean;
+}
 
-  let user: any = null;
-  try {
-    const rawUser =
-      sessionStorage.getItem('user') || sessionStorage.getItem('@Rolliude:user');
-    if (rawUser && rawUser !== 'undefined') {
-      user = JSON.parse(rawUser);
-    }
-  } catch (error) {
-    console.error('Erro ao ler dados do usuário do sessionStorage:', error);
+export const ProtectedRoute: React.FC = () => {
+  const token = sessionStorage.getItem('token') || sessionStorage.getItem('@Rolliude:token');
+  const rawUser = sessionStorage.getItem('user') || sessionStorage.getItem('@Rolliude:user');
+
+  if (!token || !rawUser) {
+    return <Navigate to="/login" replace />;
   }
 
-  const isAuthenticated = Boolean(token);
-  const userRole = String(user?.role || user?.tipo || '').toUpperCase();
-  const isAdmin = userRole === 'ADMIN' || user?.isAdmin === true;
+  try {
+    const user = JSON.parse(rawUser) as StoredUser;
+    const role = String(user.role || user.tipo || '').toUpperCase();
+    const isAdmin = role === 'ADMIN' || user.isAdmin === true;
 
-  if (!isAuthenticated || !isAdmin) {
+    if (!isAdmin) {
+      return <Navigate to="/catalogo" replace />;
+    }
+  } catch {
     return <Navigate to="/login" replace />;
   }
 

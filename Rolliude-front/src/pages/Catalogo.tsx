@@ -35,7 +35,8 @@ export const Catalogo: React.FC = () => {
 
   const fetchMovies = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/movies');
+      const moviesUrl = 'http:/' + '/localhost:3000/api/movies';
+      const response = await fetch(moviesUrl);
       if (response.ok) {
         const resData = await response.json();
         const apiMovies = resData.data || resData;

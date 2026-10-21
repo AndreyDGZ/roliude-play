@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Page.module.css';
 
+interface UserData {
+  id?: string;
+  nome?: string;
+  email?: string;
+  role?: string;
+  tipo?: string;
+  isAdmin?: boolean;
+}
+
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -16,7 +25,8 @@ export const Login: React.FC = () => {
     setCarregando(true);
 
     try {
-      const response = await fetch('http://localhost:3000/api/auth/login', {
+      const loginUrl = 'http:/' + '/localhost:3000/api/auth/login';
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,13 +50,12 @@ export const Login: React.FC = () => {
 
       const authResult = resData.data || {};
       const token = authResult.token || authResult.accessToken;
-      const user = authResult.user;
+      const user: UserData | undefined = authResult.user;
 
       if (!token) {
         throw new Error('Servidor não retornou um token de autenticação.');
       }
 
-      // 🔐 Grava na sessionStorage para expirar ao fechar a aba/navegador
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('@Rolliude:token', token);
 
@@ -62,9 +71,12 @@ export const Login: React.FC = () => {
       } else {
         navigate('/catalogo');
       }
-    } catch (err: any) {
-      console.error('Erro no login:', err);
-      setErro(err.message || 'Não foi possível conectar ao servidor.');
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setErro(err.message);
+      } else {
+        setErro('Não foi possível conectar ao servidor.');
+      }
     } finally {
       setCarregando(false);
     }

@@ -1,18 +1,20 @@
 import { Router } from 'express';
-import { requireAdmin } from '../../shared/middlewares/require-admin';
-import { movieController } from './movie.controller';
+import { PapelUsuario } from '@prisma/client';
+import { authenticate, requireRole } from '../../middlewares/authenticate';
+import { MovieController } from './movie.controller';
 
-export const adminMovieRoutes = Router();
+const movieController = new MovieController();
 
-adminMovieRoutes.use(requireAdmin);
-adminMovieRoutes.get('/', movieController.list);
-adminMovieRoutes.get('/generos', movieController.listGeneros);
-adminMovieRoutes.get('/:id', movieController.getById);
-adminMovieRoutes.post('/', movieController.create);
-adminMovieRoutes.put('/:id', movieController.update);
-adminMovieRoutes.patch('/:id/status', movieController.setStatus);
-adminMovieRoutes.delete('/:id', movieController.remove);
+const publicMovieRoutes = Router();
+const adminMovieRoutes = Router();
 
-export const publicMovieRoutes = Router();
-
+publicMovieRoutes.get('/', movieController.list);
+publicMovieRoutes.get('/:id', movieController.getById);
 publicMovieRoutes.get('/:id/stream', movieController.stream);
+
+adminMovieRoutes.use(authenticate, requireRole(PapelUsuario.ADMIN));
+adminMovieRoutes.post('/', movieController.create);
+adminMovieRoutes.patch('/:id', movieController.update);
+adminMovieRoutes.patch('/:id/publicado', movieController.togglePublicado);
+
+export { publicMovieRoutes, adminMovieRoutes };

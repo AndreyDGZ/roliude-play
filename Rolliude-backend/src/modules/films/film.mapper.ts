@@ -74,7 +74,7 @@ export function toFilmResponse(record: FilmRecord, viewer: 'public' | 'admin'): 
     dominioPublico: record.dominioPublico,
     publicado: record.publicado,
     municipio: record.municipio,
-    generos: record.generos.map(item => item.genero),
+    generos: record.generos.map((item) => item.genero),
     createdAt: record.createdAt.toISOString(),
     updatedAt: record.updatedAt.toISOString()
   };
