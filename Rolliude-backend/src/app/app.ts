@@ -22,5 +22,5 @@ app.use('/api/movies', publicMovieRoutes);
 app.use('/api/admin/movies', adminMovieRoutes);
 app.use('/admin/dashboard', adminDashboardRoutes);
 
-// ⚠️ O errorHandler DEVE ser o último middleware registrado
+// ⚠️ errorHandler DEVE ser o último middleware
 app.use(errorHandler);

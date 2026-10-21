@@ -30,4 +30,6 @@
   --layout-content-max: 1240px;
   --layout-form-max: 400px;
   --layout-auth-max: 460px;
+  --layout-card-min: 200px;
+  --layout-field-min: 180px;
 }

@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "prisma:validate": "prisma validate",
-    "test": "yarn typecheck"
+    "test": "yarn typecheck",
+    "db:seed": "yarn build && node dist/seed/seed.js"
   },
   "engines": {
     "node": ">=20",
