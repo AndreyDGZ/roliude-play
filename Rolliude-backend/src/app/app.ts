@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { env } from '../config/env';
 import { authRoutes } from '../modules/auth/auth.routes';
+import { adminMovieRoutes } from '../modules/movies/movie.routes';
 import { docsRoutes } from '../modules/docs/docs.routes';
 import { filmAdminRoutes, filmRoutes } from '../modules/films/film.routes';
 import { genreRoutes } from '../modules/genres/genre.routes';
@@ -20,6 +21,7 @@ app.get('/api/health', (_request: Request, response: Response) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin/movies', adminMovieRoutes);
 app.use('/api/films', filmRoutes);
 app.use('/api/admin/films', filmAdminRoutes);
 app.use('/api/genres', genreRoutes);
