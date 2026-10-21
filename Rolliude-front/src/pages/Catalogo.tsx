@@ -11,7 +11,6 @@ interface Movie {
   coverUrl?: string;
 }
 
-// Dados de reserva caso o backend não retorne registros imediatos
 const MOCK_MOVIES: Movie[] = [
   { id: '1', title: 'Terra de Cabaceiras', year: 2022, genre: 'Documentário', state: 'PB' },
   { id: '2', title: 'Retirantes', year: 2021, genre: 'Drama', state: 'PB' },
@@ -40,50 +39,37 @@ export const Catalogo: React.FC = () => {
       if (response.ok) {
         const resData = await response.json();
         const apiMovies = resData.data || resData;
-        
-        if (Array.isArray(apiMovies) && apiMovies.length > 0) {
-          setMovies(apiMovies);
-        } else {
-          setMovies(MOCK_MOVIES);
-        }
+        setMovies(Array.isArray(apiMovies) && apiMovies.length > 0 ? apiMovies : MOCK_MOVIES);
       } else {
         setMovies(MOCK_MOVIES);
       }
-    } catch (error) {
-      console.error('Erro ao buscar filmes:', error);
+    } catch {
       setMovies(MOCK_MOVIES);
     } finally {
       setCarregando(false);
     }
   };
 
-  // Alternar filtro de gênero
   const handleGenreToggle = (genre: string) => {
     setGenerosSelecionados((prev) =>
-      prev.includes(genre)
-        ? prev.filter((g) => g !== genre)
-        : [...prev, genre]
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
     );
   };
 
-  // Limpar todos os filtros
   const handleClearFilters = () => {
     setBusca('');
     setGenerosSelecionados([]);
     setEstadoPB(false);
   };
 
-  // Filtragem dinâmica dos filmes
   const filmesFiltrados = movies.filter((movie) => {
     const tituloMatch = movie.title.toLowerCase().includes(busca.toLowerCase());
     const generoMatch =
       generosSelecionados.length === 0 || generosSelecionados.includes(movie.genre);
     const estadoMatch = !estadoPB || movie.state === 'PB';
-
     return tituloMatch && generoMatch && estadoMatch;
   });
 
-  // Utilitário para gradients variados das capas sem foto
   const getGradientClass = (index: number) => {
     const gradients = [styles.g1, styles.g2, styles.g3, styles.g4];
     return gradients[index % gradients.length];
@@ -91,16 +77,12 @@ export const Catalogo: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {/* Cabeçalho da Página */}
       <div className={styles.pageHeader}>
         <h1>Catálogo</h1>
         <p className={styles.breadcrumb}>
           Catálogo de produções
           {(busca || generosSelecionados.length > 0 || estadoPB) && (
-            <button
-              className={styles.clearFiltersBtn}
-              onClick={handleClearFilters}
-            >
+            <button className={styles.clearFiltersBtn} onClick={handleClearFilters}>
               Limpar Filtros
             </button>
           )}
@@ -120,10 +102,8 @@ export const Catalogo: React.FC = () => {
         </div>
       </div>
 
-      {/* Layout Principal com Sidebar de Filtros e Grid */}
       <div className={styles.catalogLayout}>
         <aside className={styles.filterBox}>
-          {/* Grupo: Localização */}
           <div className={styles.filterGroup}>
             <h4>Localização</h4>
             <label className={styles.filterOpt}>
@@ -136,7 +116,6 @@ export const Catalogo: React.FC = () => {
             </label>
           </div>
 
-          {/* Grupo: Gênero */}
           <div className={styles.filterGroup}>
             <h4>Gênero</h4>
             {['Drama', 'Documentário', 'Curta-metragem', 'Comédia'].map((genero) => (
@@ -151,7 +130,6 @@ export const Catalogo: React.FC = () => {
             ))}
           </div>
 
-          {/* Grupo: Ano */}
           <div className={styles.filterGroup}>
             <h4>Ano</h4>
             <div className={styles.filterOpt}>
@@ -160,7 +138,6 @@ export const Catalogo: React.FC = () => {
           </div>
         </aside>
 
-        {/* Grid dos Filmes */}
         <div>
           <div className={styles.resultsTop}>
             <span>
@@ -178,18 +155,10 @@ export const Catalogo: React.FC = () => {
                 onClick={() => navigate(`/filme/${movie.id}`)}
               >
                 <div
-                  className={`${styles.art} ${
-                    !movie.coverUrl ? getGradientClass(index) : ''
-                  }`}
-                  style={
-                    movie.coverUrl
-                      ? { backgroundImage: `url(${movie.coverUrl})` }
-                      : undefined
-                  }
+                  className={`${styles.art} ${!movie.coverUrl ? getGradientClass(index) : ''}`}
+                  style={movie.coverUrl ? { backgroundImage: `url(${movie.coverUrl})` } : undefined}
                 >
-                  {movie.state && (
-                    <span className={styles.badge}>{movie.state}</span>
-                  )}
+                  {movie.state && <span className={styles.badge}>{movie.state}</span>}
                 </div>
                 <div className={styles.info}>
                   <h4>{movie.title}</h4>

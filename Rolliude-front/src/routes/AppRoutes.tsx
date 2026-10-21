@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
 import { Home } from '../pages/Home';
-import { Catalogo } from '../pages/Catalogo'; // 👈 Certifique-se de importar o novo Catalogo
+import { Catalogo } from '../pages/Catalogo';
 import { FilmeDetalhe } from '../pages/FilmeDetalhe';
 import { Login } from '../pages/Login';
 import { Cadastro } from '../pages/Cadastro';
@@ -14,13 +14,10 @@ import { ProtectedRoute } from '../components/ProtectedRoute';
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Rotas Públicas */}
+      {/* Rotas Públicas envoltas pelo Layout */}
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        
-        {/* Rota pública do catálogo integrado */}
         <Route path="catalogo" element={<Catalogo />} />
-        
         <Route path="filme/:id" element={<FilmeDetalhe />} />
         <Route path="login" element={<Login />} />
         <Route path="cadastro" element={<Cadastro />} />
@@ -29,7 +26,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="*" element={<NotFound />} />
       </Route>
 
-      {/* Rotas Protegidas de Administração */}
+      {/* Rotas Protegidas Exclusivas para Admin */}
       <Route element={<ProtectedRoute />}>
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/filmes" element={<Dashboard />} />
