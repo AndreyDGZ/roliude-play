@@ -1,60 +1,96 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Page.module.css';
-
-interface UserData {
-  nome?: string;
-  email?: string;
-  role?: string;
-  tipo?: string;
-  isAdmin?: boolean;
-}
 
 interface Movie {
   id: string;
   title: string;
   genre: string;
-  coverUrl?: string;
+  year?: number | string;
+  publicado?: boolean;
 }
 
 export const Dashboard: React.FC = () => {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const rawUser = sessionStorage.getItem('user') || sessionStorage.getItem('@Rolliude:user');
-    if (rawUser) {
+    const fetchAdminMovies = async () => {
       try {
-        const parsedUser = JSON.parse(rawUser) as UserData;
-        setUser(parsedUser);
+        const adminUrl = 'http:/' + '/localhost:3000/api/movies';
+        const token = sessionStorage.getItem('token') || sessionStorage.getItem('@Rolliude:token');
 
-        const role = String(parsedUser.role || parsedUser.tipo || '').toUpperCase();
-        setIsAdmin(role === 'ADMIN' || parsedUser.isAdmin === true);
+        const response = await fetch(adminUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const resData = await response.json();
+          const list = resData.data || resData;
+          if (Array.isArray(list)) {
+            setMovies(list);
+          }
+        }
       } catch {
-        setUser(null);
+        setMovies([]);
+      } finally {
+        setCarregando(false);
       }
-    }
-    setCarregando(false);
+    };
+
+    fetchAdminMovies();
   }, []);
 
   return (
-    <div className={styles.container}>
-      <h2>Painel Administrativo</h2>
+    <div className={styles.formPage}>
+      <h1>Gerenciamento de Filmes</h1>
+
+      <div style={{ marginBottom: '20px' }}>
+        <button
+          onClick={() => navigate('/admin/filmes/novo')}
+          style={{
+            padding: '10px 16px',
+            backgroundColor: '#FF9200',
+            color: '#FFF',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+          }}
+        >
+          + Cadastrar Novo Filme
+        </button>
+      </div>
+
       {carregando ? (
-        <p>Carregando...</p>
+        <p>Carregando filmes...</p>
       ) : (
         <div>
-          <p>Bem-vindo, {user?.nome || 'Administrador'}!</p>
+          <p style={{ marginBottom: '16px' }}>Total de cadastros: {movies.length}</p>
 
-          {isAdmin ? (
-            <div style={{ marginTop: '2rem' }}>
-              <h3>Métricas e Gestão</h3>
-              <p>Total de filmes cadastrados no catálogo: {movies.length}</p>
-            </div>
-          ) : (
-            <p>Acesso restrito apenas a administradores.</p>
-          )}
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {movies.map((movie) => (
+              <li
+                key={movie.id}
+                style={{
+                  padding: '12px',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: '6px',
+                  marginBottom: '8px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <span>
+                  <strong>{movie.title}</strong> — {movie.genre}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
