@@ -12,3 +12,7 @@ adminMovieRoutes.post('/', movieController.create);
 adminMovieRoutes.put('/:id', movieController.update);
 adminMovieRoutes.patch('/:id/status', movieController.setStatus);
 adminMovieRoutes.delete('/:id', movieController.remove);
+
+export const publicMovieRoutes = Router();
+
+publicMovieRoutes.get('/:id/stream', movieController.stream);

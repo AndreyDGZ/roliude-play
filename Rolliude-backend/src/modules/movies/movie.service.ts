@@ -1,8 +1,11 @@
-import type { Prisma, StatusFilme } from '@prisma/client';
+import path from 'node:path';
+import { StatusFilme, type Prisma } from '@prisma/client';
+import { env } from '../../config/env';
 import { prisma } from '../../config/prisma';
 import type { MovieInput, MovieListQuery, MovieUpdateInput } from './movie.schema';
 
 const filmeInclude = { generos: true } satisfies Prisma.FilmeInclude;
+const videosDirectory = path.resolve(env.VIDEOS_DIRECTORY);
 
 function connectGeneros(generoIds: string[]) {
   return generoIds.map((generoId) => ({ id: generoId }));
@@ -64,4 +67,12 @@ export const movieService = {
   remove: (id: string) => prisma.filme.delete({ where: { id } }),
 
   listGeneros: () => prisma.genero.findMany({ orderBy: { nome: 'asc' } }),
+    async findVideoPath(id: string) {
+    const filme = await prisma.filme.findFirst({
+      where: { id, status: StatusFilme.PUBLICADO },
+      select: {videoFileName: true },
+    });
+    if (!filme?.videoFileName) return null;
+    return path.join(videosDirectory, path.basename(filme.videoFileName));
+  },
 };

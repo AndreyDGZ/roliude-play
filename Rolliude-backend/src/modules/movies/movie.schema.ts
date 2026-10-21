@@ -8,7 +8,15 @@ const optionalUrl = z
   .optional()
   .transform((value) => (value ? value : undefined));
 
-export const movieBodySchema = z.object({
+  const optionalVideoFileName = z
+  .string()
+  .trim()
+  .max(200)
+  .regex(/^([a-z0-9][a-z0-9._-]*\.mp4)?$/i, 'Nome de arquivo inválido')
+  .optional()
+  .transform((value) => (value ? value : undefined));
+
+  export const movieBodySchema = z.object({
   titulo: z.string().trim().min(1, 'Título obrigatório').max(160),
   sinopse: z.string().trim().min(10, 'Sinopse muito curta').max(5000),
   diretor: z.string().trim().min(1, 'Diretor obrigatório').max(120),
@@ -22,7 +30,7 @@ export const movieBodySchema = z.object({
   classificacaoIndicativa: z.enum(classificacoesIndicativas).optional(),
   posterUrl: optionalUrl,
   trailerUrl: optionalUrl,
-  videoUrl: optionalUrl,
+  videoFileName: optionalVideoFileName,
   dominioPublico: z.boolean().default(false),
   status: z.nativeEnum(StatusFilme).default(StatusFilme.RASCUNHO),
   generoIds: z.array(z.string().uuid()).min(1, 'Informe ao menos um gênero').max(8),

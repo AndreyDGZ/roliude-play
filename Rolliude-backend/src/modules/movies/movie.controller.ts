@@ -9,12 +9,17 @@ import {
 } from './movie.schema';
 import { movieService } from './movie.service';
 
+
 function sendValidationError(response: Response, error: ZodError) {
   response.status(400).json({ error: 'Dados inválidos', details: error.flatten().fieldErrors });
 }
 
 function sendNotFound(response: Response) {
   response.status(404).json({ error: 'Filme não encontrado' });
+}
+
+function sendVideoNotFound(response: Response) {
+  response.status(404).json({ error: 'Vídeo não encontrado' });
 }
 
 function parseId(request: Request, response: Response): string | null {
@@ -100,6 +105,20 @@ export const movieController = {
       if (!(await movieService.findById(id))) return sendNotFound(response);
       await movieService.remove(id);
       response.status(204).end();
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async stream(request: Request, response: Response, next: NextFunction) {
+    try {
+      const id = parseId(request, response);
+      if (!id) return;
+      const videoPath = await movieService.findVideoPath(id);
+      if (!videoPath) return sendVideoNotFound(response);
+      response.sendFile(videoPath, (error) => {
+        if (error && !response.headersSent) sendVideoNotFound(response);
+      });
     } catch (error) {
       next(error);
     }

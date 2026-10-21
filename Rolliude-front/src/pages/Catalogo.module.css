@@ -1,0 +1,201 @@
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px 70px;
+}
+
+.pageHeader {
+  padding: 40px 0 0;
+}
+
+.pageHeader h1 {
+  font-family: 'Rye', serif;
+  font-size: 34px;
+  color: #C84B31;
+  margin: 0 0 6px;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  color: rgba(36, 26, 16, 0.62);
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.clearFiltersBtn {
+  background: none;
+  border: none;
+  color: #C84B31;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.searchRow {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(36, 26, 16, 0.14);
+  background: #FFFFFF;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13.5px;
+  color: #241A10;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #FF9200;
+}
+
+.sortBtn {
+  background: transparent;
+  border: 1.5px solid #241A10;
+  color: #241A10;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 11px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.catalogLayout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 40px;
+}
+
+.filterBox {
+  border-right: 1px solid rgba(36, 26, 16, 0.14);
+  padding-right: 24px;
+}
+
+.filterGroup {
+  padding: 18px 0;
+  border-top: 1px solid rgba(36, 26, 16, 0.14);
+}
+
+.filterGroup:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.filterGroup h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: #241A10;
+}
+
+.filterOpt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(36, 26, 16, 0.62);
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.filterOpt input {
+  accent-color: #C84B31;
+  cursor: pointer;
+}
+
+.resultsTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: rgba(36, 26, 16, 0.62);
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.card {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid rgba(36, 26, 16, 0.14);
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.art {
+  height: 230px;
+  border-bottom: 1px solid rgba(36, 26, 16, 0.14);
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  background: #241A10;
+  color: #FFD23F;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+
+.info {
+  padding: 12px;
+}
+
+.info h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  margin: 0 0 4px;
+  color: #241A10;
+}
+
+.info p {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(36, 26, 16, 0.62);
+}
+
+/* Fallback Gradients para capas de filmes sem imagem */
+.g1 { background: linear-gradient(150deg, #C84B31, #7C2E1B); }
+.g2 { background: linear-gradient(150deg, #FF9200, #C84B31); }
+.g3 { background: linear-gradient(150deg, #FFD23F, #FF9200); }
+.g4 { background: linear-gradient(150deg, #7C2E1B, #241A10); }
+
+@media (max-width: 900px) {
+  .catalogLayout {
+    grid-template-columns: 1fr;
+  }
+  .filterBox {
+    border-right: none;
+    border-bottom: 1px solid rgba(36, 26, 16, 0.14);
+    padding-bottom: 20px;
+  }
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

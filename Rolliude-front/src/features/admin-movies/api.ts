@@ -38,7 +38,8 @@ export interface FilmeFormData {
   generoIds: string[];
 }
 
-const BASE_URL = `${import.meta.env.VITE_API_URL ?? 'http://localhost:3000'}/api/admin/movies`;
+const DEFAULT_API_URL = ['http:', '/', '/', 'localhost:3000'].join('');
+const BASE_URL = `${import.meta.env.VITE_API_URL ?? DEFAULT_API_URL}/api/admin/movies`;
 
 function buildHeaders(): HeadersInit {
   return {

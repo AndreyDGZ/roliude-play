@@ -2,7 +2,8 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { env } from '../config/env';
 import { authRoutes } from '../modules/auth/auth.routes';
-import { adminMovieRoutes } from '../modules/movies/movie.routes';
+import { adminDashboardRoutes } from '../modules/dashboard/dashboard.routes';
+import { adminMovieRoutes, publicMovieRoutes } from '../modules/movies/movie.routes';
 import { userRoutes } from '../modules/users/user.routes';
 import { errorHandler } from '../shared/errors/error-handler';
 
@@ -17,5 +18,7 @@ app.get('/api/health', (_request: Request, response: Response) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/movies', publicMovieRoutes);
 app.use('/api/admin/movies', adminMovieRoutes);
+app.use('/admin/dashboard', adminDashboardRoutes);
 app.use(errorHandler);

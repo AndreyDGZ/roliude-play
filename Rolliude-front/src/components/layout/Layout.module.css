@@ -26,15 +26,61 @@
   text-shadow: 2px 2px 0 var(--brand-terracotta), 4px 4px 0 var(--brand-orange);
 }
 
-.nav {
+/* Centralização dos links principais ("Início" e "Catálogo") */
+.centerNav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: var(--space-4);
 }
 
+/* Link interativo com efeito de flutuação no hover */
 .navLink {
   color: var(--color-text-primary);
   font-weight: 600;
   text-decoration: none;
+  padding: var(--space-1) var(--space-2);
+  display: inline-block;
+  transition: transform 0.25s ease, color 0.25s ease, text-shadow 0.25s ease;
+}
+
+.navLink:hover {
+  transform: translateY(-4px); /* Eleva o link suavemente */
+  color: var(--brand-orange);
+  text-shadow: 0 4px 10px rgba(255, 146, 0, 0.35); /* Glow na cor da marca */
+}
+
+/* Área do usuário / botões de autenticação no canto direito */
+.rightNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.userBadge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 600;
+  color: var(--brand-ink);
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid var(--brand-terracotta);
+  color: var(--brand-terracotta);
+  padding: var(--space-1) var(--space-3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background-color: var(--brand-terracotta);
+  color: #fff;
 }
 
 .main {
@@ -52,17 +98,24 @@
   text-align: center;
 }
 
+/* Responsividade para telas menores */
 @media (max-width: 720px) {
   .header {
-    align-items: flex-start;
+    align-items: center;
     flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-3);
   }
 
-  .nav {
+  .centerNav {
+    position: static;
+    transform: none;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    justify-content: center;
+  }
+
+  .rightNav {
+    margin-left: 0;
   }
 
   .main {

@@ -77,7 +77,7 @@ model Filme {
   classificacaoIndicativa String?
   posterUrl               String?
   trailerUrl              String?
-  videoUrl                String?
+  videoFileName           String?
   dominioPublico          Boolean     @default(false)
   status                  StatusFilme @default(RASCUNHO)
   generos                 Genero[]
