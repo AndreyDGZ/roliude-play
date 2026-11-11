@@ -6,49 +6,52 @@ metadata:
 description: >-
   How to work inside the Rolliude Play repository without inventing conventions
   that already exist somewhere else in the project. Covers: where the
-  canonical source of truth lives for product vision, database schema, HTTP
-  contracts, UI tokens, UI components, runtime versions, dependencies, git
-  flow and agent instructions; the mandatory coding rules from AGENTS.md (no
+  canonical source of truth lives for database schema, HTTP contracts, UI
+  tokens, UI components, runtime versions, dependencies, git flow and agent
+  instructions; the mandatory coding rules from AGENTS.md (no
   `any`/`as any`/`@ts-ignore`/`@ts-expect-error`, no comments in touched
   files, no one-letter variables, no duplicate sources of truth, no inventing
   UI colors/fonts/spacing/variants); the real Design System tokens (brand
   colors, Rye/Montserrat fonts, spacing/radius scale) and that styling is CSS
   Modules + CSS variables, not Tailwind; the backend's modular folder pattern
-  under `src/modules/<domain>/` versus the legacy `src/controllers|routes|schemas|services/`
-  structure; Prisma as the only valid source for schema/migrations; and the
-  sprint/ClickUp delivery workflow. Use when adding or changing a React
+  under `src/modules/<domain>/`; Prisma as the only valid source for
+  schema/migrations; and the sprint/ClickUp delivery workflow. All project
+  ADRs, standards, API contract reference and historical docs live under
+  `references/` in this skill folder, not in a separate top-level
+  `Rolliude-project/` anymore. Use when adding or changing a React
   component, a CSS/style value, an Express route or controller, a Prisma
   model or migration, or anything else inside this repo, before writing code
   that could reinvent a rule, a color, a folder pattern or a table that
   already has a canonical home. Triggers on: "Rolliude Play", "Rolliúde
-  Play", "AGENTS.md", "authority-map", "project-standards", "ADR-00", "design
-  system", "tokens.css", "designTokens", "--brand-orange", "--brand-ink",
-  "Rye", "Montserrat", "CSS Modules", "Tailwind", "schema.prisma", "Prisma
+  Play", "AGENTS.md", "authority-map", "ADR-00", "design system",
+  "tokens.css", "designTokens", "--brand-orange", "--brand-ink", "Rye",
+  "Montserrat", "CSS Modules", "Tailwind", "schema.prisma", "Prisma
   migration", "novo componente", "nova rota", "novo controller", "sprint",
-  "ClickUp", "Rolliude-front", "Rolliude-backend", "Rolliude-project".
+  "ClickUp", "Rolliude-front", "Rolliude-backend".
 ---
 
 # Trabalhando no repositório Rolliude Play
 
 ## Modelo mental
 
-Rolliude Play não é uma lib com uma API própria — é um monorepo com três pastas
-de primeiro nível (`Rolliude-front/`, `Rolliude-backend/`, `Rolliude-project/`)
-e uma regra única acima de tudo: **para quase todo assunto existe exatamente
-um arquivo que é a fonte de verdade**, listado em
-`Rolliude-project/project-standards/01-authority-map.md`. Qualquer outro lugar
-onde o mesmo valor apareça (uma cor copiada dentro de um componente, um tipo
-de frontend que diverge do schema de validação do backend, um SQL solto fora
-do Prisma) é, por definição, não canônico — mesmo que esteja funcionando.
+Rolliude Play não é uma lib com uma API própria — é um monorepo com duas
+pastas de primeiro nível de código (`Rolliude-front/`, `Rolliude-backend/`)
+mais esta skill, que concentra toda a documentação de projeto (ADRs,
+padrões, fluxo de git, contrato de API, material histórico). Uma regra
+única acima de tudo: **para quase todo assunto existe exatamente um arquivo
+que é a fonte de verdade**, listado no mapa de autoridade abaixo. Qualquer
+outro lugar onde o mesmo valor apareça (uma cor copiada dentro de um
+componente, um tipo de frontend que diverge do schema de validação do
+backend, um SQL solto fora do Prisma) é, por definição, não canônico — mesmo
+que esteja funcionando.
 
 O ponto de entrada de qualquer tarefa é sempre o mesmo, na ordem:
 
-1. `AGENTS.md` (raiz do repo) — regras obrigatórias.
-2. `Rolliude-project/project-standards/01-authority-map.md` — identificar a
-   área afetada.
-3. O arquivo de padrão correspondente em `project-standards/02..09-*.md`.
-4. As ADRs aceitas em `Rolliude-project/docs/architecture/adr/` relevantes
-   para essa área.
+1. `AGENTS.md` (raiz do repo) — regras obrigatórias, hoje só um ponteiro
+   pra esta skill.
+2. Mapa de autoridade abaixo — identificar a área afetada.
+3. `references/standards.md` — seção correspondente ao tema.
+4. `references/adrs.md` — decisões aceitas relevantes pra essa área.
 
 ## Princípios norteadores
 
@@ -58,27 +61,33 @@ O ponto de entrada de qualquer tarefa é sempre o mesmo, na ordem:
   sinal para parar e perguntar, não para decidir sozinho.
 - **Divergência para o ADR, não para o código.** Se dois lugares do repo
   dizem coisas diferentes sobre o mesmo assunto (ex.: um componente com cor
-  hardcoded diferente do token oficial), o `01-authority-map.md` manda: parar
-  a implementação afetada, identificar a fonte canônica, documentar a decisão
-  estrutural em uma ADR se for arquitetural, corrigir a fonte não canônica, e
-  só então continuar.
+  hardcoded diferente do token oficial), a regra é: parar a implementação
+  afetada, identificar a fonte canônica, documentar a decisão estrutural em
+  uma ADR se for arquitetural, corrigir a fonte não canônica, e só então
+  continuar.
 
 ## Mapa de autoridade (resumo)
 
 | Assunto | Fonte canônica | Não é canônico |
 |---|---|---|
-| Visão de produto | `Rolliude-project/docs/product/vision.md` | README, mensagens de chat |
-| MVP atual | `Rolliude-project/docs/product/mvp.md` | documentos históricos de sprint |
-| Requisitos | `Rolliude-project/docs/product/requirements.md` | notas informais de implementação |
-| Decisões de arquitetura | ADRs aceitas em `Rolliude-project/docs/architecture/adr/` | mensagens de chat |
+| Decisões de arquitetura | `references/adrs.md` (ADRs aceitas) | mensagens de chat |
 | Banco de dados | `Rolliude-backend/prisma/schema.prisma` + `Rolliude-backend/prisma/migrations/` | SQL solto ou documentos históricos de sprint |
-| Contrato HTTP | schemas de rota do backend + OpenAPI gerado | tipos de frontend manuais que divergem |
+| Contrato HTTP | schemas de rota do backend + OpenAPI gerado | `references/api-catalog.md` é guia de uso, não a fonte; tipos de frontend manuais que divergem tampouco são canônicos |
 | Tokens de UI | `Rolliude-front/src/styles/tokens.css` | valores copiados dentro de componentes |
 | Componentes de UI | `Rolliude-front/src/components/ui/` | implementações duplicadas locais à página |
-| Runtime | `.nvmrc`, `engines` do `package.json`, Docker e CI | valores só no README |
-| Dependências | `package.json` + `yarn.lock` oficiais | listas de dependências copiadas |
-| Fluxo de Git | `Rolliude-project/CONTRIBUTING.md` | mensagens de grupo |
-| Instruções de agente | `AGENTS.md` + `Rolliude-project/project-standards/` | cópias independentes de regras de IA |
+| Runtime | `.nvmrc`, `engines` do `package.json`, Docker e CI | README-only values |
+| Dependências | `package.json` + `yarn.lock` oficiais de cada repo | listas de dependências copiadas |
+| Fluxo de Git | `references/git-workflow.md` | mensagens de grupo |
+| Instruções de agente | `AGENTS.md` + esta skill | cópias independentes de regras de IA |
+
+### Pendência conhecida (não inventar conteúdo pra preencher)
+
+O mapa de autoridade antigo também citava `docs/product/vision.md`, `mvp.md`
+e `requirements.md` como fonte canônica de visão de produto/MVP/requisitos.
+**Nenhum dos três arquivos jamais existiu no repositório** — a pendência é
+real e anterior a esta reorganização. Se alguém pedir a visão de
+produto/MVP/requisitos formal, não existe documento pra apontar; não invente
+o conteúdo desses arquivos, sinalize a lacuna.
 
 ## Regras obrigatórias (de `AGENTS.md`)
 
@@ -123,9 +132,9 @@ da cor de marca bruta (ex.: `--color-action-primary-bg`, não
 
 ### Regra que morde
 
-Este projeto **não usa Tailwind** — a estratégia de estilo (ver
-`ADR-003-styling-strategy.md`) é CSS Modules (`*.module.css`) consumindo essas
-CSS variables. Não adicione configuração do Tailwind nem escreva classes
+Este projeto **não usa Tailwind** — a estratégia de estilo (ver ADR-003 em
+`references/adrs.md`) é CSS Modules (`*.module.css`) consumindo essas CSS
+variables. Não adicione configuração do Tailwind nem escreva classes
 utilitárias esperando que exista um `tailwind.config` — ele não existe neste
 repo.
 
@@ -133,16 +142,18 @@ repo.
 
 - Stack: React + TypeScript, build com Vite.
 - Estilo: CSS Modules por componente (`Component.tsx` + `Component.module.css`),
-  nunca estilo inline com valores de cor/fonte/espaçamento fora dos tokens.
+  nunca estilo inline (`style={{...}}`) com valores de cor/fonte/espaçamento
+  fora dos tokens.
+- Chamadas de API devem passar por `src/lib/http/` (camada HTTP genérica),
+  nunca `fetch`/URL hardcoded direto num componente de página.
 - Componentes de UI reutilizáveis já existem em
   `Rolliude-front/src/components/ui/` (ex.: `Button.tsx`, `TextField.tsx`,
   cada um com seu `.module.css`). Antes de criar um componente novo, procure
-  ali — recriar um botão ou campo de texto do zero numa página é a duplicação
-  que `01-authority-map.md` chama de "implementação duplicada local à
-  página".
-- Leia `project-standards/03-frontend.md` para padrões de estrutura de
-  pastas/rotas e `project-standards/07-ui-accessibility.md` antes de criar
-  qualquer componente novo de UI.
+  ali — recriar um botão ou campo de texto do zero numa página é a
+  duplicação que o mapa de autoridade chama de "implementação duplicada
+  local à página".
+- Leia `references/standards.md` seção 3 (frontend) e seção 7
+  (UI/acessibilidade) antes de criar qualquer componente novo de UI.
 
 ## Backend (`Rolliude-backend/`)
 
@@ -154,8 +165,11 @@ repo.
   `src/schemas/`, `src/services/`), feita só de shims de uma linha
   reexportando o código modular, existiu neste repo e foi removida numa
   reorganização — não recrie esse padrão plano por camada técnica.
-- Leia `project-standards/04-backend.md` e `project-standards/06-api-auth.md`
+- Leia `references/standards.md` seção 4 (backend) e seção 6 (API/auth)
   antes de decidir onde colocar um controller, rota ou schema novo.
+- **Antes de criar um módulo novo de domínio, confirme que outro módulo não
+  já cobre o mesmo domínio e está só desconectado de `app.ts`** — ver
+  "Pitfalls conhecidos" abaixo sobre `modules/films/` vs `modules/movies/`.
 
 ### Regra que morde
 
@@ -172,15 +186,25 @@ proíbe e que já foi limpa deste repo.
   arquivos `database.ts` ad-hoc) é não canônico — não parta desses arquivos
   nem os trate como fonte de verdade; se existirem, são candidatos a
   reconciliação ou remoção, não a extensão.
-- Leia `project-standards/05-database.md` antes de criar uma migration.
+- Depois de editar `schema.prisma` sem criar migration nova (ex. corrigindo
+  um `@@map`/nome de campo que diverge do banco real), rode
+  `npx prisma generate` antes de tocar em qualquer `.ts` que importe tipos
+  do `@prisma/client` — não há `postinstall` configurado rodando isso
+  sozinho.
+- Antes de uma migration nova, valide com
+  `npx prisma migrate diff --from-url <DATABASE_URL> --to-schema-datamodel prisma/schema.prisma --script`
+  contra um banco de dev descartável: diff vazio confirma que
+  `schema.prisma` e o banco real convergem.
+- Leia `references/standards.md` seção 5 (banco de dados) antes de criar uma
+  migration.
 
 ## Qualidade, segurança e documentação
 
-- `project-standards/08-quality-security.md` cobre padrões de qualidade e
-  segurança que se aplicam antes de qualquer PR.
-- `project-standards/09-git-documentation.md` cobre convenções de commit/PR e
-  documentação; o fluxo de Git canônico vive em
-  `Rolliude-project/CONTRIBUTING.md`.
+- `references/standards.md` seção 8 cobre padrões de qualidade e segurança
+  que se aplicam antes de qualquer PR.
+- `references/standards.md` seção 9 e `references/git-workflow.md` cobrem
+  convenções de commit/PR, documentação e o fluxo de Git canônico completo
+  (branches, checks obrigatórios).
 
 ## Metodologia de sprint e ClickUp
 
@@ -197,19 +221,30 @@ proíbe e que já foi limpa deste repo.
 
 ## Pitfalls conhecidos neste repo
 
-- Uma reorganização removeu protótipos e arquivos órfãos que haviam se
-  acumulado na raiz (um módulo de auth antigo com `package.json`/`tsconfig.json`/
-  `database.ts`/`usuarios.sql` próprios, uma pasta `backend/` com um
-  `server.ts` incompleto, e um projeto Vite standalone de protótipo de tela
-  de cadastro) e os shims legados do backend (`src/controllers/`,
-  `src/routes/`, `src/schemas/`, parte de `src/services/`). Não recrie esse
-  padrão: qualquer arquivo de configuração, SQL ou scaffold de app solto na
-  raiz do repo, fora de `.claude/`, `Rolliude-backend/`, `Rolliude-front/` ou
-  `Rolliude-project/`, é sinal de que algo não passou pela fonte canônica.
-- Conteúdo de produto que ainda não foi integrado ao fluxo real (ex.: texto
-  de termos de uso e lista de estados/regiões do protótipo de cadastro
-  removido) fica em `Rolliude-project/docs/product/cadastro-content-reference.md`
-  como referência — não é código, não deve ser tratado como implementação
+- **`modules/films/` vs `modules/movies/` (backend)**: existem duas
+  implementações paralelas do mesmo domínio de catálogo. `modules/films/`
+  tem schema de validação Zod, mapper com visibilidade por domínio público
+  e busca dedicada (bate com `references/api-catalog.md` e as ADRs 007/009)
+  — mas **nunca foi conectado em `src/app/app.ts`**. Quem roda de verdade
+  hoje é `modules/movies/`, uma versão mais pobre do mesmo domínio, sem
+  schema próprio nem mapper, e é nela que o frontend está cabeado. Antes de
+  mexer em qualquer rota de filme/movie, confirme qual dos dois módulos
+  você está realmente alterando e se o outro não devia ser removido/fundido
+  primeiro.
+- Uma reorganização anterior removeu protótipos e arquivos órfãos que
+  haviam se acumulado na raiz (um módulo de auth antigo com
+  `package.json`/`tsconfig.json`/`database.ts`/`usuarios.sql` próprios, uma
+  pasta `backend/` com um `server.ts` incompleto, um projeto Vite standalone
+  de protótipo de tela de cadastro, e os shims legados do backend
+  `src/controllers/`, `src/routes/`, `src/schemas/`, parte de
+  `src/services/`). Não recrie esse padrão: qualquer arquivo de
+  configuração, SQL ou scaffold de app solto na raiz do repo, fora de
+  `.claude/`, `Rolliude-backend/` ou `Rolliude-front/`, é sinal de que algo
+  não passou pela fonte canônica.
+- Conteúdo de produto que ainda não foi integrado ao fluxo real (textos de
+  termos de uso e lista de estados/regiões do protótipo de cadastro
+  removido) fica em `references/cadastro-content-reference.md` como
+  referência — não é código, não deve ser tratado como implementação
   pronta, e integrá-lo ao `Cadastro.tsx` real exige uma feature própria
   (schema do `Usuario` no Prisma não tem campos de estado/município/perfil
   ainda).
@@ -217,14 +252,34 @@ proíbe e que já foi limpa deste repo.
   ainda referenciam a paleta antiga (vermelho/preto/dourado) — se você vir
   essas cores em qualquer lugar fora de material histórico, é desalinhamento
   com o Design System oficial, não uma variante válida.
+- Já houve um commit (`d20db6d`, "fix: resolve erros do quality-check e
+  limpa comentarios de linha") que, junto com limpezas legítimas, introduziu
+  drift real sem ADR: renomeou enums/campos do `schema.prisma` sem gerar
+  migration, e trocou código por versões com cor/URL hardcoded em vez de
+  token/`src/lib/http/`. Um "fix de lint" grande mexendo em muitos arquivos
+  de uma vez é sinal de atenção redobrada, não só confiança no nome do
+  commit.
 
 ## O que esta skill não decide
 
 - Não substitui a leitura da ADR específica da área que você está mudando —
-  esta skill indexa onde elas estão, não resume o conteúdo de cada decisão.
+  `references/adrs.md` indexa as decisões, não convida a pular a leitura
+  antes de uma mudança arquitetural grande.
 - Não aprova mudança de paleta, tipografia ou criação de nova variante de
   componente — isso é decisão de Design System/Product Owner, documentada
   via ADR, não algo para o agente inferir sozinho.
-- Não resolve divergências entre fontes por conta própria — segue a regra do
-  `01-authority-map.md`: parar, identificar a fonte canônica, documentar em
+- Não resolve divergências entre fontes por conta própria — segue a regra
+  do mapa de autoridade: parar, identificar a fonte canônica, documentar em
   ADR se for estrutural, corrigir a fonte não canônica, então continuar.
+
+## Referências completas
+
+- `references/adrs.md` — as 9 ADRs aceitas, condensadas por decisão.
+- `references/standards.md` — os 9 temas de padrão de projeto.
+- `references/git-workflow.md` — fluxo de contribuição e checks de PR.
+- `references/api-catalog.md` — guia de uso do contrato de API de catálogo
+  (com a nota de drift `films`/`movies` documentada).
+- `references/schema-filmes-test.md` — relatório histórico de banco do
+  Sprint 1 (não canônico, só pra saber o que é roadmap).
+- `references/cadastro-content-reference.md` — conteúdo de produto do
+  protótipo de cadastro removido, ainda não integrado ao código real.

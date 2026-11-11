@@ -58,7 +58,7 @@ yarn db:seed
 
 O seed carrega gêneros, estados com região e alguns municípios. Defina `SEED_ADMIN_EMAIL` e `SEED_ADMIN_PASSWORD` no `.env` para criar um administrador.
 
-O contrato da API é gerado dos schemas do backend e fica em `http://localhost:3000/api/docs/openapi.json`. O guia de uso está em `Rolliude-project/docs/api/catalog.md`.
+O contrato da API é gerado dos schemas do backend e fica em `http://localhost:3000/api/docs/openapi.json`. O guia de uso está em `.claude/skills/rolliude-play/references/api-catalog.md`.
 
 ## Checks
 
@@ -78,8 +78,7 @@ yarn prisma:validate
 
 ## Fontes canônicas
 
-- Regras de autoridade: `Rolliude-project/project-standards/01-authority-map.md`
-- Padrões do projeto: `Rolliude-project/project-standards/`
-- Decisões arquiteturais: `Rolliude-project/docs/architecture/adr/`
-- Contribuição: `Rolliude-project/CONTRIBUTING.md`
+- Regras de autoridade e padrões do projeto: `.claude/skills/rolliude-play/SKILL.md`
+- Decisões arquiteturais: `.claude/skills/rolliude-play/references/adrs.md`
+- Contribuição: `.claude/skills/rolliude-play/references/git-workflow.md`
 - Instruções para agentes: `AGENTS.md`
