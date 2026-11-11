@@ -1,6 +1,6 @@
 # Rolliúde Play Agent Instructions
 
-Before changing this repository, read `Rolliude-project/project-standards/01-authority-map.md`, identify the affected area, then read the matching standard file and accepted ADRs in `Rolliude-project/docs/architecture/adr/`.
+Before changing this repository, read the `rolliude-play` skill at `.claude/skills/rolliude-play/SKILL.md`, identify the affected area from its authority map, then read the matching section in `references/standards.md` and the accepted ADRs in `references/adrs.md`.
 
 Mandatory rules:
 

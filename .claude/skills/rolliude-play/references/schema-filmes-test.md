@@ -1,3 +1,15 @@
+# Relatório de banco do Sprint 1 (histórico, não canônico)
+
+Material histórico: rascunho de schema Prisma produzido no relatório de
+banco do Sprint 1, antes da reconciliação da ADR-008. Não é a fonte
+canônica do banco (essa é `Rolliude-backend/prisma/schema.prisma` +
+`Rolliude-backend/prisma/migrations/`). Serve só pra saber o que é
+"roadmap até ser implementado em código" por `05-database.md`/
+`references/standards.md` seção 5: diretores, elenco, avaliações,
+favoritos e histórico de visualização aparecem aqui mas ainda não existem
+no schema real.
+
+```prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -95,7 +107,6 @@ model Filme {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  // novos campos (opcionais ou com default, para não quebrar linhas existentes)
   tituloOriginal          String?                 @map("titulo_original")
   sinopse                 String?
   anoLancamento           Int?                    @map("ano_lancamento")
@@ -106,7 +117,6 @@ model Filme {
   trailerUrl              String?                 @map("trailer_url")
   publicado               Boolean                 @default(false)
 
-  // município de origem/produção (opcional)
   municipioId String?    @map("municipio_id")
   municipio   Municipio? @relation(fields: [municipioId], references: [id])
 
@@ -187,7 +197,7 @@ model Avaliacao {
   id         String   @id @default(uuid())
   usuarioId  String   @map("usuario_id")
   filmeId    String   @map("filme_id")
-  nota       Int // 1 a 5 (validar na aplicação ou via CHECK na migration)
+  nota       Int
   comentario String?
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
@@ -200,11 +210,11 @@ model Avaliacao {
 }
 
 model Favorito {
-  usuarioId   String   @map("usuario_id")
-  filmeId     String   @map("filme_id")
+  usuarioId    String   @map("usuario_id")
+  filmeId      String   @map("filme_id")
   adicionadoEm DateTime @default(now()) @map("adicionado_em")
-  usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  filme       Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  filme        Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
 
   @@id([usuarioId, filmeId])
   @@index([filmeId])
@@ -212,17 +222,17 @@ model Favorito {
 }
 
 model HistoricoVisualizacao {
-  id              String   @id @default(uuid())
-  usuarioId       String   @map("usuario_id")
-  filmeId         String   @map("filme_id")
-  progressoSeg    Int      @default(0) @map("progresso_seg")
-  concluido       Boolean  @default(false)
-  ultimaExibicao  DateTime @default(now()) @map("ultima_exibicao")
-  usuario         Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-  filme           Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  id             String   @id @default(uuid())
+  usuarioId      String   @map("usuario_id")
+  filmeId        String   @map("filme_id")
+  progressoSeg   Int      @default(0) @map("progresso_seg")
+  concluido      Boolean  @default(false)
+  ultimaExibicao DateTime @default(now()) @map("ultima_exibicao")
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  filme          Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, filmeId])
   @@index([usuarioId, ultimaExibicao])
   @@map("historico_visualizacao")
 }
-else:
+```

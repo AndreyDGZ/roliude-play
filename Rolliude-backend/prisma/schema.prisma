@@ -1,24 +1,31 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pg_trgm]
 }
 
 enum PapelUsuario {
-  ADMIN
-  USER
+  USUARIO
+  CURADOR
+  ADMINISTRADOR
+
+  @@map("papel_usuario")
 }
 
 enum ClassificacaoIndicativa {
   L
-  DEZ
-  DOZE
-  QUATORZE
-  DEZESSEIS
-  DEZOITO
+  DEZ       @map("10")
+  DOZE      @map("12")
+  QUATORZE  @map("14")
+  DEZESSEIS @map("16")
+  DEZOITO   @map("18")
+
+  @@map("classificacao_indicativa")
 }
 
 enum RegiaoBrasil {
@@ -27,14 +34,17 @@ enum RegiaoBrasil {
   CENTRO_OESTE
   SUDESTE
   SUL
+
+  @@map("regiao_brasil")
 }
 
 model Usuario {
   id                  String               @id @default(uuid())
   nome                String
   email               String               @unique
-  senha               String
-  role                PapelUsuario         @default(USER)
+  senha               String?
+  googleId            String?              @unique
+  papel               PapelUsuario         @default(USUARIO)
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   passwordResetTokens PasswordResetToken[]
@@ -51,6 +61,8 @@ model PasswordResetToken {
   usedAt    DateTime? @map("used_at")
   createdAt DateTime  @default(now()) @map("created_at")
 
+  @@index([usuarioId])
+  @@index([expiresAt])
   @@map("password_reset_tokens")
 }
 
@@ -61,16 +73,18 @@ model Estado {
   regiao     RegiaoBrasil
   municipios Municipio[]
 
+  @@index([regiao])
   @@map("estados")
 }
 
 model Municipio {
   id       String   @id @default(uuid())
   nome     String
-  estadoId String   @map("estado_id")
+  estadoId String
   estado   Estado   @relation(fields: [estadoId], references: [id])
   filmes   Filme[]
 
+  @@unique([estadoId, nome])
   @@map("municipios")
 }
 
@@ -107,6 +121,7 @@ model Filme {
   @@index([anoLancamento])
   @@index([publicado, createdAt(sort: Desc)])
   @@index([municipioId])
+  @@index([tituloBusca(ops: raw("gin_trgm_ops"))], type: Gin)
   @@map("filmes")
 }
 
@@ -114,8 +129,9 @@ model FilmeGenero {
   filmeId  String @map("filme_id")
   generoId String @map("genero_id")
   filme    Filme  @relation(fields: [filmeId], references: [id], onDelete: Cascade)
-  genero   Genero @relation(fields: [generoId], references: [id], onDelete: Cascade)
+  genero   Genero @relation(fields: [generoId], references: [id], onDelete: Restrict)
 
   @@id([filmeId, generoId])
+  @@index([generoId])
   @@map("filme_generos")
 }
