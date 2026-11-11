@@ -18,7 +18,7 @@ export const ProtectedRoute: React.FC = () => {
   try {
     const user = JSON.parse(rawUser) as StoredUser;
     const role = String(user.role || user.tipo || '').toUpperCase();
-    const isAdmin = role === 'ADMIN' || user.isAdmin === true;
+    const isAdmin = role === 'ADMINISTRADOR' || user.isAdmin === true;
 
     if (!isAdmin) {
       return <Navigate to="/catalogo" replace />;

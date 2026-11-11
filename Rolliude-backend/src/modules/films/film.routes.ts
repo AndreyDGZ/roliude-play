@@ -12,7 +12,7 @@ filmRoutes.get('/:id', filmController.getById);
 
 const filmAdminRoutes = Router();
 
-filmAdminRoutes.use(authenticate, requireRole(PapelUsuario.ADMIN));
+filmAdminRoutes.use(authenticate, requireRole(PapelUsuario.ADMINISTRADOR));
 filmAdminRoutes.get('/', filmController.listAdmin);
 filmAdminRoutes.get('/:id', filmController.getByIdAdmin);
 filmAdminRoutes.post('/', filmController.create);

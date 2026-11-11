@@ -52,12 +52,12 @@ async function seedAdministrator(): Promise<void> {
 
   await prisma.usuario.upsert({
     where: { email: email.toLowerCase() },
-    update: { role: PapelUsuario.ADMIN },
+    update: { papel: PapelUsuario.ADMINISTRADOR },
     create: {
       email: email.toLowerCase(),
       nome: process.env.SEED_ADMIN_NAME ?? 'Administrador',
       senha: hashedPassword,
-      role: PapelUsuario.ADMIN
+      papel: PapelUsuario.ADMINISTRADOR
     }
   });
 }

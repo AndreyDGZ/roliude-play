@@ -66,7 +66,7 @@ export const Login: React.FC = () => {
 
       const userRole = String(user?.role || user?.tipo || '').toUpperCase();
 
-      if (userRole === 'ADMIN' || user?.isAdmin) {
+      if (userRole === 'ADMINISTRADOR' || user?.isAdmin) {
         navigate('/admin/filmes');
       } else {
         navigate('/catalogo');

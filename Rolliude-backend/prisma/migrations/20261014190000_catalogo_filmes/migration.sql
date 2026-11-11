@@ -36,11 +36,11 @@ ADD COLUMN "publicado" BOOLEAN NOT NULL DEFAULT false,
 ADD COLUMN "municipio_id" TEXT;
 
 -- CreateTable
-CREATE TABLE "filme_genero" (
+CREATE TABLE "filme_generos" (
     "filme_id" TEXT NOT NULL,
     "genero_id" TEXT NOT NULL,
 
-    CONSTRAINT "filme_genero_pkey" PRIMARY KEY ("filme_id", "genero_id")
+    CONSTRAINT "filme_generos_pkey" PRIMARY KEY ("filme_id", "genero_id")
 );
 
 -- CreateIndex
@@ -62,13 +62,13 @@ CREATE INDEX "filmes_publicado_idx" ON "filmes"("publicado");
 CREATE INDEX "filmes_municipio_id_idx" ON "filmes"("municipio_id");
 
 -- CreateIndex
-CREATE INDEX "filme_genero_genero_id_idx" ON "filme_genero"("genero_id");
+CREATE INDEX "filme_generos_genero_id_idx" ON "filme_generos"("genero_id");
 
 -- AddForeignKey
 ALTER TABLE "filmes" ADD CONSTRAINT "filmes_municipio_id_fkey" FOREIGN KEY ("municipio_id") REFERENCES "municipios"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "filme_genero" ADD CONSTRAINT "filme_genero_filme_id_fkey" FOREIGN KEY ("filme_id") REFERENCES "filmes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "filme_generos" ADD CONSTRAINT "filme_generos_filme_id_fkey" FOREIGN KEY ("filme_id") REFERENCES "filmes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "filme_genero" ADD CONSTRAINT "filme_genero_genero_id_fkey" FOREIGN KEY ("genero_id") REFERENCES "generos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "filme_generos" ADD CONSTRAINT "filme_generos_genero_id_fkey" FOREIGN KEY ("genero_id") REFERENCES "generos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -8,7 +8,7 @@ import { AppError } from '../shared/errors/app-error';
 export interface AuthenticatedUser {
   id: string;
   email: string;
-  role: PapelUsuario;
+  papel: PapelUsuario;
 }
 
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +23,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const decoded = jwt.verify(token, env.JWT_SECRET) as { sub: string; email: string };
     const user = await prisma.usuario.findUnique({
       where: { id: decoded.sub },
-      select: { id: true, email: true, role: true }
+      select: { id: true, email: true, papel: true }
     });
 
     if (!user) {
@@ -45,7 +45,7 @@ export const requireRole = (...roles: PapelUsuario[]) => {
       return next(new AppError('Não autenticado.', 401));
     }
 
-    if (!roles.includes(usuario.role)) {
+    if (!roles.includes(usuario.papel)) {
       return next(new AppError('Acesso negado. Permissão insuficiente.', 403));
     }
 
