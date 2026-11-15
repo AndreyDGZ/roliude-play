@@ -9,7 +9,7 @@ const bannedPatterns = [
   { pattern: /@ts-ignore/, label: '@ts-ignore' },
   { pattern: /@ts-expect-error/, label: '@ts-expect-error' },
   { pattern: /console\.log/, label: 'console.log' },
-  { pattern: /\/\//, label: 'line comment' },
+  { pattern: /(^|[^:])\/\//, label: 'line comment' },
   { pattern: /\/\*/, label: 'block comment' }
 ];
 

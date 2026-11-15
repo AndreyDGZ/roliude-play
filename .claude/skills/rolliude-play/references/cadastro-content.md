@@ -1,21 +1,18 @@
 # Conteúdo de referência: fluxo de cadastro
 
-Conteúdo extraído do protótipo standalone `rolliúde-play tela cadastro/` antes de sua remoção
-(reorganização de repositório). Ainda não foi integrado ao fluxo real em
-`Rolliude-front/src/pages/Cadastro.tsx`, que hoje só coleta nome/e-mail/senha.
-Integrar este conteúdo exige trabalho de feature própria, fora do escopo de uma limpeza
-de repositório: o modelo `Usuario` no `Rolliude-backend/prisma/schema.prisma` não tem
-campos de estado/município/perfil, então seria necessária uma migration nova, campos na
-API e no formulário.
+Conteúdo de produto guardado de um protótipo antigo de cadastro. Não é implementação:
+hoje não existe tela de cadastro nem modelo de usuário no `schema.prisma`. Usar este texto
+exige uma feature própria (modelo `Usuario`, migration, rotas e tela), seguindo a decisão 006
+de `decisions.md`.
 
 ## Texto de Termos de Uso e Privacidade
 
-1. **Apresentação e Missão** — O Rolliúde Play é uma plataforma cultural e audiovisual
+1. **Apresentação e Missão**: O Rolliúde Play é uma plataforma cultural e audiovisual
    brasileira concebida para a valorização, difusão e preservação do cinema nacional e
    regional, sob o lema "O cinema da nossa terra na sua tela." Projeto desenvolvido no
    âmbito acadêmico pelo Centro Universitário de Patos (UNIFIP) - Curso de Análise e
    Desenvolvimento de Sistemas (ADS).
-2. **Proteção de Dados e Segurança (RNF01 / LGPD)** — Em estrita conformidade com os
+2. **Proteção de Dados e Segurança (RNF01 / LGPD)**: Em estrita conformidade com os
    requisitos de segurança de software e as diretrizes da Lei Geral de Proteção de Dados
    (LGPD):
    - As senhas de acesso são criptografadas com hash irreversível, nunca sendo salvas em
@@ -24,11 +21,11 @@ API e no formulário.
      personalização do acervo e recomendações regionais do catálogo.
    - Nenhum dado pessoal é comercializado ou compartilhado com terceiros sem
      consentimento explícito.
-3. **Perfis e Curadoria Cultural** — O usuário pode definir seu perfil como espectador,
+3. **Perfis e Curadoria Cultural**: O usuário pode definir seu perfil como espectador,
    cinéfilo, profissional do audiovisual ou produtora. As produções exibidas respeitam os
    direitos autorais e de propriedade intelectual dos cineastas, coletivos e produtoras
    parceiras.
-4. **Direitos do Usuário** — O usuário poderá a qualquer momento solicitar a atualização,
+4. **Direitos do Usuário**: O usuário poderá a qualquer momento solicitar a atualização,
    retificação ou exclusão permanente de sua conta e histórico de navegação através das
    configurações de perfil.
 
