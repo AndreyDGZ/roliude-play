@@ -1,0 +1,5 @@
+yarn run v1.22.22
+$ ts-node-dev --respawn --transpile-only src/app/server.ts
+[INFO] 15:29:10 ts-node-dev ver. 2.0.0 (using ts-node ver. 10.9.2, typescript ver. 5.9.3)
+◇ injected env (4) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+Backend running on http://localhost:3333

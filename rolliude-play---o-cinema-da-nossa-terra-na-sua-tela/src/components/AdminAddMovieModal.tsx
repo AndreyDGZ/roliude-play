@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  PlusCircle, 
-  Film, 
-  MapPin, 
-  Users, 
-  Camera, 
-  Music, 
-  Sparkles, 
-  RotateCcw,
+import {
+  X,
+  PlusCircle,
+  Film,
+  MapPin,
+  Users,
+  Camera,
+  Music,
+  Sparkles,
   Check
 } from 'lucide-react';
-import { Movie, AgeRating, Region } from '../types';
+import { AgeRating, Region } from '../types';
+import { CreateMoviePayload } from '../services/api';
 
 interface AdminAddMovieModalProps {
   onClose: () => void;
-  onAddMovie: (movie: Movie) => void;
-  onResetToDefault: () => void;
+  onAddMovie: (payload: CreateMoviePayload) => Promise<void>;
 }
 
 export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
   onClose,
-  onAddMovie,
-  onResetToDefault
+  onAddMovie
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [titulo, setTitulo] = useState('');
   const [sinopse, setSinopse] = useState('');
   const [municipio, setMunicipio] = useState('Campina Grande');
@@ -105,21 +105,19 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!titulo.trim() || !sinopse.trim()) return;
 
-    // Parse cast
-    const castItems = elencoText.split(',').map((item, idx) => {
+    const castItems = elencoText.split(',').map((item) => {
       const match = item.match(/(.+?)\s*\((.+?)\)/);
       if (match) {
-        return { id: `c-${Date.now()}-${idx}`, nome: match[1].trim(), personagem: match[2].trim() };
+        return { nome: match[1].trim(), personagem: match[2].trim() };
       }
-      return { id: `c-${Date.now()}-${idx}`, nome: item.trim(), personagem: 'Personagem' };
+      return { nome: item.trim(), personagem: 'Personagem' };
     });
 
-    const newMovie: Movie = {
-      id: `filme-custom-${Date.now()}`,
+    const payload = {
       titulo: titulo.trim(),
       sinopse: sinopse.trim(),
       posterUrl: posterUrl.trim(),
@@ -148,14 +146,20 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
       curiosidades: ['Cadastrado via painel administrativo de gestão de acervo regional.'],
       destaqueCuradoria: true,
       curadoriaTag: curadoriaTag.trim() || 'Novidade no Catálogo',
-      popularidade: 85,
-      notaMedia: 4.8,
-      avaliacoesCount: 1,
-      reviews: []
+      popularidade: 85
     };
 
-    onAddMovie(newMovie);
-    onClose();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await onAddMovie(payload);
+      onClose();
+    } catch {
+      setSubmitError('Não foi possível salvar o filme agora. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -419,18 +423,7 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
 
           {/* Action buttons */}
           <div className="pt-3 border-t border-[#381D11] flex items-center justify-between">
-            <button
-              type="button"
-              onClick={() => {
-                onResetToDefault();
-                onClose();
-              }}
-              className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[#27140B] text-[#D8B490] hover:text-white border border-[#482515]"
-              title="Restaurar acervo de exemplo inicial"
-            >
-              <RotateCcw className="w-3.5 h-3.5 text-[#EA580C]" />
-              <span>Restaurar Catálogo Padrão</span>
-            </button>
+            {submitError ? <span className="text-xs text-[#EA580C]">{submitError}</span> : <span />}
 
             <div className="flex items-center space-x-2">
               <button
@@ -442,10 +435,11 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 rounded-xl bg-[#C2410C] hover:bg-[#EA580C] text-white font-bold flex items-center space-x-1.5 transition shadow-lg"
+                disabled={isSubmitting}
+                className="px-5 py-2 rounded-xl bg-[#C2410C] hover:bg-[#EA580C] text-white font-bold flex items-center space-x-1.5 transition shadow-lg disabled:opacity-60"
               >
                 <Check className="w-4 h-4" />
-                <span>Salvar no Catálogo</span>
+                <span>{isSubmitting ? 'Salvando...' : 'Salvar no Catálogo'}</span>
               </button>
             </div>
           </div>

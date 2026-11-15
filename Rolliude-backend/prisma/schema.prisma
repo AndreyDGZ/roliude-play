@@ -9,52 +9,6 @@ datasource db {
   extensions = [pg_trgm]
 }
 
-enum PapelUsuario {
-  USUARIO
-  CURADOR
-  ADMINISTRADOR
-
-  @@map("papel_usuario")
-}
-
-model Usuario {
-  id                  String               @id @default(uuid())
-  email               String               @unique
-  nome                String
-  senha               String?
-  googleId            String?              @unique
-  papel               PapelUsuario         @default(USUARIO)
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  passwordResetTokens PasswordResetToken[]
-
-  @@map("usuarios")
-}
-
-model PasswordResetToken {
-  id        String    @id @default(uuid())
-  usuarioId String    @map("usuario_id")
-  tokenHash String    @unique @map("token_hash")
-  expiresAt DateTime  @map("expires_at")
-  usedAt    DateTime? @map("used_at")
-  createdAt DateTime  @default(now()) @map("created_at")
-  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-
-  @@index([usuarioId])
-  @@index([expiresAt])
-  @@map("password_reset_tokens")
-}
-
-enum RegiaoBrasil {
-  NORTE
-  NORDESTE
-  CENTRO_OESTE
-  SUDESTE
-  SUL
-
-  @@map("regiao_brasil")
-}
-
 enum ClassificacaoIndicativa {
   L
   DEZ       @map("10")
@@ -66,100 +20,112 @@ enum ClassificacaoIndicativa {
   @@map("classificacao_indicativa")
 }
 
-model Estado {
-  id         String       @id @default(uuid())
-  uf         String       @unique
-  nome       String
-  regiao     RegiaoBrasil
-  municipios Municipio[]
-
-  @@index([regiao])
-  @@map("estados")
-}
-
-model Municipio {
-  id       String  @id @default(uuid())
-  nome     String
-  estadoId String
-  estado   Estado  @relation(fields: [estadoId], references: [id])
-  filmes   Filme[]
-
-  @@unique([estadoId, nome])
-  @@map("municipios")
-}
-
-model Genero {
-  id     String  @id @default(uuid())
-  nome   String  @unique
-  filmes Filme[]
-  id     String        @id @default(uuid())
-  nome   String        @unique
-  filmes FilmeGenero[]
-
-  @@map("generos")
-}
-
-enum StatusFilme {
-  RASCUNHO
-  PUBLICADO
-  ARQUIVADO
-}
-
 model Filme {
-  id                      String      @id @default(uuid())
-  titulo                  String
-  sinopse                 String?
-  diretor                 String?
-  anoLancamento           Int?
-  duracaoMinutos          Int?
-  idioma                  String      @default("pt-BR")
-  classificacaoIndicativa String?
-  posterUrl               String?
-  trailerUrl              String?
-  videoUrl                String?
-  dominioPublico          Boolean     @default(false)
-  status                  StatusFilme @default(RASCUNHO)
-  generos                 Genero[]
-  createdAt               DateTime    @default(now())
-  updatedAt               DateTime    @updatedAt
-
-  @@index([status])
-  @@index([anoLancamento])
   id                      String                  @id @default(uuid())
   titulo                  String
   tituloOriginal          String?                 @map("titulo_original")
   tituloBusca             String                  @default("") @map("titulo_busca")
-  sinopse                 String?
-  anoLancamento           Int?                    @map("ano_lancamento")
-  duracaoMin              Int?                    @map("duracao_min")
+  sinopse                 String
+  posterUrl               String                  @map("poster_url")
+  backdropUrl             String                  @map("backdrop_url")
+  trailerUrl              String                  @map("trailer_url")
+  videoUrl                String                  @map("video_url")
+  ano                     Int
+  duracaoMinutos          Int                     @map("duracao_minutos")
+  genero                  String[]
   classificacaoIndicativa ClassificacaoIndicativa @default(L) @map("classificacao_indicativa")
-  idiomaOriginal          String?                 @map("idioma_original")
-  posterUrl               String?                 @map("poster_url")
-  trailerUrl              String?                 @map("trailer_url")
-  videoUrl                String?
-  dominioPublico          Boolean                 @default(false)
-  publicado               Boolean                 @default(false)
-  municipioId             String?                 @map("municipio_id")
-  municipio               Municipio?              @relation(fields: [municipioId], references: [id])
-  generos                 FilmeGenero[]
-  createdAt               DateTime                @default(now())
-  updatedAt               DateTime                @updatedAt
+  localizacaoPais         String                  @map("localizacao_pais")
+  localizacaoRegiao       String                  @map("localizacao_regiao")
+  localizacaoEstado       String                  @map("localizacao_estado")
+  localizacaoEstadoSigla  String                  @map("localizacao_estado_sigla")
+  localizacaoMunicipio    String                  @map("localizacao_municipio")
+  direcao                 String[]
+  roteiro                 String[]
+  producao                String[]
+  fotografia              String
+  trilhaSonora            String                  @map("trilha_sonora")
+  produtora               String
+  premios                 String[]
+  curiosidades            String[]
+  destaqueCuradoria       Boolean                 @default(false) @map("destaque_curadoria")
+  curadoriaTag            String?                 @map("curadoria_tag")
+  popularidade            Int                     @default(0)
+  notaMedia               Float                   @default(0) @map("nota_media")
+  avaliacoesCount         Int                     @default(0) @map("avaliacoes_count")
+  createdAt               DateTime                @default(now()) @map("created_at")
+  updatedAt               DateTime                @updatedAt @map("updated_at")
 
-  @@index([titulo])
-  @@index([anoLancamento])
-  @@index([publicado, createdAt(sort: Desc)])
-  @@index([municipioId])
+  elenco                  ElencoItem[]
+  bastidores              ItemBastidores[]
+  avaliacoes              Avaliacao[]
+  profissionais           Profissional[]          @relation("ProfissionalFilmes")
+
+  @@index([ano])
+  @@index([destaqueCuradoria])
+  @@index([localizacaoEstadoSigla])
+  @@index([genero], type: Gin)
   @@index([tituloBusca(ops: raw("gin_trgm_ops"))], type: Gin)
   @@map("filmes")
 }
 
-model FilmeGenero {
-  filmeId  String @map("filme_id")
-  generoId String @map("genero_id")
-  filme    Filme  @relation(fields: [filmeId], references: [id], onDelete: Cascade)
-  genero   Genero @relation(fields: [generoId], references: [id], onDelete: Restrict)
+model ElencoItem {
+  id         String  @id @default(uuid())
+  filmeId    String  @map("filme_id")
+  nome       String
+  personagem String
+  foto       String?
+  ordem      Int     @default(0)
+  filme      Filme   @relation(fields: [filmeId], references: [id], onDelete: Cascade)
 
-  @@id([filmeId, generoId])
-  @@index([generoId])
-  @@map("filme_genero")
+  @@index([filmeId])
+  @@map("elenco_itens")
+}
+
+model ItemBastidores {
+  id             String   @id @default(uuid())
+  filmeId        String   @map("filme_id")
+  titulo         String
+  tipo           String
+  descricao      String
+  duracao        String?
+  thumbnailUrl   String   @map("thumbnail_url")
+  videoUrl       String?  @map("video_url")
+  galeriaFotos   String[] @map("galeria_fotos")
+  entrevistado   String?
+  dataPublicacao DateTime @map("data_publicacao")
+  filme          Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+
+  @@index([filmeId])
+  @@map("itens_bastidores")
+}
+
+model Avaliacao {
+  id         String   @id @default(uuid())
+  filmeId    String   @map("filme_id")
+  autor      String
+  cidade     String
+  nota       Int
+  comentario String
+  createdAt  DateTime @default(now()) @map("created_at")
+  filme      Filme    @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+
+  @@index([filmeId, createdAt(sort: Desc)])
+  @@map("avaliacoes")
+}
+
+model Profissional {
+  id          String   @id @default(uuid())
+  nome        String
+  funcoes     String[]
+  foto        String
+  cidadeNatal String   @map("cidade_natal")
+  estadoNatal String   @map("estado_natal")
+  biografia   String
+  premios     String[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  filmes      Filme[]  @relation("ProfissionalFilmes")
+
+  @@map("profissionais")
 }

@@ -12,12 +12,17 @@ import { ProfessionalModal } from './components/ProfessionalModal';
 import { VideoPlayerModal } from './components/VideoPlayerModal';
 import { AdminAddMovieModal } from './components/AdminAddMovieModal';
 import { Footer } from './components/Footer';
-import { 
-  INITIAL_MOVIES, 
-  INITIAL_PROFESSIONALS, 
-  INITIAL_BEHIND_THE_SCENES 
-} from './data/mockData';
 import { Movie, Professional, BehindTheScenesItem, Review } from './types';
+import {
+  createMovie,
+  createReview,
+  getBehindTheScenesItems,
+  getMovies,
+  getProfessionals,
+  CreateMoviePayload
+} from './services/api';
+
+type AppStatus = 'loading' | 'error' | 'ready';
 
 export default function App() {
   // Navigation Tab State
@@ -28,23 +33,27 @@ export default function App() {
   // Search State
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Catalog Movies State with LocalStorage persistence
-  const [movies, setMovies] = useState<Movie[]>(() => {
-    try {
-      const saved = localStorage.getItem('rolliude_catalog_movies_v1');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.warn('Erro ao carregar dados salvos do localStorage', e);
-    }
-    return INITIAL_MOVIES;
-  });
+  // Data loaded from the real API
+  const [status, setStatus] = useState<AppStatus>('loading');
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [professionals, setProfessionals] = useState<Professional[]>([]);
+  const [btsItems, setBtsItems] = useState<BehindTheScenesItem[]>([]);
 
-  // Professionals & Behind the Scenes
-  const [professionals] = useState<Professional[]>(INITIAL_PROFESSIONALS);
-  const [btsItems] = useState<BehindTheScenesItem[]>(INITIAL_BEHIND_THE_SCENES);
+  function loadData(): void {
+    setStatus('loading');
+    Promise.all([getMovies(), getProfessionals(), getBehindTheScenesItems()])
+      .then(([loadedMovies, loadedProfessionals, loadedBtsItems]) => {
+        setMovies(loadedMovies);
+        setProfessionals(loadedProfessionals);
+        setBtsItems(loadedBtsItems);
+        setStatus('ready');
+      })
+      .catch(() => setStatus('error'));
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   // Favorites state with persistence
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => {
@@ -62,15 +71,6 @@ export default function App() {
   const [selectedMediaForPlay, setSelectedMediaForPlay] = useState<Movie | BehindTheScenesItem | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
-  // Save changes to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem('rolliude_catalog_movies_v1', JSON.stringify(movies));
-    } catch (e) {
-      console.warn('Erro ao salvar no localStorage', e);
-    }
-  }, [movies]);
 
   useEffect(() => {
     try {
@@ -106,58 +106,52 @@ export default function App() {
   };
 
   // Add Review
-  const handleAddReview = (movieId: string, newReview: Review) => {
-    setMovies((prevMovies) =>
-      prevMovies.map((m) => {
-        if (m.id !== movieId) return m;
-        const currentReviews = m.reviews || [];
-        const updatedReviews = [newReview, ...currentReviews];
-        const newCount = m.avaliacoesCount + 1;
-        const sum = (m.notaMedia * m.avaliacoesCount) + newReview.nota;
-        const newAvg = Number((sum / newCount).toFixed(1));
+  const handleAddReview = async (movieId: string, newReview: Review) => {
+    const updatedMovie = await createReview(movieId, {
+      autor: newReview.autor,
+      cidade: newReview.cidade,
+      nota: newReview.nota,
+      comentario: newReview.comentario
+    });
 
-        return {
-          ...m,
-          notaMedia: newAvg,
-          avaliacoesCount: newCount,
-          reviews: updatedReviews
-        };
-      })
-    );
+    setMovies((prevMovies) => prevMovies.map((m) => (m.id === movieId ? updatedMovie : m)));
 
-    // Also update current modal if open
     if (selectedMovieForDetail && selectedMovieForDetail.id === movieId) {
-      const currentReviews = selectedMovieForDetail.reviews || [];
-      const updatedReviews = [newReview, ...currentReviews];
-      const newCount = selectedMovieForDetail.avaliacoesCount + 1;
-      const sum = (selectedMovieForDetail.notaMedia * selectedMovieForDetail.avaliacoesCount) + newReview.nota;
-      const newAvg = Number((sum / newCount).toFixed(1));
-
-      setSelectedMovieForDetail({
-        ...selectedMovieForDetail,
-        notaMedia: newAvg,
-        avaliacoesCount: newCount,
-        reviews: updatedReviews
-      });
+      setSelectedMovieForDetail(updatedMovie);
     }
   };
 
   // Add New Movie from Admin/Curator Modal
-  const handleAddMovie = (newMovie: Movie) => {
-    setMovies((prev) => [newMovie, ...prev]);
+  const handleAddMovie = async (payload: CreateMoviePayload) => {
+    const createdMovie = await createMovie(payload);
+    setMovies((prev) => [createdMovie, ...prev]);
     setActiveTab('catalogo');
   };
 
-  // Reset to default sample catalog
-  const handleResetCatalog = () => {
-    setMovies(INITIAL_MOVIES);
-    try {
-      localStorage.removeItem('rolliude_catalog_movies_v1');
-    } catch (e) {}
-  };
+  // Featured Hero movie
+  const heroMovie = movies[0];
 
-  // Featured Hero movie (O Auto da Compadecida or first item)
-  const heroMovie = movies.find((m) => m.id === 'filme-auto-compadecida') || movies[0];
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-[#120D0A] text-[#FAF6EE] flex items-center justify-center font-sans">
+        <p className="text-sm text-[#C89D77]">Carregando o catálogo...</p>
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="min-h-screen bg-[#120D0A] text-[#FAF6EE] flex flex-col items-center justify-center gap-4 font-sans">
+        <p className="text-sm text-[#C89D77]">Não foi possível carregar o catálogo agora.</p>
+        <button
+          onClick={loadData}
+          className="px-4 py-2 rounded-xl bg-[#C2410C] hover:bg-[#EA580C] text-white text-sm font-bold transition"
+        >
+          Tentar novamente
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#120D0A] text-[#FAF6EE] flex flex-col font-sans selection:bg-[#C2410C] selection:text-white">
@@ -299,11 +293,7 @@ export default function App() {
 
       {/* MODAL 4: Cadastro / Gestão de Obras de Exemplo */}
       {isAddModalOpen && (
-        <AdminAddMovieModal
-          onClose={() => setIsAddModalOpen(false)}
-          onAddMovie={handleAddMovie}
-          onResetToDefault={handleResetCatalog}
-        />
+        <AdminAddMovieModal onClose={() => setIsAddModalOpen(false)} onAddMovie={handleAddMovie} />
       )}
     </div>
   );
