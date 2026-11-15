@@ -1,71 +1,94 @@
-import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
-import { PapelUsuario } from '@prisma/client';
 import { prisma } from '../config/prisma';
-import { GENRE_NAMES, STATE_SEEDS } from './reference-data';
+import { classificationToDatabase } from '../modules/movies/movie.mapper';
+import { BTS_SEEDS, MOVIE_SEEDS, PROFESSIONAL_SEEDS } from './movies-seed-data';
 
 dotenv.config();
 
-const BCRYPT_SALT_ROUNDS = 12;
+function parseReviewDate(value: string): Date {
+  const [day, month, year] = value.split('/').map(Number);
 
-async function seedGenres(): Promise<void> {
-  for (const name of GENRE_NAMES) {
-    await prisma.genero.upsert({
-      where: { nome: name },
-      update: {},
-      create: { nome: name }
-    });
-  }
+  return new Date(year, month - 1, day);
 }
 
-async function seedStatesAndMunicipalities(): Promise<void> {
-  for (const stateSeed of STATE_SEEDS) {
-    const state = await prisma.estado.upsert({
-      where: { uf: stateSeed.uf },
-      update: { nome: stateSeed.nome, regiao: stateSeed.regiao },
-      create: { uf: stateSeed.uf, nome: stateSeed.nome, regiao: stateSeed.regiao }
-    });
+async function seedMovies(): Promise<Map<string, string>> {
+  const chaveToId = new Map<string, string>();
 
-    for (const municipalityName of stateSeed.municipios) {
-      const existingMunicipality = await prisma.municipio.findFirst({
-        where: { estadoId: state.id, nome: municipalityName }
-      });
+  for (const seed of MOVIE_SEEDS) {
+    const { localizacao, elenco, classificacaoIndicativa, ...scalarFields } = seed.movie;
+    const notaMedia =
+      seed.reviews.length > 0
+        ? Math.round((seed.reviews.reduce((total, review) => total + review.nota, 0) / seed.reviews.length) * 10) / 10
+        : 0;
 
-      if (!existingMunicipality) {
-        await prisma.municipio.create({
-          data: { estadoId: state.id, nome: municipalityName }
-        });
+    const created = await prisma.filme.create({
+      data: {
+        ...scalarFields,
+        classificacaoIndicativa: classificationToDatabase(classificacaoIndicativa),
+        tituloBusca: seed.movie.titulo.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase(),
+        localizacaoPais: localizacao.pais,
+        localizacaoRegiao: localizacao.regiao,
+        localizacaoEstado: localizacao.estado,
+        localizacaoEstadoSigla: localizacao.estadoSigla,
+        localizacaoMunicipio: localizacao.municipio,
+        notaMedia,
+        avaliacoesCount: seed.reviews.length,
+        elenco: { create: elenco.map((item, index) => ({ ...item, ordem: index })) },
+        avaliacoes: {
+          create: seed.reviews.map(review => ({
+            autor: review.autor,
+            cidade: review.cidade,
+            nota: review.nota,
+            comentario: review.comentario,
+            createdAt: parseReviewDate(review.data)
+          }))
+        }
       }
-    }
+    });
+
+    chaveToId.set(seed.chave, created.id);
+  }
+
+  return chaveToId;
+}
+
+async function seedProfessionals(chaveToId: Map<string, string>): Promise<void> {
+  for (const seed of PROFESSIONAL_SEEDS) {
+    const movieIds = seed.filmesChaves
+      .map(chave => chaveToId.get(chave))
+      .filter((id): id is string => id !== undefined);
+
+    await prisma.profissional.create({
+      data: {
+        ...seed.professional,
+        ...(movieIds.length > 0 ? { filmes: { connect: movieIds.map(id => ({ id })) } } : {})
+      }
+    });
   }
 }
 
-async function seedAdministrator(): Promise<void> {
-  const email = process.env.SEED_ADMIN_EMAIL;
-  const password = process.env.SEED_ADMIN_PASSWORD;
+async function seedBehindTheScenes(chaveToId: Map<string, string>): Promise<void> {
+  for (const seed of BTS_SEEDS) {
+    const filmeId = chaveToId.get(seed.filmeChave);
 
-  if (!email || !password) {
-    return;
-  }
-
-  const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-
-  await prisma.usuario.upsert({
-    where: { email: email.toLowerCase() },
-    update: { papel: PapelUsuario.ADMINISTRADOR },
-    create: {
-      email: email.toLowerCase(),
-      nome: process.env.SEED_ADMIN_NAME ?? 'Administrador',
-      senha: hashedPassword,
-      papel: PapelUsuario.ADMINISTRADOR
+    if (!filmeId) {
+      continue;
     }
-  });
+
+    await prisma.itemBastidores.create({
+      data: {
+        ...seed.item,
+        filmeId,
+        dataPublicacao: new Date(seed.item.dataPublicacao)
+      }
+    });
+  }
 }
 
 async function main(): Promise<void> {
-  await seedGenres();
-  await seedStatesAndMunicipalities();
-  await seedAdministrator();
+  const chaveToId = await seedMovies();
+  await seedProfessionals(chaveToId);
+  await seedBehindTheScenes(chaveToId);
   process.stdout.write('Seed concluído.\n');
 }
 

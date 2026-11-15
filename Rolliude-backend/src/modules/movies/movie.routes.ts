@@ -1,20 +1,13 @@
 import { Router } from 'express';
-import { PapelUsuario } from '@prisma/client';
-import { authenticate, requireRole } from '../../middlewares/authenticate';
 import { MovieController } from './movie.controller';
 
+const movieRoutes = Router();
 const movieController = new MovieController();
 
-const publicMovieRoutes = Router();
-const adminMovieRoutes = Router();
+movieRoutes.get('/', movieController.list);
+movieRoutes.get('/:id', movieController.getById);
+movieRoutes.post('/', movieController.create);
+movieRoutes.patch('/:id', movieController.update);
+movieRoutes.delete('/:id', movieController.remove);
 
-publicMovieRoutes.get('/', movieController.list);
-publicMovieRoutes.get('/:id', movieController.getById);
-publicMovieRoutes.get('/:id/stream', movieController.stream);
-
-adminMovieRoutes.use(authenticate, requireRole(PapelUsuario.ADMINISTRADOR));
-adminMovieRoutes.post('/', movieController.create);
-adminMovieRoutes.patch('/:id', movieController.update);
-adminMovieRoutes.patch('/:id/publicado', movieController.togglePublicado);
-
-export { publicMovieRoutes, adminMovieRoutes };
+export { movieRoutes };

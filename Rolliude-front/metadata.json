@@ -1,0 +1,6 @@
+{
+  "name": "Rolliude Play - O Cinema da Nossa Terra na Sua Tela",
+  "description": "Plataforma cultural dedicada à valorização do cinema brasileiro e regional com catálogo completo, curadoria local por municípios e estados, fichas técnicas integradas e bastidores.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

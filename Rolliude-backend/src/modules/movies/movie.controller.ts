@@ -1,87 +1,65 @@
-import { Request, Response, NextFunction } from 'express';
-import {
-  movieBodySchema,
-  movieUpdateSchema,
-  idParamsSchema,
-  listQuerySchema,
-  publicadoBodySchema
-} from './movie.schema';
+import { NextFunction, Request, Response } from 'express';
+import { createMovieSchema, listMoviesQuerySchema, movieIdParamsSchema, updateMovieSchema } from './movie.schema';
 import { MovieService } from './movie.service';
 
-const movieService = new MovieService();
-
 export class MovieController {
-  async list(req: Request, res: Response, next: NextFunction) {
-    try {
-      const query = listQuerySchema.parse(req.query);
-      const movies = await movieService.findAll(query);
-      res.json({ data: movies });
-    } catch (error) {
-      next(error);
-    }
+  private readonly movieService: MovieService;
+
+  constructor() {
+    this.movieService = new MovieService();
   }
 
-  async getById(req: Request, res: Response, next: NextFunction) {
+  list = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
     try {
-      const { id } = idParamsSchema.parse(req.params);
-      const movie = await movieService.findById(id);
+      const query = listMoviesQuerySchema.parse(request.query);
 
-      if (!movie) {
-        res.status(404).json({ message: 'Filme não encontrado.' });
-        return;
-      }
-
-      res.json({ data: movie });
+      return response.json(await this.movieService.list(query));
     } catch (error) {
-      next(error);
+      return next(error);
     }
-  }
+  };
 
-  async create(req: Request, res: Response, next: NextFunction) {
+  getById = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
     try {
-      const body = movieBodySchema.parse(req.body);
-      const movie = await movieService.create(body);
-      res.status(201).json({ data: movie });
-    } catch (error) {
-      next(error);
-    }
-  }
+      const { id } = movieIdParamsSchema.parse(request.params);
 
-  async update(req: Request, res: Response, next: NextFunction) {
+      return response.json({ data: await this.movieService.getById(id) });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  create = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
     try {
-      const { id } = idParamsSchema.parse(req.params);
-      const body = movieUpdateSchema.parse(req.body);
-      const movie = await movieService.update(id, body);
-      res.json({ data: movie });
-    } catch (error) {
-      next(error);
-    }
-  }
+      const data = createMovieSchema.parse(request.body);
+      const movie = await this.movieService.create(data);
 
-  async togglePublicado(req: Request, res: Response, next: NextFunction) {
+      return response.status(201).json({ message: 'Filme cadastrado com sucesso.', data: movie });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  update = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
     try {
-      const { id } = idParamsSchema.parse(req.params);
-      const { publicado } = publicadoBodySchema.parse(req.body);
-      const movie = await movieService.togglePublicado(id, publicado);
-      res.json({ data: movie });
-    } catch (error) {
-      next(error);
-    }
-  }
+      const { id } = movieIdParamsSchema.parse(request.params);
+      const data = updateMovieSchema.parse(request.body);
+      const movie = await this.movieService.update(id, data);
 
-  async stream(req: Request, res: Response, next: NextFunction) {
+      return response.json({ message: 'Filme atualizado com sucesso.', data: movie });
+    } catch (error) {
+      return next(error);
+    }
+  };
+
+  remove = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
     try {
-      const { id } = idParamsSchema.parse(req.params);
-      const filePath = await movieService.getStreamFilePath(id);
+      const { id } = movieIdParamsSchema.parse(request.params);
+      await this.movieService.remove(id);
 
-      if (!filePath) {
-        res.status(404).json({ message: 'Vídeo não encontrado ou indisponível.' });
-        return;
-      }
-
-      res.sendFile(filePath);
+      return response.status(204).send();
     } catch (error) {
-      next(error);
+      return next(error);
     }
-  }
+  };
 }

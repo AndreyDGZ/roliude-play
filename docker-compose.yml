@@ -16,25 +16,25 @@ services:
     build:
       context: ./Rolliude-backend
     ports:
-      - "3000:3000"
+      - "3333:3333"
     environment:
-      - PORT=3000
+      - PORT=3333
       - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/rolliude_play?schema=public
-      - JWT_SECRET=local_development_secret_with_32_chars
-      - CORS_ORIGIN=http://localhost:5173
-      - FRONTEND_URL=http://localhost:5173
+      - CORS_ORIGIN=http://localhost:3000
+      - FRONTEND_URL=http://localhost:3000
     depends_on:
       - postgres
 
   frontend:
     build:
-      context: ./Rolliude-front
+      context: ./rolliude-play---o-cinema-da-nossa-terra-na-sua-tela
     ports:
-      - "5173:5173"
+      - "3000:3000"
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - VITE_API_BASE_URL=http://localhost:3333/api
     volumes:
-      - ./Rolliude-front:/app
+      - ./rolliude-play---o-cinema-da-nossa-terra-na-sua-tela:/app
       - /app/node_modules
 
 volumes:

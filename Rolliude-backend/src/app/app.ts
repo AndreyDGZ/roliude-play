@@ -1,10 +1,11 @@
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { env } from '../config/env';
-import { authRoutes } from '../modules/auth/auth.routes';
-import { adminDashboardRoutes } from '../modules/dashboard/dashboard.routes';
-import { adminMovieRoutes, publicMovieRoutes } from '../modules/movies/movie.routes';
-import { userRoutes } from '../modules/users/user.routes';
+import { bastidoresRoutes } from '../modules/behind-the-scenes/bts.routes';
+import { docsRoutes } from '../modules/docs/docs.routes';
+import { movieRoutes } from '../modules/movies/movie.routes';
+import { professionalRoutes } from '../modules/professionals/professional.routes';
+import { reviewRoutes } from '../modules/reviews/review.routes';
 import { errorHandler } from '../shared/errors/error-handler';
 
 export const app = express();
@@ -16,10 +17,10 @@ app.get('/api/health', (_request: Request, response: Response) => {
   response.json({ status: 'ok' });
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/movies', publicMovieRoutes);
-app.use('/api/admin/movies', adminMovieRoutes);
-app.use('/admin/dashboard', adminDashboardRoutes);
+app.use('/api/movies', movieRoutes);
+app.use('/api/movies', reviewRoutes);
+app.use('/api/professionals', professionalRoutes);
+app.use('/api/behind-the-scenes', bastidoresRoutes);
+app.use('/api/docs', docsRoutes);
 
 app.use(errorHandler);

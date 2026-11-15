@@ -1,141 +1,177 @@
-import path from 'path';
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/prisma';
+import { AppError } from '../../shared/errors/app-error';
+import { buildSearchField, buildSearchTokens } from '../../shared/search/search-text';
+import { classificationToDatabase, movieSelect, toMovieResponse } from './movie.mapper';
+import { CreateMovieInput, ListMoviesQuery, MovieResponse, PaginatedMovies, UpdateMovieInput } from './movie.schema';
 
-const videosDirectory = path.join(process.cwd(), 'uploads', 'videos');
-
-const filmeInclude = {
-  generos: {
-    select: {
-      genero: {
-        select: {
-          id: true,
-          nome: true
-        }
-      }
-    }
-  },
-  municipio: {
-    select: {
-      id: true,
-      nome: true,
-      estado: {
-        select: {
-          id: true,
-          uf: true,
-          nome: true
-        }
-      }
-    }
-  }
-} satisfies Prisma.FilmeInclude;
-
-export interface CreateMovieData {
+interface MovieTitles {
   titulo: string;
-  tituloOriginal?: string;
-  sinopse?: string;
-  anoLancamento?: number;
-  duracaoMin?: number;
-  posterUrl?: string;
-  trailerUrl?: string;
-  videoUrl?: string;
-  dominioPublico?: boolean;
-  publicado?: boolean;
-  municipioId?: string;
-  generoIds?: string[];
+  tituloOriginal: string | null;
 }
 
-export interface UpdateMovieData extends Partial<CreateMovieData> {}
+const ORDER_BY: Record<ListMoviesQuery['ordenar'], Prisma.FilmeOrderByWithRelationInput[]> = {
+  recentes: [{ createdAt: 'desc' }, { id: 'asc' }],
+  titulo: [{ titulo: 'asc' }, { id: 'asc' }],
+  ano: [{ ano: 'desc' }, { titulo: 'asc' }, { id: 'asc' }]
+};
 
 export class MovieService {
-  async findAll(query: { page?: number; pageSize?: number; search?: string; publicado?: boolean; generoId?: string }) {
-    const where: Prisma.FilmeWhereInput = {};
+  async list(query: ListMoviesQuery): Promise<PaginatedMovies> {
+    const where: Prisma.FilmeWhereInput = {
+      AND: buildSearchTokens(query.busca).map(token => ({ tituloBusca: { contains: token } }))
+    };
 
-    if (query.publicado !== undefined) {
-      where.publicado = query.publicado;
-    }
+    const [total, movies] = await prisma.$transaction([
+      prisma.filme.count({ where }),
+      prisma.filme.findMany({
+        where,
+        orderBy: ORDER_BY[query.ordenar],
+        skip: (query.pagina - 1) * query.limite,
+        take: query.limite,
+        select: movieSelect
+      })
+    ]);
 
-    if (query.search) {
-      where.OR = [
-        { titulo: { contains: query.search, mode: 'insensitive' } },
-        { sinopse: { contains: query.search, mode: 'insensitive' } }
-      ];
-    }
-
-    if (query.generoId) {
-      where.generos = {
-        some: {
-          generoId: query.generoId
-        }
-      };
-    }
-
-    return prisma.filme.findMany({
-      where,
-      include: filmeInclude,
-      orderBy: { createdAt: 'desc' }
-    });
-  }
-
-  async findById(id: string) {
-    return prisma.filme.findUnique({
-      where: { id },
-      include: filmeInclude
-    });
-  }
-
-  async create(data: CreateMovieData) {
-    const { generoIds = [], ...filmeData } = data;
-
-    const createInput: Prisma.FilmeUncheckedCreateInput = {
-      ...filmeData,
-      generos: {
-        create: generoIds.map((generoId: string) => ({ generoId }))
+    return {
+      data: movies.map(toMovieResponse),
+      meta: {
+        pagina: query.pagina,
+        limite: query.limite,
+        total,
+        totalPaginas: Math.ceil(total / query.limite)
       }
     };
-
-    return prisma.filme.create({
-      data: createInput,
-      include: filmeInclude
-    });
   }
 
-  async update(id: string, data: UpdateMovieData) {
-    const { generoIds, ...filmeData } = data;
+  async getById(movieId: string): Promise<MovieResponse> {
+    const movie = await prisma.filme.findUnique({ where: { id: movieId }, select: movieSelect });
 
-    const updateInput: Prisma.FilmeUncheckedUpdateInput = {
-      ...filmeData
-    };
-
-    if (generoIds) {
-      updateInput.generos = {
-        deleteMany: {},
-        create: generoIds.map((generoId: string) => ({ generoId }))
-      };
+    if (!movie) {
+      throw new AppError('Filme não encontrado.', 404);
     }
 
-    return prisma.filme.update({
-      where: { id },
-      data: updateInput,
-      include: filmeInclude
-    });
+    return toMovieResponse(movie);
   }
 
-  async togglePublicado(id: string, publicado: boolean) {
-    return prisma.filme.update({
-      where: { id },
-      data: { publicado },
-      include: filmeInclude
+  async create(data: CreateMovieInput): Promise<MovieResponse> {
+    await this.assertProfessionalsExist(data.profissionalIds);
+
+    const { localizacao, elenco, profissionalIds, classificacaoIndicativa, ...scalarFields } = data;
+    const created = await prisma.filme.create({
+      data: {
+        ...scalarFields,
+        classificacaoIndicativa: classificationToDatabase(classificacaoIndicativa),
+        tituloBusca: buildSearchField(data.titulo, data.tituloOriginal),
+        localizacaoPais: localizacao.pais,
+        localizacaoRegiao: localizacao.regiao,
+        localizacaoEstado: localizacao.estado,
+        localizacaoEstadoSigla: localizacao.estadoSigla,
+        localizacaoMunicipio: localizacao.municipio,
+        elenco: {
+          create: elenco.map((item, index) => ({
+            nome: item.nome,
+            personagem: item.personagem,
+            foto: item.foto,
+            ordem: index
+          }))
+        },
+        ...(profissionalIds ? { profissionais: { connect: profissionalIds.map(id => ({ id })) } } : {})
+      },
+      select: movieSelect
     });
+
+    return toMovieResponse(created);
   }
 
-  async getStreamFilePath(id: string): Promise<string | null> {
-    const filme = await prisma.filme.findFirst({
-      where: { id, publicado: true },
-      select: { videoUrl: true }
+  async update(movieId: string, data: UpdateMovieInput): Promise<MovieResponse> {
+    const current = await this.findTitles(movieId);
+    await this.assertProfessionalsExist(data.profissionalIds);
+
+    const { localizacao, elenco, profissionalIds, classificacaoIndicativa, ...scalarFields } = data;
+
+    const updated = await prisma.filme.update({
+      where: { id: movieId },
+      data: {
+        ...scalarFields,
+        ...(classificacaoIndicativa ? { classificacaoIndicativa: classificationToDatabase(classificacaoIndicativa) } : {}),
+        ...this.toSearchField(data, current),
+        ...(localizacao
+          ? {
+              localizacaoPais: localizacao.pais,
+              localizacaoRegiao: localizacao.regiao,
+              localizacaoEstado: localizacao.estado,
+              localizacaoEstadoSigla: localizacao.estadoSigla,
+              localizacaoMunicipio: localizacao.municipio
+            }
+          : {}),
+        ...(elenco
+          ? {
+              elenco: {
+                deleteMany: {},
+                create: elenco.map((item, index) => ({
+                  nome: item.nome,
+                  personagem: item.personagem,
+                  foto: item.foto,
+                  ordem: index
+                }))
+              }
+            }
+          : {}),
+        ...(profissionalIds ? { profissionais: { set: profissionalIds.map(id => ({ id })) } } : {})
+      },
+      select: movieSelect
     });
 
-    if (!filme?.videoUrl) return null;
-    return path.join(videosDirectory, path.basename(filme.videoUrl));
+    return toMovieResponse(updated);
+  }
+
+  async remove(movieId: string): Promise<void> {
+    await this.assertMovieExists(movieId);
+    await prisma.filme.delete({ where: { id: movieId } });
+  }
+
+  private toSearchField(data: UpdateMovieInput, current: MovieTitles): { tituloBusca?: string } {
+    if (data.titulo === undefined && data.tituloOriginal === undefined) {
+      return {};
+    }
+
+    const title = data.titulo ?? current.titulo;
+    const originalTitle = data.tituloOriginal === undefined ? current.tituloOriginal : data.tituloOriginal;
+
+    return { tituloBusca: buildSearchField(title, originalTitle) };
+  }
+
+  private async findTitles(movieId: string): Promise<MovieTitles> {
+    const movie = await prisma.filme.findUnique({
+      where: { id: movieId },
+      select: { titulo: true, tituloOriginal: true }
+    });
+
+    if (!movie) {
+      throw new AppError('Filme não encontrado.', 404);
+    }
+
+    return movie;
+  }
+
+  private async assertMovieExists(movieId: string): Promise<void> {
+    const movie = await prisma.filme.findUnique({ where: { id: movieId }, select: { id: true } });
+
+    if (!movie) {
+      throw new AppError('Filme não encontrado.', 404);
+    }
+  }
+
+  private async assertProfessionalsExist(profissionalIds?: string[]): Promise<void> {
+    if (!profissionalIds || profissionalIds.length === 0) {
+      return;
+    }
+
+    const existing = await prisma.profissional.count({ where: { id: { in: profissionalIds } } });
+
+    if (existing !== profissionalIds.length) {
+      throw new AppError('Um ou mais profissionais informados não existem.', 422);
+    }
   }
 }

@@ -6,7 +6,7 @@ Rolliúde Play é uma plataforma web para valorização, descoberta e exibição
 
 | Área | Tecnologias |
 |---|---|
-| Frontend | React, Vite, TypeScript |
+| Frontend | React, Vite, TypeScript, Tailwind CSS |
 | Backend | Node, Express, TypeScript, Prisma |
 | Banco | PostgreSQL |
 | Ambiente | Docker Compose |
@@ -23,9 +23,9 @@ Rolliúde Play é uma plataforma web para valorização, descoberta e exibição
 docker compose up --build
 ```
 
-Frontend: `http://localhost:5173`
+Frontend: `http://localhost:3000`
 
-Backend: `http://localhost:3000/api/health`
+Backend: `http://localhost:3333/api/health`
 
 ## Rodar manualmente
 
@@ -42,8 +42,9 @@ yarn dev
 Frontend:
 
 ```bash
-cd Rolliude-front
-yarn install --frozen-lockfile
+cd rolliude-play---o-cinema-da-nossa-terra-na-sua-tela
+cp .env.example .env
+yarn install
 yarn dev
 ```
 
@@ -56,17 +57,16 @@ yarn prisma migrate deploy
 yarn db:seed
 ```
 
-O seed carrega gêneros, estados com região e alguns municípios. Defina `SEED_ADMIN_EMAIL` e `SEED_ADMIN_PASSWORD` no `.env` para criar um administrador.
+O seed carrega o catálogo de filmes, profissionais e conteúdos de bastidores. A API é totalmente pública, sem autenticação.
 
-O contrato da API é gerado dos schemas do backend e fica em `http://localhost:3000/api/docs/openapi.json`. O guia de uso está em `.claude/skills/rolliude-play/references/api-catalog.md`.
+O contrato da API é gerado dos schemas do backend e fica em `http://localhost:3333/api/docs/openapi.json`.
 
 ## Checks
 
-Execute nas pastas `Rolliude-front/` e `Rolliude-backend/`:
+Execute nas pastas `rolliude-play---o-cinema-da-nossa-terra-na-sua-tela/` e `Rolliude-backend/`:
 
 ```bash
-yarn format:check
-yarn typecheck
+yarn lint
 yarn build
 ```
 
@@ -78,7 +78,4 @@ yarn prisma:validate
 
 ## Fontes canônicas
 
-- Regras de autoridade e padrões do projeto: `.claude/skills/rolliude-play/SKILL.md`
-- Decisões arquiteturais: `.claude/skills/rolliude-play/references/adrs.md`
-- Contribuição: `.claude/skills/rolliude-play/references/git-workflow.md`
 - Instruções para agentes: `AGENTS.md`

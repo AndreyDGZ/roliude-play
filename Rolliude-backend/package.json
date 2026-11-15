@@ -6,8 +6,8 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
-    "lint": "node ../.claude/skills/rolliude-play/scripts/quality-check.mjs src && tsc --noEmit",
-    "format:check": "node ../.claude/skills/rolliude-play/scripts/quality-check.mjs src",
+    "lint": "node scripts/quality-check.mjs src && tsc --noEmit",
+    "format:check": "node scripts/quality-check.mjs src",
     "typecheck": "tsc --noEmit",
     "build": "tsc",
     "prisma:validate": "prisma validate",
@@ -23,24 +23,16 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1122.0",
     "@prisma/client": "^6.12.0",
-    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.7.0",
-    "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^10.0.10",
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.4.0",
-    "@types/nodemailer": "^8.0.2",
     "prisma": "^6.12.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
