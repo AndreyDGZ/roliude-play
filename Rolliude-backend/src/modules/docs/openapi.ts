@@ -24,10 +24,19 @@ import {
   notificationListResponseSchema,
   notificationResponseSchema
 } from '../notifications/notification.schema';
-import { createReviewSchema } from '../reviews/review.schema';
+import { createReviewSchema, listReviewsQuerySchema, paginatedReviewsResponseSchema, reviewIdParamsSchema } from '../reviews/review.schema';
+import { authSessionResponseSchema, loginSchema, registerSchema, userResponseSchema } from '../auth/auth.schema';
+import {
+  adminOverviewResponseSchema,
+  listUsersQuerySchema,
+  paginatedUsersResponseSchema,
+  updateUserRoleSchema,
+  userIdParamsSchema
+} from '../admin/admin.schema';
 
 type JsonObject = Record<string, unknown>;
 type HttpMethod = 'get' | 'post' | 'patch' | 'delete';
+type AccessLevel = 'user' | 'admin';
 
 interface Operation {
   method: HttpMethod;
@@ -42,12 +51,21 @@ interface Operation {
   successSchema?: z.ZodType;
   successContentType?: string;
   errorStatuses: string[];
+  access?: AccessLevel;
 }
 
 const ERROR_DESCRIPTIONS: Record<string, string> = {
   '400': 'Erro de validação nos campos fornecidos.',
+  '401': 'Autenticação necessária ou sessão inválida.',
+  '403': 'Acesso restrito a administradores.',
   '404': 'Recurso não encontrado.',
+  '409': 'Conflito com o estado atual do recurso.',
   '422': 'Referência a registro inexistente.'
+};
+
+const ACCESS_ERROR_STATUSES: Record<AccessLevel, string[]> = {
+  user: ['401'],
+  admin: ['401', '403']
 };
 
 const dataEnvelope = (schema: z.ZodType): z.ZodType => z.object({ data: schema });
@@ -79,6 +97,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'post',
     path: '/movies',
+    access: 'admin',
     summary: 'Cadastra um filme.',
     tag: 'Filmes',
     body: createMovieSchema,
@@ -90,6 +109,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'patch',
     path: '/movies/{id}',
+    access: 'admin',
     summary: 'Atualiza parcialmente um filme.',
     tag: 'Filmes',
     pathParams: movieIdParamsSchema,
@@ -102,6 +122,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'delete',
     path: '/movies/{id}',
+    access: 'admin',
     summary: 'Remove um filme.',
     tag: 'Filmes',
     pathParams: movieIdParamsSchema,
@@ -146,6 +167,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'post',
     path: '/professionals',
+    access: 'admin',
     summary: 'Cadastra um profissional.',
     tag: 'Profissionais',
     body: createProfessionalSchema,
@@ -157,6 +179,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'patch',
     path: '/professionals/{id}',
+    access: 'admin',
     summary: 'Atualiza parcialmente um profissional.',
     tag: 'Profissionais',
     pathParams: professionalIdParamsSchema,
@@ -169,6 +192,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'delete',
     path: '/professionals/{id}',
+    access: 'admin',
     summary: 'Remove um profissional.',
     tag: 'Profissionais',
     pathParams: professionalIdParamsSchema,
@@ -201,6 +225,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'post',
     path: '/behind-the-scenes',
+    access: 'admin',
     summary: 'Cadastra um conteúdo de bastidores.',
     tag: 'Bastidores',
     body: createBtsItemSchema,
@@ -212,6 +237,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'patch',
     path: '/behind-the-scenes/{id}',
+    access: 'admin',
     summary: 'Atualiza parcialmente um conteúdo de bastidores.',
     tag: 'Bastidores',
     pathParams: btsIdParamsSchema,
@@ -224,6 +250,7 @@ const OPERATIONS: Operation[] = [
   {
     method: 'delete',
     path: '/behind-the-scenes/{id}',
+    access: 'admin',
     summary: 'Remove um conteúdo de bastidores.',
     tag: 'Bastidores',
     pathParams: btsIdParamsSchema,
@@ -273,6 +300,98 @@ const OPERATIONS: Operation[] = [
     successStatus: '204',
     successDescription: 'Notificações marcadas como lidas.',
     errorStatuses: ['400']
+  },
+  {
+    method: 'post',
+    path: '/auth/register',
+    summary: 'Cria uma conta de usuário comum.',
+    tag: 'Autenticação',
+    body: registerSchema,
+    successStatus: '201',
+    successDescription: 'Conta criada; retorna o token e o usuário.',
+    successSchema: messageEnvelope(authSessionResponseSchema),
+    errorStatuses: ['400', '409']
+  },
+  {
+    method: 'post',
+    path: '/auth/login',
+    summary: 'Autentica com e-mail e senha.',
+    tag: 'Autenticação',
+    body: loginSchema,
+    successStatus: '200',
+    successDescription: 'Sessão aberta; retorna o token e o usuário.',
+    successSchema: dataEnvelope(authSessionResponseSchema),
+    errorStatuses: ['400', '401']
+  },
+  {
+    method: 'get',
+    path: '/auth/me',
+    access: 'user',
+    summary: 'Retorna o usuário dono do token.',
+    tag: 'Autenticação',
+    successStatus: '200',
+    successDescription: 'Usuário autenticado.',
+    successSchema: dataEnvelope(userResponseSchema),
+    errorStatuses: []
+  },
+  {
+    method: 'get',
+    path: '/admin/overview',
+    access: 'admin',
+    summary: 'Totais do catálogo e últimos filmes cadastrados.',
+    tag: 'Administração',
+    successStatus: '200',
+    successDescription: 'Visão geral do painel.',
+    successSchema: dataEnvelope(adminOverviewResponseSchema),
+    errorStatuses: []
+  },
+  {
+    method: 'get',
+    path: '/admin/users',
+    access: 'admin',
+    summary: 'Lista os usuários cadastrados.',
+    tag: 'Administração',
+    query: listUsersQuerySchema,
+    successStatus: '200',
+    successDescription: 'Página de usuários.',
+    successSchema: paginatedUsersResponseSchema,
+    errorStatuses: ['400']
+  },
+  {
+    method: 'patch',
+    path: '/admin/users/{id}/role',
+    access: 'admin',
+    summary: 'Altera o papel de um usuário.',
+    tag: 'Administração',
+    pathParams: userIdParamsSchema,
+    body: updateUserRoleSchema,
+    successStatus: '200',
+    successDescription: 'Papel atualizado.',
+    successSchema: messageEnvelope(userResponseSchema),
+    errorStatuses: ['400', '404', '409']
+  },
+  {
+    method: 'get',
+    path: '/reviews',
+    access: 'admin',
+    summary: 'Lista as avaliações mais recentes para moderação.',
+    tag: 'Avaliações',
+    query: listReviewsQuerySchema,
+    successStatus: '200',
+    successDescription: 'Página de avaliações.',
+    successSchema: paginatedReviewsResponseSchema,
+    errorStatuses: ['400']
+  },
+  {
+    method: 'delete',
+    path: '/reviews/{id}',
+    access: 'admin',
+    summary: 'Remove uma avaliação e recalcula a nota do filme.',
+    tag: 'Avaliações',
+    pathParams: reviewIdParamsSchema,
+    successStatus: '204',
+    successDescription: 'Avaliação removida.',
+    errorStatuses: ['400', '404']
   }
 ];
 
@@ -305,8 +424,10 @@ function toOperationObject(operation: Operation): JsonObject {
     ? { content: { [operation.successContentType ?? 'application/json']: { schema: toJsonSchema(operation.successSchema, 'output') } } }
     : {};
 
+  const errorStatuses = operation.access ? [...operation.errorStatuses, ...ACCESS_ERROR_STATUSES[operation.access]] : operation.errorStatuses;
+
   const errorResponses = Object.fromEntries(
-    operation.errorStatuses.map(status => [
+    errorStatuses.map(status => [
       status,
       {
         description: ERROR_DESCRIPTIONS[status],
@@ -318,6 +439,7 @@ function toOperationObject(operation: Operation): JsonObject {
   return {
     summary: operation.summary,
     tags: [operation.tag],
+    ...(operation.access ? { security: [{ bearerAuth: [] }] } : {}),
     ...(parameters.length > 0 ? { parameters } : {}),
     ...(operation.body
       ? {
@@ -346,9 +468,14 @@ export function buildOpenApiDocument(): JsonObject {
     info: {
       title: 'Rolliúde Play API',
       version: '1.0.0',
-      description: 'Contrato gerado a partir dos schemas Zod do backend. API totalmente pública, sem autenticação.'
+      description: 'Contrato gerado a partir dos schemas Zod do backend. Rotas marcadas com bearerAuth exigem o token JWT obtido em /auth/login.'
     },
     servers: [{ url: '/api' }],
+    components: {
+      securitySchemes: {
+        bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }
+      }
+    },
     paths
   };
 }

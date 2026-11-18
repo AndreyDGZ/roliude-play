@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import { prisma } from '../config/prisma';
 import { classificationToDatabase } from '../modules/movies/movie.mapper';
+import { buildSearchField } from '../shared/search/search-text';
+import { seedAdmin } from './admin-seed';
 import { BTS_SEEDS, MOVIE_SEEDS, PROFESSIONAL_SEEDS } from './movies-seed-data';
 
 dotenv.config();
@@ -25,7 +27,7 @@ async function seedMovies(): Promise<Map<string, string>> {
       data: {
         ...scalarFields,
         classificacaoIndicativa: classificationToDatabase(classificacaoIndicativa),
-        tituloBusca: seed.movie.titulo.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase(),
+        tituloBusca: buildSearchField(seed.movie.titulo, seed.movie.tituloOriginal),
         localizacaoPais: localizacao.pais,
         localizacaoRegiao: localizacao.regiao,
         localizacaoEstado: localizacao.estado,
@@ -89,6 +91,7 @@ async function main(): Promise<void> {
   const chaveToId = await seedMovies();
   await seedProfessionals(chaveToId);
   await seedBehindTheScenes(chaveToId);
+  await seedAdmin();
   process.stdout.write('Seed concluído.\n');
 }
 

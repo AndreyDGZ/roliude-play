@@ -21,7 +21,7 @@ export interface Review {
   id: string;
   autor: string;
   cidade: string;
-  nota: number; // 1 a 5
+  nota: number;
   data: string;
   comentario: string;
 }
@@ -67,7 +67,6 @@ export interface Movie {
   classificacaoIndicativa: AgeRating;
   localizacao: LocationInfo;
   
-  // Ficha técnica completa
   direcao: string[];
   roteiro: string[];
   producao: string[];
@@ -78,16 +77,14 @@ export interface Movie {
   premios: string[];
   curiosidades: string[];
   
-  // Metadados curatoriais
   destaqueCuradoria?: boolean;
-  curadoriaTag?: string; // ex: 'Roliúde Nordestina', 'Memória Viva', 'Cinema de Resistência'
-  popularidade: number; // 0 a 100
-  notaMedia: number; // 1 a 5
+  curadoriaTag?: string;
+  popularidade: number;
+  notaMedia: number;
   avaliacoesCount: number;
   lancadoEm?: string;
   reviews?: Review[];
   
-  // Bastidores associados
   bastidoresIds?: string[];
 }
 
@@ -116,3 +113,48 @@ export interface NotificationList {
   notifications: AppNotification[];
   naoLidas: number;
 }
+
+export type UserRole = 'USUARIO' | 'ADMIN';
+
+export interface User {
+  id: string;
+  nome: string;
+  email: string;
+  papel: UserRole;
+  criadoEm: string;
+}
+
+export interface AuthSession {
+  token: string;
+  usuario: User;
+}
+
+export interface AdminOverview {
+  totais: {
+    filmes: number;
+    profissionais: number;
+    bastidores: number;
+    avaliacoes: number;
+    usuarios: number;
+  };
+  ultimosFilmes: { id: string; titulo: string; cadastradoEm: string }[];
+}
+
+export interface ModeratedReview {
+  id: string;
+  autor: string;
+  cidade: string;
+  nota: number;
+  comentario: string;
+  data: string;
+  filme: { id: string; titulo: string };
+}
+
+export interface PageResult<Item> {
+  items: Item[];
+  pagina: number;
+  totalPaginas: number;
+  total: number;
+}
+
+export type AppTab = 'inicio' | 'catalogo' | 'curadoria' | 'bastidores' | 'profissionais' | 'favoritos' | 'admin';

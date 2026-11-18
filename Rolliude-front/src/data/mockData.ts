@@ -1,3 +1,5 @@
+import { BehindTheScenesItem, Professional, UserRole } from '../types';
+
 export const MUNICIPALITIES_LIST = [
   'Cabaceiras',
   'Campina Grande',
@@ -36,3 +38,26 @@ export const GENRES_LIST = [
   'Mulheres no Audiovisual',
   'Estrada / Road Movie'
 ];
+
+export const PROFESSIONAL_ROLES: Professional['funcoes'] = [
+  'Diretor(a)',
+  'Ator/Atriz',
+  'Roteirista',
+  'Produtor(a)',
+  'Diretor(a) de Fotografia',
+  'Compositor(a)'
+];
+
+export const BEHIND_THE_SCENES_TYPES: { value: BehindTheScenesItem['tipo']; label: string }[] = [
+  { value: 'making_of', label: 'Making of' },
+  { value: 'entrevista', label: 'Entrevista' },
+  { value: 'minidoc', label: 'Minidoc' },
+  { value: 'depoimento', label: 'Depoimento' },
+  { value: 'curiosidade', label: 'Curiosidade' },
+  { value: 'galeria_fotos', label: 'Galeria de fotos' }
+];
+
+export const USER_ROLES = {
+  usuario: 'USUARIO',
+  admin: 'ADMIN'
+} as const satisfies Record<string, UserRole>;

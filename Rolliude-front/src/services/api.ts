@@ -1,4 +1,18 @@
-import { AppNotification, BehindTheScenesItem, CastMember, Movie, NotificationList, Professional, Review } from '../types';
+import {
+  AdminOverview,
+  AppNotification,
+  AuthSession,
+  BehindTheScenesItem,
+  CastMember,
+  ModeratedReview,
+  Movie,
+  NotificationList,
+  PageResult,
+  Professional,
+  Review,
+  User,
+  UserRole
+} from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3333/api';
 
@@ -110,11 +124,53 @@ interface PaginatedEnvelope<Item> {
   meta: { pagina: number; limite: number; total: number; totalPaginas: number };
 }
 
+const AUTH_STORAGE_KEY = 'rolliude_auth_v1';
+
+let unauthorizedHandler: (() => void) | null = null;
+
+export function setUnauthorizedHandler(handler: (() => void) | null): void {
+  unauthorizedHandler = handler;
+}
+
+export function getStoredToken(): string | null {
+  try {
+    return localStorage.getItem(AUTH_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function storeToken(token: string): void {
+  try {
+    localStorage.setItem(AUTH_STORAGE_KEY, token);
+  } catch {
+    return;
+  }
+}
+
+export function clearStoredToken(): void {
+  try {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+  } catch {
+    return;
+  }
+}
+
+function buildAuthorizationHeader(token: string | null): Record<string, string> {
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
 async function request<ResponseBody>(path: string, init?: RequestInit): Promise<ResponseBody> {
+  const token = getStoredToken();
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
-    headers: { 'Content-Type': 'application/json', ...init?.headers }
+    headers: { 'Content-Type': 'application/json', ...buildAuthorizationHeader(token), ...init?.headers }
   });
+
+  if (response.status === 401 && token) {
+    clearStoredToken();
+    unauthorizedHandler?.();
+  }
 
   if (!response.ok) {
     const body = await response.json().catch(() => null);
@@ -299,4 +355,148 @@ export function openNotificationStream(onRelease: (notification: AppNotification
   });
 
   return stream;
+}
+
+export interface RegisterPayload {
+  nome: string;
+  email: string;
+  senha: string;
+}
+
+export interface LoginPayload {
+  email: string;
+  senha: string;
+}
+
+export interface ProfessionalPayload {
+  nome: string;
+  funcoes: Professional['funcoes'];
+  foto: string;
+  cidadeNatal: string;
+  estadoNatal: string;
+  biografia: string;
+  premios: string[];
+}
+
+export interface BehindTheScenesPayload {
+  filmeId: string;
+  titulo: string;
+  tipo: BehindTheScenesItem['tipo'];
+  descricao: string;
+  thumbnailUrl: string;
+  videoUrl?: string;
+  dataPublicacao: string;
+}
+
+function toPageResult<Item, Mapped>(page: PaginatedEnvelope<Item>, mapItem: (item: Item) => Mapped): PageResult<Mapped> {
+  return {
+    items: page.data.map(mapItem),
+    pagina: page.meta.pagina,
+    totalPaginas: page.meta.totalPaginas,
+    total: page.meta.total
+  };
+}
+
+function keepItem<Item>(item: Item): Item {
+  return item;
+}
+
+export async function register(payload: RegisterPayload): Promise<AuthSession> {
+  const envelope = await request<Envelope<AuthSession>>('/auth/register', { method: 'POST', body: JSON.stringify(payload) });
+
+  return envelope.data;
+}
+
+export async function login(payload: LoginPayload): Promise<AuthSession> {
+  const envelope = await request<Envelope<AuthSession>>('/auth/login', { method: 'POST', body: JSON.stringify(payload) });
+
+  return envelope.data;
+}
+
+export async function getCurrentUser(): Promise<User> {
+  const envelope = await request<Envelope<User>>('/auth/me');
+
+  return envelope.data;
+}
+
+export async function updateMovie(id: string, payload: Partial<CreateMoviePayload>): Promise<Movie> {
+  const envelope = await request<Envelope<ApiMovie>>(`/movies/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload)
+  });
+
+  return mapMovie(envelope.data);
+}
+
+export async function deleteMovie(id: string): Promise<void> {
+  await request<void>(`/movies/${encodeURIComponent(id)}`, { method: 'DELETE' });
+}
+
+export async function createProfessional(payload: ProfessionalPayload): Promise<Professional> {
+  const envelope = await request<Envelope<ApiProfessional>>('/professionals', { method: 'POST', body: JSON.stringify(payload) });
+
+  return mapProfessional(envelope.data);
+}
+
+export async function updateProfessional(id: string, payload: Partial<ProfessionalPayload>): Promise<Professional> {
+  const envelope = await request<Envelope<ApiProfessional>>(`/professionals/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload)
+  });
+
+  return mapProfessional(envelope.data);
+}
+
+export async function deleteProfessional(id: string): Promise<void> {
+  await request<void>(`/professionals/${encodeURIComponent(id)}`, { method: 'DELETE' });
+}
+
+export async function createBehindTheScenesItem(payload: BehindTheScenesPayload): Promise<BehindTheScenesItem> {
+  const envelope = await request<Envelope<ApiBtsItem>>('/behind-the-scenes', { method: 'POST', body: JSON.stringify(payload) });
+
+  return mapBtsItem(envelope.data);
+}
+
+export async function updateBehindTheScenesItem(id: string, payload: Partial<BehindTheScenesPayload>): Promise<BehindTheScenesItem> {
+  const envelope = await request<Envelope<ApiBtsItem>>(`/behind-the-scenes/${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload)
+  });
+
+  return mapBtsItem(envelope.data);
+}
+
+export async function deleteBehindTheScenesItem(id: string): Promise<void> {
+  await request<void>(`/behind-the-scenes/${encodeURIComponent(id)}`, { method: 'DELETE' });
+}
+
+export async function getAdminOverview(): Promise<AdminOverview> {
+  const envelope = await request<Envelope<AdminOverview>>('/admin/overview');
+
+  return envelope.data;
+}
+
+export async function getUsers(pagina: number): Promise<PageResult<User>> {
+  const page = await request<PaginatedEnvelope<User>>(`/admin/users?pagina=${pagina}`);
+
+  return toPageResult(page, keepItem);
+}
+
+export async function updateUserRole(id: string, papel: UserRole): Promise<User> {
+  const envelope = await request<Envelope<User>>(`/admin/users/${encodeURIComponent(id)}/role`, {
+    method: 'PATCH',
+    body: JSON.stringify({ papel })
+  });
+
+  return envelope.data;
+}
+
+export async function getReviews(pagina: number): Promise<PageResult<ModeratedReview>> {
+  const page = await request<PaginatedEnvelope<ModeratedReview>>(`/reviews?pagina=${pagina}`);
+
+  return toPageResult(page, keepItem);
+}
+
+export async function deleteReview(id: string): Promise<void> {
+  await request<void>(`/reviews/${encodeURIComponent(id)}`, { method: 'DELETE' });
 }
