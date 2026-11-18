@@ -1,8 +1,11 @@
+import { randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
+import { env } from '../../config/env';
 import { prisma } from '../../config/prisma';
+import { RELEASE_EVENT_TYPE, RELEASE_EVENT_VERSION, ReleaseEvent } from '../../shared/events/release-event.schema';
 import { AppError } from '../../shared/errors/app-error';
 import { buildSearchField, buildSearchTokens } from '../../shared/search/search-text';
-import { classificationToDatabase, movieSelect, toMovieResponse } from './movie.mapper';
+import { MovieRecord, classificationToApi, classificationToDatabase, movieSelect, toMovieResponse } from './movie.mapper';
 import { CreateMovieInput, ListMoviesQuery, MovieResponse, PaginatedMovies, UpdateMovieInput } from './movie.schema';
 
 interface MovieTitles {
@@ -58,27 +61,34 @@ export class MovieService {
     await this.assertProfessionalsExist(data.profissionalIds);
 
     const { localizacao, elenco, profissionalIds, classificacaoIndicativa, ...scalarFields } = data;
-    const created = await prisma.filme.create({
-      data: {
-        ...scalarFields,
-        classificacaoIndicativa: classificationToDatabase(classificacaoIndicativa),
-        tituloBusca: buildSearchField(data.titulo, data.tituloOriginal),
-        localizacaoPais: localizacao.pais,
-        localizacaoRegiao: localizacao.regiao,
-        localizacaoEstado: localizacao.estado,
-        localizacaoEstadoSigla: localizacao.estadoSigla,
-        localizacaoMunicipio: localizacao.municipio,
-        elenco: {
-          create: elenco.map((item, index) => ({
-            nome: item.nome,
-            personagem: item.personagem,
-            foto: item.foto,
-            ordem: index
-          }))
+    const created = await prisma.$transaction(async transaction => {
+      const movie = await transaction.filme.create({
+        data: {
+          ...scalarFields,
+          lancadoEm: new Date(),
+          classificacaoIndicativa: classificationToDatabase(classificacaoIndicativa),
+          tituloBusca: buildSearchField(data.titulo, data.tituloOriginal),
+          localizacaoPais: localizacao.pais,
+          localizacaoRegiao: localizacao.regiao,
+          localizacaoEstado: localizacao.estado,
+          localizacaoEstadoSigla: localizacao.estadoSigla,
+          localizacaoMunicipio: localizacao.municipio,
+          elenco: {
+            create: elenco.map((item, index) => ({
+              nome: item.nome,
+              personagem: item.personagem,
+              foto: item.foto,
+              ordem: index
+            }))
+          },
+          ...(profissionalIds ? { profissionais: { connect: profissionalIds.map(id => ({ id })) } } : {})
         },
-        ...(profissionalIds ? { profissionais: { connect: profissionalIds.map(id => ({ id })) } } : {})
-      },
-      select: movieSelect
+        select: movieSelect
+      });
+
+      await transaction.eventoOutbox.create({ data: this.buildReleaseOutboxEntry(movie) });
+
+      return movie;
     });
 
     return toMovieResponse(created);
@@ -173,5 +183,31 @@ export class MovieService {
     if (existing !== profissionalIds.length) {
       throw new AppError('Um ou mais profissionais informados não existem.', 422);
     }
+  }
+
+  private buildReleaseOutboxEntry(movie: MovieRecord): Prisma.EventoOutboxCreateInput {
+    const event: ReleaseEvent = {
+      eventId: randomUUID(),
+      eventType: RELEASE_EVENT_TYPE,
+      version: RELEASE_EVENT_VERSION,
+      occurredAt: new Date().toISOString(),
+      data: {
+        filmeId: movie.id,
+        titulo: movie.titulo,
+        genero: movie.genero,
+        municipio: movie.localizacaoMunicipio,
+        estadoSigla: movie.localizacaoEstadoSigla,
+        classificacaoIndicativa: classificationToApi(movie.classificacaoIndicativa),
+        posterUrl: movie.posterUrl
+      }
+    };
+
+    return {
+      id: event.eventId,
+      topico: env.KAFKA_TOPIC_RELEASES,
+      chave: movie.id,
+      tipoEvento: event.eventType,
+      payload: event
+    };
   }
 }

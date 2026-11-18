@@ -21,6 +21,10 @@ const CLASSIFICATION_TO_DATABASE: Record<MovieClassification, ClassificacaoIndic
   '18': 'DEZOITO'
 };
 
+export function classificationToApi(classification: ClassificacaoIndicativa): MovieClassification {
+  return CLASSIFICATION_TO_API[classification];
+}
+
 export function classificationToDatabase(classification: MovieClassification): ClassificacaoIndicativa {
   return CLASSIFICATION_TO_DATABASE[classification];
 }
@@ -56,6 +60,7 @@ export const movieSelect = {
   popularidade: true,
   notaMedia: true,
   avaliacoesCount: true,
+  lancadoEm: true,
   elenco: { orderBy: { ordem: 'asc' } },
   avaliacoes: { orderBy: { createdAt: 'desc' } },
   profissionais: { select: { id: true, nome: true } }
@@ -84,7 +89,7 @@ export function toMovieResponse(record: MovieRecord): MovieResponse {
     ano: record.ano,
     duracaoMinutos: record.duracaoMinutos,
     genero: record.genero,
-    classificacaoIndicativa: CLASSIFICATION_TO_API[record.classificacaoIndicativa],
+    classificacaoIndicativa: classificationToApi(record.classificacaoIndicativa),
     localizacao: {
       pais: record.localizacaoPais,
       regiao: record.localizacaoRegiao as MovieResponse['localizacao']['regiao'],
@@ -111,6 +116,7 @@ export function toMovieResponse(record: MovieRecord): MovieResponse {
     popularidade: record.popularidade,
     notaMedia: record.notaMedia,
     avaliacoesCount: record.avaliacoesCount,
+    lancadoEm: record.lancadoEm ? record.lancadoEm.toISOString() : null,
     reviews: record.avaliacoes.map(review => ({
       id: review.id,
       autor: review.autor,
