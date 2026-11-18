@@ -33,6 +33,8 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 | PostgreSQL 15 + extensão `pg_trgm` | docker | banco e busca por trecho de texto |
 | cors, dotenv | ^2.8.6 / ^17.4.2 | CORS e variáveis de ambiente |
 | kafkajs | ^2.2.4 | producer e consumers do Kafka (`src/shared/events/kafka-event-bus.ts`) |
+| bcryptjs | ^3 | hash de senha (custo 10) em `modules/auth` e no seed do admin |
+| jsonwebtoken | ^9 | JWT HS256 em `src/shared/auth/access-token.ts` |
 | ts-node-dev | ^2.0.0 | `yarn dev` |
 | TypeScript | ^5.9.3 | tipagem |
 | `scripts/quality-check.mjs` | n/a | bloqueia `any`, `@ts-ignore`, `console.log` e comentários |

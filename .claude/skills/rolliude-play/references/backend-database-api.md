@@ -13,10 +13,11 @@ src/modules/<dominio>/  controller, routes, schema, service e mapper
 src/shared/errors/    AppError, errorHandler, schema da resposta de erro
 src/shared/search/    normalização de texto da busca
 src/shared/events/    EventBus (Kafka ou memória), schema do evento de lançamento
+src/shared/auth/      JWT (signAccessToken), middlewares authenticate, requireAdmin e adminOnly, tipagem de request.user, password.ts (única fonte de tamanho de senha, rounds, hash e comparação)
 src/seed/             dados locais (yarn db:seed)
 ```
 
-Módulos atuais: `movies`, `reviews`, `professionals`, `behind-the-scenes`, `notifications`, `docs`.
+Módulos atuais: `movies`, `reviews`, `professionals`, `behind-the-scenes`, `notifications`, `auth`, `admin`, `docs`.
 
 ## Regras
 
@@ -34,10 +35,15 @@ O contrato oficial é o OpenAPI gerado a partir dos schemas Zod em `src/modules/
 |---|---|---|
 | GET | `/api/movies` | catálogo paginado (`busca`, `ordenar` = `recentes`/`titulo`/`ano`, `pagina` padrão 1, `limite` padrão 12 máximo 48) |
 | GET | `/api/movies/:id` | ficha do filme |
-| POST, PATCH, DELETE | `/api/movies`, `/api/movies/:id` | administração do catálogo |
+| POST, PATCH, DELETE | `/api/movies`, `/api/movies/:id` | administração do catálogo (admin) |
 | POST | `/api/movies/:id/reviews` | nova avaliação (nota 1 a 5) |
-| GET, POST, PATCH, DELETE | `/api/professionals` | profissionais |
-| GET, POST, PATCH, DELETE | `/api/behind-the-scenes` | bastidores |
+| GET, POST, PATCH, DELETE | `/api/professionals` | profissionais (escrita: admin) |
+| GET, POST, PATCH, DELETE | `/api/behind-the-scenes` | bastidores (escrita: admin) |
+| POST | `/api/auth/register`, `/api/auth/login` | cria conta `USUARIO` / abre sessão; respondem `{ token, usuario }` |
+| GET | `/api/auth/me` | usuário do token (bearer) |
+| GET | `/api/admin/overview` | totais e últimos filmes (admin) |
+| GET, PATCH | `/api/admin/users`, `/api/admin/users/:id/role` | usuários e troca de papel (admin; nunca zero admins, nem o próprio papel) |
+| GET, DELETE | `/api/reviews`, `/api/reviews/:id` | moderação de avaliações, recalcula a nota (admin) |
 | GET | `/api/notifications` | notificações dos últimos 30 dias por `dispositivoId`, com `lida` e `meta.naoLidas` |
 | POST | `/api/notifications/:id/read`, `/api/notifications/read-all` | marcar como lida (body `dispositivoId`) |
 | GET | `/api/notifications/stream` | SSE, evento `release`; aceita `Last-Event-ID` |
@@ -47,7 +53,7 @@ Lista paginada responde `{ data, meta: { pagina, limite, total, totalPaginas } }
 ## Banco
 
 - Fonte única: `Rolliude-backend/prisma/schema.prisma` + `prisma/migrations/`. SQL solto fora disso não vale.
-- Modelos atuais: `Filme`, `ElencoItem`, `ItemBastidores`, `Avaliacao`, `Profissional`, `EventoOutbox`, `Notificacao`, `NotificacaoLeitura`, enum `ClassificacaoIndicativa`.
+- Modelos atuais: `Filme`, `ElencoItem`, `ItemBastidores`, `Avaliacao`, `Profissional`, `EventoOutbox`, `Notificacao`, `NotificacaoLeitura`, `Usuario`, enums `ClassificacaoIndicativa` e `PapelUsuario`.
 
 ## Eventos (Kafka)
 
@@ -64,4 +70,5 @@ Lista paginada responde `{ data, meta: { pagina, limite, total, totalPaginas } }
 ## Mídia e autenticação
 
 - Vídeo e trailer são só URLs. Upload ou streaming de arquivo grande pelo Node é proibido sem decisão nova.
-- Ainda não existe login nem usuário. A decisão para quando existir está em `decisions.md` (e-mail e senha, bcrypt, JWT, token de recuperação de uso único, segredos só em variável de ambiente). Até lá, as rotas de escrita estão abertas: isso é pendência, não padrão.
+- Login por e-mail e senha (decisões 006 e 014): bcryptjs, JWT HS256 com `JWT_SECRET` (mínimo 32 caracteres, obrigatório) e `JWT_EXPIRES_IN_SECONDS`. Rota protegida usa `authenticate` (qualquer usuário) ou `...adminOnly` (admin). O token só carrega `sub`; o papel vem do banco. `senhaHash` nunca sai em resposta: use `authenticatedUserSelect` + `toUserResponse`.
+- Admin local: `ADMIN_EMAIL`, `ADMIN_PASSWORD` e `ADMIN_NOME` no `.env`; `yarn db:seed:admin` cria ou atualiza só o admin (o `yarn db:seed` completo também chama).
