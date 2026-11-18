@@ -12,10 +12,11 @@ src/config/prisma.ts  PrismaClient único
 src/modules/<dominio>/  controller, routes, schema, service e mapper
 src/shared/errors/    AppError, errorHandler, schema da resposta de erro
 src/shared/search/    normalização de texto da busca
+src/shared/events/    EventBus (Kafka ou memória), schema do evento de lançamento
 src/seed/             dados locais (yarn db:seed)
 ```
 
-Módulos atuais: `movies`, `reviews`, `professionals`, `behind-the-scenes`, `docs`.
+Módulos atuais: `movies`, `reviews`, `professionals`, `behind-the-scenes`, `notifications`, `docs`.
 
 ## Regras
 
@@ -37,13 +38,24 @@ O contrato oficial é o OpenAPI gerado a partir dos schemas Zod em `src/modules/
 | POST | `/api/movies/:id/reviews` | nova avaliação (nota 1 a 5) |
 | GET, POST, PATCH, DELETE | `/api/professionals` | profissionais |
 | GET, POST, PATCH, DELETE | `/api/behind-the-scenes` | bastidores |
+| GET | `/api/notifications` | notificações dos últimos 30 dias por `dispositivoId`, com `lida` e `meta.naoLidas` |
+| POST | `/api/notifications/:id/read`, `/api/notifications/read-all` | marcar como lida (body `dispositivoId`) |
+| GET | `/api/notifications/stream` | SSE, evento `release`; aceita `Last-Event-ID` |
 
 Lista paginada responde `{ data, meta: { pagina, limite, total, totalPaginas } }`; item único responde `{ data }`.
 
 ## Banco
 
 - Fonte única: `Rolliude-backend/prisma/schema.prisma` + `prisma/migrations/`. SQL solto fora disso não vale.
-- Modelos atuais: `Filme`, `ElencoItem`, `ItemBastidores`, `Avaliacao`, `Profissional`, enum `ClassificacaoIndicativa`.
+- Modelos atuais: `Filme`, `ElencoItem`, `ItemBastidores`, `Avaliacao`, `Profissional`, `EventoOutbox`, `Notificacao`, `NotificacaoLeitura`, enum `ClassificacaoIndicativa`.
+
+## Eventos (Kafka)
+
+- Cadastro de filme grava, na mesma transação, o filme (`lancadoEm`) e uma linha em `eventos_outbox` (padrão outbox). Nunca publicar no Kafka direto do service.
+- `OutboxRelay` publica os pendentes a cada `OUTBOX_INTERVAL_MS` (`FOR UPDATE SKIP LOCKED`).
+- Tópico `catalogo.lancamentos` (3 partições, chave = id do filme) e `catalogo.lancamentos.dlq`. Evento `catalogo.filme.lancado` v1 validado por `releaseEventSchema` na publicação e no consumo.
+- Grupos: `notificacoes-persistencia` (grava `Notificacao`, idempotente por `eventId`, que também é o `id`) e `notificacoes-sse-<hostname>` (repassa ao `SseHub`). 3 falhas: DLQ no Kafka, aviso no log em memória.
+- `KAFKA_ENABLED=false` (padrão) usa `InMemoryEventBus`, mesmo fluxo sem broker.
 - Tabelas e colunas em snake_case via `@map`/`@@map`; campos no Prisma em camelCase português.
 - `filmes.titulo_busca` é derivada (título e título original em minúsculas e sem acento), indexada com GIN `gin_trgm_ops`. Só o service de filmes escreve nela; nunca vem da requisição.
 - `notaMedia` e `avaliacoesCount` são recalculados pelo service de avaliações.

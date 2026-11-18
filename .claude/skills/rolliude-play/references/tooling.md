@@ -13,11 +13,12 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 | lucide-react | ^0.546.0 | ícones | oficial e única lib de ícones |
 | Google Fonts: Cinzel | 600, 700, 800, 900 | títulos e marca | oficial |
 | Google Fonts: Outfit, Plus Jakarta Sans | carregadas no `index.html` | sem uso no código | pendente: adotar uma como fonte de corpo ou remover |
-| motion | ^12.23.24 | animação | instalada sem uso; usar só para animação real, senão remover |
+| motion | ^12.23.24 | animação de sininho, painel, toast e tag "Novo" (sempre com `useReducedMotion`) | oficial |
 | autoprefixer, esbuild, tsx | dev | herança do scaffold | candidatos a remoção |
 | `@types/node`, `@types/react`, `@types/react-dom` | dev | tipos | oficial |
 | `fetch` nativo + `request` + `ApiError` em `src/services/api.ts` | n/a | cliente HTTP | oficial, não adicionar axios |
-| `localStorage` | n/a | favoritos, chave `rolliude_favorites_v1` | oficial por ora |
+| `localStorage` | n/a | favoritos (`rolliude_favorites_v1`) e id do dispositivo das notificações (`rolliude_dispositivo_v1`) | oficial por ora |
+| `EventSource` nativo | n/a | canal em tempo real de notificações, aberto só por `openNotificationStream` em `api.ts` | oficial |
 | `VITE_API_BASE_URL` (`.env.example`) | n/a | endereço da API, padrão `http://localhost:3333/api` | oficial |
 | Alias `@/*` | n/a | import curto, definido em `vite.config.ts` e `tsconfig.json` | oficial |
 | Google AI Studio | n/a | origem do protótipo (`metadata.json`, README, `DISABLE_HMR`, `GEMINI_API_KEY`) | herança; não há Gemini no código |
@@ -31,6 +32,7 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 | Prisma + `@prisma/client` | ^6.12.0 | ORM e migrations |
 | PostgreSQL 15 + extensão `pg_trgm` | docker | banco e busca por trecho de texto |
 | cors, dotenv | ^2.8.6 / ^17.4.2 | CORS e variáveis de ambiente |
+| kafkajs | ^2.2.4 | producer e consumers do Kafka (`src/shared/events/kafka-event-bus.ts`) |
 | ts-node-dev | ^2.0.0 | `yarn dev` |
 | TypeScript | ^5.9.3 | tipagem |
 | `scripts/quality-check.mjs` | n/a | bloqueia `any`, `@ts-ignore`, `console.log` e comentários |
@@ -41,7 +43,7 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 |---|---|
 | Node `20` (`.nvmrc` na raiz), `engines: node >=20` | runtime |
 | Yarn `1.22.22` | único gerenciador de pacotes; npm não é usado |
-| `docker-compose.yml` na raiz | sobe postgres, backend (3333) e frontend (3000) |
+| `docker-compose.yml` na raiz | sobe postgres, kafka (KRaft, 9092 externo e 29092 interno), kafka-ui (8080), backend (3333) e frontend (3000) |
 | GitHub Actions `.github/workflows/ci.yml` | checks em push e PR para `master`: front (`yarn lint`, `yarn build`) e back (`format:check`, `typecheck`, `prisma:validate`, `build`) |
 | Prettier (`.prettierrc.json`) e `.editorconfig` na raiz | formatação |
 | ClickUp | gestão de tasks (limite de 100 chamadas por dia na integração) |
