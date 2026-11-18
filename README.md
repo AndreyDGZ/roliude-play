@@ -42,7 +42,7 @@ yarn dev
 Frontend:
 
 ```bash
-cd rolliude-play---o-cinema-da-nossa-terra-na-sua-tela
+cd Rolliude-front
 cp .env.example .env
 yarn install
 yarn dev
@@ -63,7 +63,7 @@ O contrato da API é gerado dos schemas do backend e fica em `http://localhost:3
 
 ## Checks
 
-Execute nas pastas `rolliude-play---o-cinema-da-nossa-terra-na-sua-tela/` e `Rolliude-backend/`:
+Execute nas pastas `Rolliude-front/` e `Rolliude-backend/`:
 
 ```bash
 yarn lint

@@ -7,7 +7,7 @@ description: >-
   Fonte única de regras e documentação do Rolliúde Play: toda feature nova segue esta skill.
   Cobre o Design System oficial (paleta escura de couro e terracota, tokens no @theme do
   Tailwind v4, fonte Cinzel, ícones lucide-react), as ferramentas oficiais de front, back e
-  infra, a estrutura do front em rolliude-play---o-cinema-da-nossa-terra-na-sua-tela (abas no
+  infra, a estrutura do front em Rolliude-front (abas no
   App.tsx, src/components, src/services/api.ts), o backend modular em Rolliude-backend/src/modules,
   Prisma como única fonte do banco, contrato HTTP gerado do Zod, decisões de arquitetura,
   regras obrigatórias de código (sem any, sem comentários, sem variável de uma letra) e o
@@ -27,7 +27,7 @@ Plataforma de cinema brasileiro e regional: catálogo, curadoria por estado e mu
 | Assunto | Fonte oficial |
 |---|---|
 | Regras, decisões e documentação | esta skill (`references/`) |
-| Frontend | `rolliude-play---o-cinema-da-nossa-terra-na-sua-tela/` |
+| Frontend | `Rolliude-front/` |
 | Backend | `Rolliude-backend/src/modules/<dominio>/` |
 | Banco | `Rolliude-backend/prisma/schema.prisma` + `prisma/migrations/` |
 | Contrato HTTP | schemas Zod, OpenAPI em `GET /api/docs/openapi.json` |
@@ -38,8 +38,13 @@ Plataforma de cinema brasileiro e regional: catálogo, curadoria por estado e mu
 
 Dois lugares dizendo coisas diferentes sobre o mesmo assunto: pare, siga a fonte oficial acima, corrija a outra e registre em `references/decisions.md` se for decisão estrutural.
 
+## Implementar uma task
+
+Toda implementação (pedida direto ou vinda de um plano aprovado em `/rolliude-planning` ou `/rolliude-planning-review`) segue `references/implementation-workflow.md` do começo ao fim: entender a task, conferir Node 20, ler o padrão real, Design System com `/frontend-design` ou `/ui-ux-pro-max` quando houver UI, implementar sob a REGRA MÁXIMA, auditoria pelo subagent `rolliude-reviewer` (`.claude/agents/rolliude-reviewer.md`), validação HTTP com o backend rodando quando houver rota nova ou alterada, e relatório final com roteiro de teste manual, branch, commit e descrição de PR sugeridos. Nunca commitar nem dar push.
+
 ## Leia conforme a tarefa
 
+- Implementação de qualquer task: `references/implementation-workflow.md`
 - UI, cor, fonte, ícone, acessibilidade: `references/design-system.md`
 - Tela, componente, chamada HTTP no front: `references/frontend.md`
 - Rota, schema, service, model, migration: `references/backend-database-api.md`
@@ -71,7 +76,7 @@ Fundo `#120D0A`, superfície `#23130B`, borda `#442315`, texto `#FAF6EE`, primá
 
 ## Pendências conhecidas (não são padrão)
 
-- CI (`.github/workflows/ci.yml`) aponta para `Rolliude-front`, pasta que não existe; deve apontar para a pasta do front real e rodar `yarn lint`.
+- CI do backend roda `format:check` e `typecheck`, não o `yarn lint` completo; o reviewer roda `yarn lint` localmente para compensar.
 - Front sem tokens `@theme`: cerca de 120 hex avulsos em classes. Corrigir por arquivo tocado.
 - `tsconfig.json` do front sem `strict`; `any` em `CatalogView.tsx` e `MovieDetailModal.tsx`; comentários do scaffold em vários arquivos.
 - Herança do Google AI Studio no front: nome de pacote `react-example`, README do AI Studio, `metadata.json`, `motion`, `tsx` e `esbuild` sem uso, script `clean` citando `server.js`, front sem `.nvmrc`/`engines`.

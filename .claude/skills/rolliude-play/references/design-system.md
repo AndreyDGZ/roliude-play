@@ -1,6 +1,6 @@
 # Design System
 
-Fonte: o visual do front real em `rolliude-play---o-cinema-da-nossa-terra-na-sua-tela/`. Identidade: cinema nordestino, couro, cordel e terra, sobre fundo escuro.
+Fonte: o visual do front real em `Rolliude-front/`. Identidade: cinema nordestino, couro, cordel e terra, sobre fundo escuro.
 
 ## Marca
 

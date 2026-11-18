@@ -2,10 +2,10 @@
 
 ## Git
 
-- Branch a partir da `develop`: `feature/`, `fix/`, `refactor/`, `docs/`, `test/` ou `chore/` + descrição curta.
+- Branch a partir da `master`: `feature/`, `fix/`, `refactor/`, `docs/`, `test/` ou `chore/` + descrição curta.
 - Commits em Conventional Commits (`feat(front): ...`, `fix(backend): ...`).
 - Um PR, um objetivo. Se a mudança altera regra, ferramenta, token ou contrato, a skill é atualizada no mesmo PR.
-- PR aponta para `develop`; `main` recebe as releases.
+- `master` é a branch principal: PR aponta para `master`, onde o CI roda. Não usar `develop` nem `main`.
 
 ## Checks antes de dar como pronto
 

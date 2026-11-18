@@ -2,7 +2,7 @@
 
 Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.json` reais. Ferramenta nova só entra depois de registrada aqui e em `decisions.md`.
 
-## Frontend (`rolliude-play---o-cinema-da-nossa-terra-na-sua-tela/`)
+## Frontend (`Rolliude-front/`)
 
 | Ferramenta | Versão | Uso | Status |
 |---|---|---|---|
@@ -42,6 +42,6 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 | Node `20` (`.nvmrc` na raiz), `engines: node >=20` | runtime |
 | Yarn `1.22.22` | único gerenciador de pacotes; npm não é usado |
 | `docker-compose.yml` na raiz | sobe postgres, backend (3333) e frontend (3000) |
-| GitHub Actions `.github/workflows/ci.yml` | checks de PR para `main` e `develop` |
+| GitHub Actions `.github/workflows/ci.yml` | checks em push e PR para `master`: front (`yarn lint`, `yarn build`) e back (`format:check`, `typecheck`, `prisma:validate`, `build`) |
 | Prettier (`.prettierrc.json`) e `.editorconfig` na raiz | formatação |
 | ClickUp | gestão de tasks (limite de 100 chamadas por dia na integração) |

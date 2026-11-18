@@ -1,6 +1,6 @@
 # Frontend
 
-Pasta: `rolliude-play---o-cinema-da-nossa-terra-na-sua-tela/`. Stack e versões em `tooling.md`, visual em `design-system.md`.
+Pasta: `Rolliude-front/`. Stack e versões em `tooling.md`, visual em `design-system.md`.
 
 ## Estrutura
 
