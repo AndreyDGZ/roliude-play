@@ -173,3 +173,23 @@ model NotificacaoLeitura {
   @@index([dispositivoId])
   @@map("notificacoes_leituras")
 }
+
+enum PapelUsuario {
+  USUARIO
+  ADMIN
+
+  @@map("papel_usuario")
+}
+
+model Usuario {
+  id        String       @id @default(uuid())
+  nome      String
+  email     String       @unique
+  senhaHash String       @map("senha_hash")
+  papel     PapelUsuario @default(USUARIO)
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  @@index([papel])
+  @@map("usuarios")
+}
