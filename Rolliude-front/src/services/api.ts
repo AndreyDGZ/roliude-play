@@ -1,4 +1,4 @@
-import { BehindTheScenesItem, CastMember, Movie, Professional, Review } from '../types';
+import { AppNotification, BehindTheScenesItem, CastMember, Movie, NotificationList, Professional, Review } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3333/api';
 
@@ -63,6 +63,7 @@ interface ApiMovie {
   popularidade: number;
   notaMedia: number;
   avaliacoesCount: number;
+  lancadoEm: string | null;
   reviews: ApiReview[];
 }
 
@@ -91,6 +92,14 @@ interface ApiBtsItem {
   entrevistado: string | null;
   dataPublicacao: string;
 }
+
+interface ApiNotificationList {
+  data: AppNotification[];
+  meta: { naoLidas: number };
+}
+
+const NOTIFICATIONS_PAGE_SIZE = 20;
+const NOTIFICATION_RELEASE_EVENT = 'release';
 
 interface Envelope<Item> {
   data: Item;
@@ -157,6 +166,7 @@ function mapMovie(item: ApiMovie): Movie {
     popularidade: item.popularidade,
     notaMedia: item.notaMedia,
     avaliacoesCount: item.avaliacoesCount,
+    lancadoEm: item.lancadoEm ?? undefined,
     reviews: item.reviews.map(mapReview)
   };
 }
@@ -261,4 +271,32 @@ export async function getBehindTheScenesItems(): Promise<BehindTheScenesItem[]> 
   const envelope = await request<Envelope<ApiBtsItem[]>>('/behind-the-scenes');
 
   return envelope.data.map(mapBtsItem);
+}
+
+export async function getNotifications(dispositivoId: string): Promise<NotificationList> {
+  const query = new URLSearchParams({ dispositivoId, limite: String(NOTIFICATIONS_PAGE_SIZE) });
+  const page = await request<ApiNotificationList>(`/notifications?${query.toString()}`);
+
+  return { notifications: page.data, naoLidas: page.meta.naoLidas };
+}
+
+export async function markNotificationAsRead(notificationId: string, dispositivoId: string): Promise<void> {
+  await request<void>(`/notifications/${encodeURIComponent(notificationId)}/read`, {
+    method: 'POST',
+    body: JSON.stringify({ dispositivoId })
+  });
+}
+
+export async function markAllNotificationsAsRead(dispositivoId: string): Promise<void> {
+  await request<void>('/notifications/read-all', { method: 'POST', body: JSON.stringify({ dispositivoId }) });
+}
+
+export function openNotificationStream(onRelease: (notification: AppNotification) => void): EventSource {
+  const stream = new EventSource(`${API_BASE_URL}/notifications/stream`);
+
+  stream.addEventListener(NOTIFICATION_RELEASE_EVENT, (event: MessageEvent<string>) => {
+    onRelease(JSON.parse(event.data) as AppNotification);
+  });
+
+  return stream;
 }

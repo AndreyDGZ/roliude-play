@@ -77,8 +77,8 @@ Fundo `#120D0A`, superfície `#23130B`, borda `#442315`, texto `#FAF6EE`, primá
 ## Pendências conhecidas (não são padrão)
 
 - CI do backend roda `format:check` e `typecheck`, não o `yarn lint` completo; o reviewer roda `yarn lint` localmente para compensar.
-- Front sem tokens `@theme`: cerca de 120 hex avulsos em classes. Corrigir por arquivo tocado.
+- Bloco `@theme` criado em `src/index.css`; ainda há hex avulsos em componentes não tocados. Corrigir por arquivo tocado.
 - `tsconfig.json` do front sem `strict`; `any` em `CatalogView.tsx` e `MovieDetailModal.tsx`; comentários do scaffold em vários arquivos.
-- Herança do Google AI Studio no front: nome de pacote `react-example`, README do AI Studio, `metadata.json`, `motion`, `tsx` e `esbuild` sem uso, script `clean` citando `server.js`, front sem `.nvmrc`/`engines`.
+- Herança do Google AI Studio no front: nome de pacote `react-example`, README do AI Studio, `metadata.json`, `tsx` e `esbuild` sem uso, script `clean` citando `server.js`, front sem `.nvmrc`/`engines`.
 - Fontes Outfit e Plus Jakarta Sans carregadas sem uso.
 - Rotas de escrita do backend sem autenticação (decisão 006 ainda não implementada).

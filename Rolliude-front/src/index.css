@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #120D0A;
+  --color-brand-surface: #23130B;
+  --color-brand-surface-raised: #3E2114;
+  --color-brand-border: #442315;
+  --color-brand-text: #FAF6EE;
+  --color-brand-text-muted: #A67E5D;
+  --color-brand-text-soft: #C89D77;
+  --color-brand-primary: #C2410C;
+  --color-brand-accent: #EA580C;
+  --color-brand-star: #FCD34D;
+  --font-display: "Cinzel", serif;
+}

@@ -4,6 +4,7 @@ import { env } from '../config/env';
 import { bastidoresRoutes } from '../modules/behind-the-scenes/bts.routes';
 import { docsRoutes } from '../modules/docs/docs.routes';
 import { movieRoutes } from '../modules/movies/movie.routes';
+import { notificationRoutes } from '../modules/notifications/notification.routes';
 import { professionalRoutes } from '../modules/professionals/professional.routes';
 import { reviewRoutes } from '../modules/reviews/review.routes';
 import { errorHandler } from '../shared/errors/error-handler';
@@ -21,6 +22,7 @@ app.use('/api/movies', movieRoutes);
 app.use('/api/movies', reviewRoutes);
 app.use('/api/professionals', professionalRoutes);
 app.use('/api/behind-the-scenes', bastidoresRoutes);
+app.use('/api/notifications', notificationRoutes);
 app.use('/api/docs', docsRoutes);
 
 app.use(errorHandler);

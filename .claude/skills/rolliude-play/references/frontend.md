@@ -13,6 +13,8 @@ src/components/       um componente por arquivo, PascalCase
 src/services/api.ts   única porta de saída HTTP
 src/types/index.ts    tipos de domínio
 src/data/mockData.ts  listas estáticas (estados, municípios, gêneros)
+src/data/releases.ts  janela de "Novo" (NEW_RELEASE_WINDOW_DAYS) e tempo relativo
+src/hooks/            hooks de estado compartilhado (useNotifications)
 ```
 
 ## Navegação

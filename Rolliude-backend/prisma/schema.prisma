@@ -52,6 +52,7 @@ model Filme {
   popularidade            Int                     @default(0)
   notaMedia               Float                   @default(0) @map("nota_media")
   avaliacoesCount         Int                     @default(0) @map("avaliacoes_count")
+  lancadoEm               DateTime?               @map("lancado_em")
   createdAt               DateTime                @default(now()) @map("created_at")
   updatedAt               DateTime                @updatedAt @map("updated_at")
 
@@ -59,8 +60,10 @@ model Filme {
   bastidores              ItemBastidores[]
   avaliacoes              Avaliacao[]
   profissionais           Profissional[]          @relation("ProfissionalFilmes")
+  notificacoes            Notificacao[]
 
   @@index([ano])
+  @@index([lancadoEm])
   @@index([destaqueCuradoria])
   @@index([localizacaoEstadoSigla])
   @@index([genero], type: Gin)
@@ -128,4 +131,45 @@ model Profissional {
   filmes      Filme[]  @relation("ProfissionalFilmes")
 
   @@map("profissionais")
+}
+
+model EventoOutbox {
+  id          String    @id
+  topico      String
+  chave       String
+  tipoEvento  String    @map("tipo_evento")
+  payload     Json
+  tentativas  Int       @default(0)
+  ultimoErro  String?   @map("ultimo_erro")
+  publicadoEm DateTime? @map("publicado_em")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([publicadoEm, createdAt])
+  @@map("eventos_outbox")
+}
+
+model Notificacao {
+  id         String               @id @default(uuid())
+  eventId    String               @unique @map("event_id")
+  tipoEvento String               @map("tipo_evento")
+  filmeId    String               @map("filme_id")
+  titulo     String
+  payload    Json
+  createdAt  DateTime             @default(now()) @map("created_at")
+  filme      Filme                @relation(fields: [filmeId], references: [id], onDelete: Cascade)
+  leituras   NotificacaoLeitura[]
+
+  @@index([createdAt(sort: Desc)])
+  @@map("notificacoes")
+}
+
+model NotificacaoLeitura {
+  notificacaoId String      @map("notificacao_id")
+  dispositivoId String      @map("dispositivo_id")
+  lidaEm        DateTime    @default(now()) @map("lida_em")
+  notificacao   Notificacao @relation(fields: [notificacaoId], references: [id], onDelete: Cascade)
+
+  @@id([notificacaoId, dispositivoId])
+  @@index([dispositivoId])
+  @@map("notificacoes_leituras")
 }

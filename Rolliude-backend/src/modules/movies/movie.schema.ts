@@ -133,6 +133,7 @@ export const movieResponseSchema = z.object({
   popularidade: z.number().int(),
   notaMedia: z.number(),
   avaliacoesCount: z.number().int(),
+  lancadoEm: z.iso.datetime().nullable(),
   reviews: z.array(reviewResponseSchema),
   profissionais: z.array(professionalSummarySchema)
 });

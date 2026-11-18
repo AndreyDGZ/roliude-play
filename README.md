@@ -48,6 +48,20 @@ yarn install
 yarn dev
 ```
 
+## Notificações de lançamento (Kafka)
+
+Ao cadastrar um filme, o backend grava um evento na tabela `eventos_outbox` e o publica no tópico `catalogo.lancamentos`. Os navegadores abertos recebem o aviso em tempo real por `GET /api/notifications/stream`.
+
+Com Kafka local (Docker):
+
+```bash
+docker compose up -d postgres kafka kafka-ui
+```
+
+No `Rolliude-backend/.env`, use `KAFKA_ENABLED=true` e `KAFKA_BROKERS=localhost:9092`. O painel do Kafka fica em `http://localhost:8080`.
+
+Sem Docker para o Kafka, deixe `KAFKA_ENABLED=false`: o mesmo fluxo roda em memória dentro do backend.
+
 ## Dados iniciais e documentação da API
 
 No backend, depois de aplicar as migrations:

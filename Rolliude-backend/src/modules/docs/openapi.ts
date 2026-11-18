@@ -17,6 +17,13 @@ import {
   professionalResponseSchema,
   updateProfessionalSchema
 } from '../professionals/professional.schema';
+import {
+  listNotificationsQuerySchema,
+  notificationDeviceBodySchema,
+  notificationIdParamsSchema,
+  notificationListResponseSchema,
+  notificationResponseSchema
+} from '../notifications/notification.schema';
 import { createReviewSchema } from '../reviews/review.schema';
 
 type JsonObject = Record<string, unknown>;
@@ -33,6 +40,7 @@ interface Operation {
   successStatus: string;
   successDescription: string;
   successSchema?: z.ZodType;
+  successContentType?: string;
   errorStatuses: string[];
 }
 
@@ -222,6 +230,49 @@ const OPERATIONS: Operation[] = [
     successStatus: '204',
     successDescription: 'Conteúdo removido.',
     errorStatuses: ['400', '404']
+  },
+  {
+    method: 'get',
+    path: '/notifications',
+    summary: 'Lista as notificações de lançamento dos últimos 30 dias para um dispositivo.',
+    tag: 'Notificações',
+    query: listNotificationsQuerySchema,
+    successStatus: '200',
+    successDescription: 'Notificações com estado de leitura e total de não lidas.',
+    successSchema: notificationListResponseSchema,
+    errorStatuses: ['400']
+  },
+  {
+    method: 'get',
+    path: '/notifications/stream',
+    summary: 'Abre o canal em tempo real (SSE) que envia o evento release a cada filme lançado.',
+    tag: 'Notificações',
+    successStatus: '200',
+    successDescription: 'Fluxo text/event-stream; cada evento release traz uma notificação.',
+    successSchema: notificationResponseSchema,
+    successContentType: 'text/event-stream',
+    errorStatuses: []
+  },
+  {
+    method: 'post',
+    path: '/notifications/{id}/read',
+    summary: 'Marca uma notificação como lida para o dispositivo.',
+    tag: 'Notificações',
+    pathParams: notificationIdParamsSchema,
+    body: notificationDeviceBodySchema,
+    successStatus: '204',
+    successDescription: 'Notificação marcada como lida.',
+    errorStatuses: ['400', '404']
+  },
+  {
+    method: 'post',
+    path: '/notifications/read-all',
+    summary: 'Marca todas as notificações recentes como lidas para o dispositivo.',
+    tag: 'Notificações',
+    body: notificationDeviceBodySchema,
+    successStatus: '204',
+    successDescription: 'Notificações marcadas como lidas.',
+    errorStatuses: ['400']
   }
 ];
 
@@ -251,7 +302,7 @@ function toOperationObject(operation: Operation): JsonObject {
   ];
 
   const successContent = operation.successSchema
-    ? { content: { 'application/json': { schema: toJsonSchema(operation.successSchema, 'output') } } }
+    ? { content: { [operation.successContentType ?? 'application/json']: { schema: toJsonSchema(operation.successSchema, 'output') } } }
     : {};
 
   const errorResponses = Object.fromEntries(

@@ -96,6 +96,8 @@ Antes de dar a implementação como pronta, releia esta seção e confira o cód
 | Classificação e paginação de filmes | `src/modules/movies/movie.schema.ts` | `CLASSIFICACOES_INDICATIVAS`, limites de página |
 | Enums do banco | `@prisma/client` | `ClassificacaoIndicativa` |
 | Contrato HTTP | `src/modules/docs/openapi.ts` | OpenAPI gerado do Zod |
+| Eventos e Kafka | `src/shared/events/` | `eventBus`, `releaseEventSchema`, `RELEASE_EVENT_TYPE` |
+| Janela e paginação de notificações | `src/modules/notifications/notification.schema.ts` | `NOTIFICATIONS_WINDOW_DAYS`, `MISSED_NOTIFICATIONS_LIMIT` |
 
 #### Fontes da verdade: `Rolliude-front`
 
@@ -104,6 +106,8 @@ Antes de dar a implementação como pronta, releia esta seção e confira o cód
 | HTTP e erro de API | `src/services/api.ts` | `request`, `ApiError`, `getMovies`, `getMovieById`, `createMovie`, `createReview`, `getProfessionals`, `getBehindTheScenesItems` |
 | Tipos de domínio | `src/types/index.ts` | `Movie`, `Review`, `Professional`, `BehindTheScenesItem`, `Region`, `AgeRating` |
 | Listas estáticas | `src/data/mockData.ts` | `STATES_LIST`, `MUNICIPALITIES_LIST`, `GENRES_LIST` |
+| Lançamentos e tag "Novo" | `src/data/releases.ts` | `NEW_RELEASE_WINDOW_DAYS`, `isNewRelease`, `formatReleaseTime` |
+| Notificações | `src/hooks/useNotifications.ts` | `useNotifications` |
 | Tokens visuais | `src/index.css` | bloco `@theme` |
 | Marca e padrão cordel | `src/components/Logo.tsx`, `CordelPattern.tsx` | `Logo`, `CordelPattern` |
 
