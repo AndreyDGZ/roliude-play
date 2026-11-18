@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { HeroBanner } from './components/HeroBanner';
 import { CuratedSections } from './components/CuratedSections';
@@ -12,11 +12,15 @@ import { ProfessionalModal } from './components/ProfessionalModal';
 import { VideoPlayerModal } from './components/VideoPlayerModal';
 import { AdminAddMovieModal } from './components/AdminAddMovieModal';
 import { Footer } from './components/Footer';
-import { Movie, Professional, BehindTheScenesItem, Review } from './types';
+import { NotificationBell } from './components/NotificationBell';
+import { ReleaseToast } from './components/ReleaseToast';
+import { useNotifications } from './hooks/useNotifications';
+import { AppNotification, Movie, Professional, BehindTheScenesItem, Review } from './types';
 import {
   createMovie,
   createReview,
   getBehindTheScenesItems,
+  getMovieById,
   getMovies,
   getProfessionals,
   CreateMoviePayload
@@ -25,15 +29,12 @@ import {
 type AppStatus = 'loading' | 'error' | 'ready';
 
 export default function App() {
-  // Navigation Tab State
   const [activeTab, setActiveTab] = useState<
     'inicio' | 'catalogo' | 'curadoria' | 'bastidores' | 'profissionais' | 'favoritos'
   >('inicio');
 
-  // Search State
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Data loaded from the real API
   const [status, setStatus] = useState<AppStatus>('loading');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [professionals, setProfessionals] = useState<Professional[]>([]);
@@ -55,57 +56,67 @@ export default function App() {
     loadData();
   }, []);
 
-  // Favorites state with persistence
   const [favoriteIds, setFavoriteIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('rolliude_favorites_v1');
       if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.warn('Erro ao carregar favoritos', e);
+    } catch (error) {
+      console.warn('Erro ao carregar favoritos', error);
     }
     return ['filme-auto-compadecida', 'filme-aruanda'];
   });
 
-  // Modals state
   const [selectedMovieForDetail, setSelectedMovieForDetail] = useState<Movie | null>(null);
   const [selectedMediaForPlay, setSelectedMediaForPlay] = useState<Movie | BehindTheScenesItem | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
+  const prependMovie = useCallback((movie: Movie) => {
+    setMovies((previous) => (previous.some((existing) => existing.id === movie.id) ? previous : [movie, ...previous]));
+  }, []);
+
+  const handleRelease = useCallback(
+    (notification: AppNotification) => {
+      getMovieById(notification.filmeId)
+        .then(prependMovie)
+        .catch((error) => console.warn('Erro ao carregar o filme lançado', error));
+    },
+    [prependMovie]
+  );
+
+  const { notifications, naoLidas, toasts, markAsRead, markAllAsRead, dismissToast } = useNotifications(handleRelease);
+
   useEffect(() => {
     try {
       localStorage.setItem('rolliude_favorites_v1', JSON.stringify(favoriteIds));
-    } catch (e) {
-      console.warn('Erro ao salvar favoritos', e);
+    } catch (error) {
+      console.warn('Erro ao salvar favoritos', error);
     }
   }, [favoriteIds]);
 
-  // If user types in global search bar, navigate smoothly to catalog if on another tab
-  const handleSearchChange = (q: string) => {
-    setSearchQuery(q);
-    if (q.trim() && activeTab !== 'catalogo') {
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim() && activeTab !== 'catalogo') {
       setActiveTab('catalogo');
     }
   };
 
-  // Toggle Favorite
   const handleToggleFavorite = (movieId: string) => {
     setFavoriteIds((prev) =>
-      prev.includes(movieId) ? prev.filter((id) => id !== movieId) : [...prev, movieId]
+      prev.includes(movieId) ? prev.filter((favoriteId) => favoriteId !== movieId) : [...prev, movieId]
     );
   };
 
-  // Select Professional by Name (e.g. from cast or director click in Ficha Técnica)
   const handleSelectProfessionalByName = (name: string) => {
     const found = professionals.find(
-      (p) => p.nome.toLowerCase() === name.toLowerCase() || name.toLowerCase().includes(p.nome.toLowerCase())
+      (professional) =>
+        professional.nome.toLowerCase() === name.toLowerCase() || name.toLowerCase().includes(professional.nome.toLowerCase())
     );
     if (found) {
       setSelectedProfessional(found);
     }
   };
 
-  // Add Review
   const handleAddReview = async (movieId: string, newReview: Review) => {
     const updatedMovie = await createReview(movieId, {
       autor: newReview.autor,
@@ -114,38 +125,51 @@ export default function App() {
       comentario: newReview.comentario
     });
 
-    setMovies((prevMovies) => prevMovies.map((m) => (m.id === movieId ? updatedMovie : m)));
+    setMovies((prevMovies) => prevMovies.map((movie) => (movie.id === movieId ? updatedMovie : movie)));
 
     if (selectedMovieForDetail && selectedMovieForDetail.id === movieId) {
       setSelectedMovieForDetail(updatedMovie);
     }
   };
 
-  // Add New Movie from Admin/Curator Modal
   const handleAddMovie = async (payload: CreateMoviePayload) => {
     const createdMovie = await createMovie(payload);
-    setMovies((prev) => [createdMovie, ...prev]);
+    prependMovie(createdMovie);
     setActiveTab('catalogo');
   };
 
-  // Featured Hero movie
+  const handleOpenNotification = (notification: AppNotification) => {
+    markAsRead(notification.id);
+    dismissToast(notification.id);
+
+    const loadedMovie = movies.find((movie) => movie.id === notification.filmeId);
+    if (loadedMovie) {
+      setSelectedMovieForDetail(loadedMovie);
+      return;
+    }
+
+    getMovieById(notification.filmeId)
+      .then(setSelectedMovieForDetail)
+      .catch((error) => console.warn('Erro ao abrir o filme da notificação', error));
+  };
+
   const heroMovie = movies[0];
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-[#120D0A] text-[#FAF6EE] flex items-center justify-center font-sans">
-        <p className="text-sm text-[#C89D77]">Carregando o catálogo...</p>
+      <div className="min-h-screen bg-brand-bg text-brand-text flex items-center justify-center font-sans">
+        <p className="text-sm text-brand-text-soft">Carregando o catálogo...</p>
       </div>
     );
   }
 
   if (status === 'error') {
     return (
-      <div className="min-h-screen bg-[#120D0A] text-[#FAF6EE] flex flex-col items-center justify-center gap-4 font-sans">
-        <p className="text-sm text-[#C89D77]">Não foi possível carregar o catálogo agora.</p>
+      <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col items-center justify-center gap-4 font-sans">
+        <p className="text-sm text-brand-text-soft">Não foi possível carregar o catálogo agora.</p>
         <button
           onClick={loadData}
-          className="px-4 py-2 rounded-xl bg-[#C2410C] hover:bg-[#EA580C] text-white text-sm font-bold transition"
+          className="px-4 py-2 rounded-xl bg-brand-primary hover:bg-brand-accent text-white text-sm font-bold transition"
         >
           Tentar novamente
         </button>
@@ -154,8 +178,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#120D0A] text-[#FAF6EE] flex flex-col font-sans selection:bg-[#C2410C] selection:text-white">
-      {/* Main Header */}
+    <div className="min-h-screen bg-brand-bg text-brand-text flex flex-col font-sans selection:bg-brand-primary selection:text-white">
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -163,18 +186,26 @@ export default function App() {
         setSearchQuery={handleSearchChange}
         favoritesCount={favoriteIds.length}
         onOpenAddModal={() => setIsAddModalOpen(true)}
+        notificationBell={
+          <NotificationBell
+            notifications={notifications}
+            naoLidas={naoLidas}
+            onSelectNotification={handleOpenNotification}
+            onMarkAllAsRead={markAllAsRead}
+          />
+        }
       />
 
-      {/* Main Page Content */}
+      <ReleaseToast toasts={toasts} onDismiss={dismissToast} onSelect={handleOpenNotification} />
+
       <main className="flex-1">
-        {/* TAB 1: INÍCIO (Home Showcase with Hero Banner and Curated Rows) */}
         {activeTab === 'inicio' && (
           <div className="space-y-12">
             {heroMovie && (
               <HeroBanner
                 movie={heroMovie}
-                onPlay={(m) => setSelectedMediaForPlay(m)}
-                onOpenDetails={(m) => setSelectedMovieForDetail(m)}
+                onPlay={(movie) => setSelectedMediaForPlay(movie)}
+                onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
                 isFavorite={favoriteIds.includes(heroMovie.id)}
                 onToggleFavorite={handleToggleFavorite}
               />
@@ -183,8 +214,8 @@ export default function App() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 pb-12">
               <CuratedSections
                 movies={movies}
-                onPlay={(m) => setSelectedMediaForPlay(m)}
-                onOpenDetails={(m) => setSelectedMovieForDetail(m)}
+                onPlay={(movie) => setSelectedMediaForPlay(movie)}
+                onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
                 favoriteIds={favoriteIds}
                 onToggleFavorite={handleToggleFavorite}
                 onExploreCategory={() => setActiveTab('curadoria')}
@@ -193,30 +224,27 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 2: CATÁLOGO COM FILTROS GEOGRÁFICOS E TEMÁTICOS */}
         {activeTab === 'catalogo' && (
           <CatalogView
             movies={movies}
-            onPlay={(m) => setSelectedMediaForPlay(m)}
-            onOpenDetails={(m) => setSelectedMovieForDetail(m)}
+            onPlay={(movie) => setSelectedMediaForPlay(movie)}
+            onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
             favoriteIds={favoriteIds}
             onToggleFavorite={handleToggleFavorite}
             initialSearchQuery={searchQuery}
           />
         )}
 
-        {/* TAB 3: CURADORIA LOCAL & CATEGORIAS */}
         {activeTab === 'curadoria' && (
           <CuradoriaView
             movies={movies}
-            onPlay={(m) => setSelectedMediaForPlay(m)}
-            onOpenDetails={(m) => setSelectedMovieForDetail(m)}
+            onPlay={(movie) => setSelectedMediaForPlay(movie)}
+            onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
             favoriteIds={favoriteIds}
             onToggleFavorite={handleToggleFavorite}
           />
         )}
 
-        {/* TAB 4: ESPAÇO BASTIDORES & DIREÇÃO */}
         {activeTab === 'bastidores' && (
           <BehindTheScenesView
             items={btsItems}
@@ -226,7 +254,6 @@ export default function App() {
           />
         )}
 
-        {/* TAB 5: PROFISSIONAIS DO AUDIOVISUAL */}
         {activeTab === 'profissionais' && (
           <ProfessionalsView
             professionals={professionals}
@@ -235,28 +262,25 @@ export default function App() {
           />
         )}
 
-        {/* TAB 6: MINHA LISTA / FAVORITOS */}
         {activeTab === 'favoritos' && (
           <FavoritesView
             movies={movies}
             favoriteIds={favoriteIds}
-            onPlay={(m) => setSelectedMediaForPlay(m)}
-            onOpenDetails={(m) => setSelectedMovieForDetail(m)}
+            onPlay={(movie) => setSelectedMediaForPlay(movie)}
+            onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
             onToggleFavorite={handleToggleFavorite}
             onGoToCatalog={() => setActiveTab('catalogo')}
           />
         )}
       </main>
 
-      {/* Footer */}
       <Footer onNavigateTab={(tab) => setActiveTab(tab)} />
 
-      {/* MODAL 1: Ficha Técnica Integrada */}
       {selectedMovieForDetail && (
         <MovieDetailModal
           movie={selectedMovieForDetail}
           onClose={() => setSelectedMovieForDetail(null)}
-          onPlay={(m) => setSelectedMediaForPlay(m)}
+          onPlay={(movie) => setSelectedMediaForPlay(movie)}
           isFavorite={favoriteIds.includes(selectedMovieForDetail.id)}
           onToggleFavorite={handleToggleFavorite}
           onSelectProfessionalName={handleSelectProfessionalByName}
@@ -266,24 +290,22 @@ export default function App() {
         />
       )}
 
-      {/* MODAL 2: Perfil Profissional */}
       {selectedProfessional && (
         <ProfessionalModal
           professional={selectedProfessional}
           onClose={() => setSelectedProfessional(null)}
           movies={movies}
-          onSelectMovie={(m) => {
+          onSelectMovie={(movie) => {
             setSelectedProfessional(null);
-            setSelectedMovieForDetail(m);
+            setSelectedMovieForDetail(movie);
           }}
-          onPlayMovie={(m) => {
+          onPlayMovie={(movie) => {
             setSelectedProfessional(null);
-            setSelectedMediaForPlay(m);
+            setSelectedMediaForPlay(movie);
           }}
         />
       )}
 
-      {/* MODAL 3: Player de Vídeo e Áudio */}
       {selectedMediaForPlay && (
         <VideoPlayerModal
           item={selectedMediaForPlay}
@@ -291,7 +313,6 @@ export default function App() {
         />
       )}
 
-      {/* MODAL 4: Cadastro / Gestão de Obras de Exemplo */}
       {isAddModalOpen && (
         <AdminAddMovieModal onClose={() => setIsAddModalOpen(false)} onAddMovie={handleAddMovie} />
       )}

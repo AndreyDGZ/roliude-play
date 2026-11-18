@@ -84,6 +84,7 @@ export interface Movie {
   popularidade: number; // 0 a 100
   notaMedia: number; // 1 a 5
   avaliacoesCount: number;
+  lancadoEm?: string;
   reviews?: Review[];
   
   // Bastidores associados
@@ -96,4 +97,22 @@ export interface CuratedCarousel {
   subtitulo: string;
   tagline: string;
   criterio: (movie: Movie) => boolean;
+}
+
+export interface AppNotification {
+  id: string;
+  filmeId: string;
+  titulo: string;
+  genero: string[];
+  municipio: string;
+  estadoSigla: string;
+  classificacaoIndicativa: string;
+  posterUrl: string;
+  createdAt: string;
+  lida: boolean;
+}
+
+export interface NotificationList {
+  notifications: AppNotification[];
+  naoLidas: number;
 }
