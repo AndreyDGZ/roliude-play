@@ -11,27 +11,43 @@ import { MovieDetailModal } from './components/MovieDetailModal';
 import { ProfessionalModal } from './components/ProfessionalModal';
 import { VideoPlayerModal } from './components/VideoPlayerModal';
 import { AdminAddMovieModal } from './components/AdminAddMovieModal';
+import { AdminPanelView } from './components/AdminPanelView';
+import { AuthModal } from './components/AuthModal';
 import { Footer } from './components/Footer';
 import { NotificationBell } from './components/NotificationBell';
 import { ReleaseToast } from './components/ReleaseToast';
+import { useAuth } from './hooks/useAuth';
 import { useNotifications } from './hooks/useNotifications';
-import { AppNotification, Movie, Professional, BehindTheScenesItem, Review } from './types';
+import { USER_ROLES } from './data/mockData';
+import { AppNotification, AppTab, Movie, Professional, BehindTheScenesItem, Review, User } from './types';
 import {
+  createBehindTheScenesItem,
   createMovie,
+  createProfessional,
   createReview,
+  deleteBehindTheScenesItem,
+  deleteMovie,
+  deleteProfessional,
   getBehindTheScenesItems,
   getMovieById,
   getMovies,
   getProfessionals,
-  CreateMoviePayload
+  updateBehindTheScenesItem,
+  updateMovie,
+  updateProfessional,
+  BehindTheScenesPayload,
+  CreateMoviePayload,
+  ProfessionalPayload
 } from './services/api';
 
 type AppStatus = 'loading' | 'error' | 'ready';
 
+function replaceById<Item extends { id: string }>(items: Item[], updatedItem: Item): Item[] {
+  return items.map((item) => (item.id === updatedItem.id ? updatedItem : item));
+}
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState<
-    'inicio' | 'catalogo' | 'curadoria' | 'bastidores' | 'profissionais' | 'favoritos'
-  >('inicio');
+  const [activeTab, setActiveTab] = useState<AppTab>('inicio');
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -70,6 +86,16 @@ export default function App() {
   const [selectedMediaForPlay, setSelectedMediaForPlay] = useState<Movie | BehindTheScenesItem | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [movieBeingEdited, setMovieBeingEdited] = useState<Movie | undefined>(undefined);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  const handleSessionEnded = useCallback(() => {
+    setIsAddModalOpen(false);
+    setMovieBeingEdited(undefined);
+    setActiveTab('inicio');
+  }, []);
+
+  const { user, isAdmin, login, register, logout } = useAuth(handleSessionEnded);
 
   const prependMovie = useCallback((movie: Movie) => {
     setMovies((previous) => (previous.some((existing) => existing.id === movie.id) ? previous : [movie, ...previous]));
@@ -135,7 +161,73 @@ export default function App() {
   const handleAddMovie = async (payload: CreateMoviePayload) => {
     const createdMovie = await createMovie(payload);
     prependMovie(createdMovie);
-    setActiveTab('catalogo');
+    if (activeTab !== 'admin') setActiveTab('catalogo');
+  };
+
+  const handleUpdateMovie = async (movieId: string, payload: Partial<CreateMoviePayload>) => {
+    const updatedMovie = await updateMovie(movieId, payload);
+    setMovies((previous) => replaceById(previous, updatedMovie));
+  };
+
+  const handleToggleMovieHighlight = (movie: Movie) =>
+    handleUpdateMovie(movie.id, { destaqueCuradoria: !movie.destaqueCuradoria });
+
+  const handleDeleteMovie = async (movieId: string) => {
+    await deleteMovie(movieId);
+    setMovies((previous) => previous.filter((movie) => movie.id !== movieId));
+    setBtsItems((previous) => previous.filter((item) => item.filmeId !== movieId));
+    setFavoriteIds((previous) => previous.filter((favoriteId) => favoriteId !== movieId));
+  };
+
+  const handleCreateProfessional = async (payload: ProfessionalPayload) => {
+    const createdProfessional = await createProfessional(payload);
+    setProfessionals((previous) => [...previous, createdProfessional]);
+  };
+
+  const handleUpdateProfessional = async (professionalId: string, payload: ProfessionalPayload) => {
+    const updatedProfessional = await updateProfessional(professionalId, payload);
+    setProfessionals((previous) => replaceById(previous, updatedProfessional));
+  };
+
+  const handleDeleteProfessional = async (professionalId: string) => {
+    await deleteProfessional(professionalId);
+    setProfessionals((previous) => previous.filter((professional) => professional.id !== professionalId));
+  };
+
+  const handleCreateBtsItem = async (payload: BehindTheScenesPayload) => {
+    const createdItem = await createBehindTheScenesItem(payload);
+    setBtsItems((previous) => [createdItem, ...previous]);
+  };
+
+  const handleUpdateBtsItem = async (itemId: string, payload: BehindTheScenesPayload) => {
+    const updatedItem = await updateBehindTheScenesItem(itemId, payload);
+    setBtsItems((previous) => replaceById(previous, updatedItem));
+  };
+
+  const handleDeleteBtsItem = async (itemId: string) => {
+    await deleteBehindTheScenesItem(itemId);
+    setBtsItems((previous) => previous.filter((item) => item.id !== itemId));
+  };
+
+  const handleReviewRemoved = (movieId: string) => {
+    getMovieById(movieId)
+      .then((refreshedMovie) => setMovies((previous) => replaceById(previous, refreshedMovie)))
+      .catch(() => loadData());
+  };
+
+  const handleOpenMovieForm = (movie?: Movie) => {
+    setMovieBeingEdited(movie);
+    setIsAddModalOpen(true);
+  };
+
+  const handleCloseMovieForm = () => {
+    setIsAddModalOpen(false);
+    setMovieBeingEdited(undefined);
+  };
+
+  const handleAuthenticated = (authenticatedUser: User) => {
+    setIsAuthModalOpen(false);
+    if (authenticatedUser.papel === USER_ROLES.admin) setActiveTab('admin');
   };
 
   const handleOpenNotification = (notification: AppNotification) => {
@@ -185,7 +277,11 @@ export default function App() {
         searchQuery={searchQuery}
         setSearchQuery={handleSearchChange}
         favoritesCount={favoriteIds.length}
-        onOpenAddModal={() => setIsAddModalOpen(true)}
+        currentUser={user}
+        isAdmin={isAdmin}
+        onOpenAddModal={() => handleOpenMovieForm()}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        onLogout={logout}
         notificationBell={
           <NotificationBell
             notifications={notifications}
@@ -272,6 +368,26 @@ export default function App() {
             onGoToCatalog={() => setActiveTab('catalogo')}
           />
         )}
+
+        {activeTab === 'admin' && isAdmin && user && (
+          <AdminPanelView
+            currentUser={user}
+            movies={movies}
+            professionals={professionals}
+            btsItems={btsItems}
+            onCreateMovie={() => handleOpenMovieForm()}
+            onEditMovie={handleOpenMovieForm}
+            onToggleMovieHighlight={handleToggleMovieHighlight}
+            onDeleteMovie={handleDeleteMovie}
+            onCreateProfessional={handleCreateProfessional}
+            onUpdateProfessional={handleUpdateProfessional}
+            onDeleteProfessional={handleDeleteProfessional}
+            onCreateBtsItem={handleCreateBtsItem}
+            onUpdateBtsItem={handleUpdateBtsItem}
+            onDeleteBtsItem={handleDeleteBtsItem}
+            onReviewRemoved={handleReviewRemoved}
+          />
+        )}
       </main>
 
       <Footer onNavigateTab={(tab) => setActiveTab(tab)} />
@@ -313,8 +429,22 @@ export default function App() {
         />
       )}
 
-      {isAddModalOpen && (
-        <AdminAddMovieModal onClose={() => setIsAddModalOpen(false)} onAddMovie={handleAddMovie} />
+      {isAddModalOpen && isAdmin && (
+        <AdminAddMovieModal
+          initialMovie={movieBeingEdited}
+          onClose={handleCloseMovieForm}
+          onCreateMovie={handleAddMovie}
+          onUpdateMovie={handleUpdateMovie}
+        />
+      )}
+
+      {isAuthModalOpen && (
+        <AuthModal
+          onClose={() => setIsAuthModalOpen(false)}
+          onLogin={login}
+          onRegister={register}
+          onAuthenticated={handleAuthenticated}
+        />
       )}
     </div>
   );

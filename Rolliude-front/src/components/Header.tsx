@@ -1,28 +1,44 @@
 import React, { useState } from 'react';
-import { 
-  Film, 
-  Search, 
-  Heart, 
-  Compass, 
-  Clapperboard, 
-  Users, 
-  PlusCircle, 
-  MapPin, 
-  Menu, 
+import {
+  Film,
+  Search,
+  Heart,
+  Compass,
+  Clapperboard,
+  Users,
+  PlusCircle,
+  MapPin,
+  Menu,
   X,
-  Sparkles
+  Sparkles,
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  UserRound
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { CordelPattern } from './CordelPattern';
+import { AppTab, User } from '../types';
 
 interface HeaderProps {
-  activeTab: 'inicio' | 'catalogo' | 'curadoria' | 'bastidores' | 'profissionais' | 'favoritos';
-  setActiveTab: (tab: 'inicio' | 'catalogo' | 'curadoria' | 'bastidores' | 'profissionais' | 'favoritos') => void;
+  activeTab: AppTab;
+  setActiveTab: (tab: AppTab) => void;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   favoritesCount: number;
+  currentUser: User | null;
+  isAdmin: boolean;
   onOpenAddModal: () => void;
+  onOpenAuthModal: () => void;
+  onLogout: () => void;
   notificationBell: React.ReactNode;
+}
+
+interface NavItem {
+  id: AppTab;
+  label: string;
+  icon: typeof Film;
+  count?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -31,19 +47,49 @@ export const Header: React.FC<HeaderProps> = ({
   searchQuery,
   setSearchQuery,
   favoritesCount,
+  currentUser,
+  isAdmin,
   onOpenAddModal,
+  onOpenAuthModal,
+  onLogout,
   notificationBell
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { id: 'inicio', label: 'Início', icon: Film },
     { id: 'catalogo', label: 'Catálogo & Filtros', icon: Compass },
     { id: 'curadoria', label: 'Curadoria Local', icon: Sparkles },
     { id: 'bastidores', label: 'Bastidores & Direção', icon: Clapperboard },
     { id: 'profissionais', label: 'Profissionais', icon: Users },
     { id: 'favoritos', label: 'Minha Lista', icon: Heart, count: favoritesCount },
-  ] as const;
+    ...(isAdmin ? [{ id: 'admin' as const, label: 'Painel Admin', icon: LayoutDashboard }] : [])
+  ];
+
+  const accountButton = currentUser ? (
+    <div className="flex items-center gap-2">
+      <span className="hidden xl:inline-flex items-center gap-1 text-xs text-brand-text-soft max-w-40 truncate">
+        <UserRound className="w-3.5 h-3.5 text-brand-accent" />
+        {currentUser.nome}
+      </span>
+      <button
+        onClick={onLogout}
+        aria-label="Sair da conta"
+        title="Sair da conta"
+        className="p-2 rounded-full bg-brand-surface hover:bg-brand-surface-raised text-brand-text-soft border border-brand-border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent"
+      >
+        <LogOut className="w-4 h-4 text-brand-accent" />
+      </button>
+    </div>
+  ) : (
+    <button
+      onClick={onOpenAuthModal}
+      className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-primary hover:bg-brand-accent text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent"
+    >
+      <LogIn className="w-3.5 h-3.5" />
+      <span>Entrar</span>
+    </button>
+  );
 
   return (
     <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-surface-raised/80 shadow-2xl">
@@ -93,15 +139,18 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-center space-x-3">
             {notificationBell}
+            <div className="hidden md:flex items-center">{accountButton}</div>
             <div className="hidden lg:flex items-center space-x-3">
-              <button
-                onClick={onOpenAddModal}
-                className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-surface hover:bg-brand-surface-raised text-brand-text border border-brand-accent/40 hover:border-brand-accent transition shadow-sm"
-                title="Cadastrar nova obra ou carregar modelos de exemplo"
-              >
-                <PlusCircle className="w-3.5 h-3.5 text-brand-accent" />
-                <span>+ Nova Obra</span>
-              </button>
+              {isAdmin && (
+                <button
+                  onClick={onOpenAddModal}
+                  className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-surface hover:bg-brand-surface-raised text-brand-text border border-brand-accent/40 hover:border-brand-accent transition shadow-sm"
+                  title="Cadastrar nova obra ou carregar modelos de exemplo"
+                >
+                  <PlusCircle className="w-3.5 h-3.5 text-brand-accent" />
+                  <span>+ Nova Obra</span>
+                </button>
+              )}
 
               <button
                 onClick={() => setActiveTab('favoritos')}
@@ -155,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-brand-accent'}`} />
                 <span>{item.label}</span>
-                {'count' in item && item.count !== undefined && item.count > 0 && (
+                {item.count !== undefined && item.count > 0 && (
                   <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
                     isActive ? 'bg-black/30 text-white' : 'bg-brand-accent text-white'
                   }`}>
@@ -205,15 +254,32 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </div>
 
+          {isAdmin && (
+            <button
+              onClick={() => {
+                onOpenAddModal();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full mt-2 flex items-center justify-center space-x-2 py-2 rounded-lg bg-brand-surface text-brand-text border border-brand-accent/40 text-xs font-medium"
+            >
+              <PlusCircle className="w-4 h-4 text-brand-accent" />
+              <span>+ Cadastrar Obra no Catálogo</span>
+            </button>
+          )}
+
           <button
             onClick={() => {
-              onOpenAddModal();
+              if (currentUser) {
+                onLogout();
+              } else {
+                onOpenAuthModal();
+              }
               setMobileMenuOpen(false);
             }}
-            className="w-full mt-2 flex items-center justify-center space-x-2 py-2 rounded-lg bg-brand-surface text-brand-text border border-brand-accent/40 text-xs font-medium"
+            className="w-full flex items-center justify-center space-x-2 py-2 rounded-lg bg-brand-primary text-white text-xs font-semibold"
           >
-            <PlusCircle className="w-4 h-4 text-brand-accent" />
-            <span>+ Cadastrar Obra no Catálogo</span>
+            {currentUser ? <LogOut className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
+            <span>{currentUser ? `Sair (${currentUser.nome})` : 'Entrar ou criar conta'}</span>
           </button>
         </div>
       )}

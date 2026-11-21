@@ -33,6 +33,8 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 | PostgreSQL 15 + extensão `pg_trgm` | docker | banco e busca por trecho de texto |
 | cors, dotenv | ^2.8.6 / ^17.4.2 | CORS e variáveis de ambiente |
 | kafkajs | ^2.2.4 | producer e consumers do Kafka (`src/shared/events/kafka-event-bus.ts`) |
+| bcryptjs | ^3 | hash de senha (custo 10) em `modules/auth` e no seed do admin |
+| jsonwebtoken | ^9 | JWT HS256 em `src/shared/auth/access-token.ts` |
 | ts-node-dev | ^2.0.0 | `yarn dev` |
 | TypeScript | ^5.9.3 | tipagem |
 | `scripts/quality-check.mjs` | n/a | bloqueia `any`, `@ts-ignore`, `console.log` e comentários |
@@ -43,6 +45,9 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 |---|---|
 | Node `20` (`.nvmrc` na raiz), `engines: node >=20` | runtime |
 | Yarn `1.22.22` | único gerenciador de pacotes; npm não é usado |
+| `render.yaml` na raiz | blueprint do backend no Render free (decisão 015) |
+| Cloudflare Pages + `wrangler` | hospedagem do front (decisão 015) |
+| Neon | Postgres gerenciado de produção (decisão 015) |
 | `docker-compose.yml` na raiz | sobe postgres, kafka (KRaft, 9092 externo e 29092 interno), kafka-ui (8080), backend (3333) e frontend (3000) |
 | GitHub Actions `.github/workflows/ci.yml` | checks em push e PR para `master`: front (`yarn lint`, `yarn build`) e back (`format:check`, `typecheck`, `prisma:validate`, `build`) |
 | Prettier (`.prettierrc.json`) e `.editorconfig` na raiz | formatação |

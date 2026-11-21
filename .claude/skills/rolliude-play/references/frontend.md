@@ -14,14 +14,16 @@ src/services/api.ts   única porta de saída HTTP
 src/types/index.ts    tipos de domínio
 src/data/mockData.ts  listas estáticas (estados, municípios, gêneros)
 src/data/releases.ts  janela de "Novo" (NEW_RELEASE_WINDOW_DAYS) e tempo relativo
-src/hooks/            hooks de estado compartilhado (useNotifications)
+src/hooks/            hooks de estado compartilhado (useNotifications, useAuth)
 ```
 
 ## Navegação
 
-Não há router. `App.tsx` troca a aba ativa: `inicio`, `catalogo`, `curadoria`, `bastidores`, `profissionais`, `favoritos`. Os rótulos ficam em `Header.tsx`. Tela nova = aba nova nesse mesmo estado, até existir decisão de adotar router.
+Não há router. `App.tsx` troca a aba ativa (tipo `AppTab` em `src/types`): `inicio`, `catalogo`, `curadoria`, `bastidores`, `profissionais`, `favoritos` e `admin` (só para admin; o admin cai nela ao entrar e o logout volta para `inicio`). Os rótulos ficam em `Header.tsx`. Tela nova = aba nova nesse mesmo estado, até existir decisão de adotar router.
 
-Modais existentes: `MovieDetailModal` (ficha técnica e avaliações), `ProfessionalModal`, `VideoPlayerModal`, `AdminAddMovieModal`.
+Modais existentes: `MovieDetailModal` (ficha técnica e avaliações), `ProfessionalModal`, `VideoPlayerModal`, `AdminAddMovieModal` (cadastro e edição; na edição envia só os campos alterados), `AuthModal` (entrar e criar conta).
+
+Painel admin: `AdminPanelView` com as seções `AdminOverviewSection`, `AdminMoviesSection`, `AdminProfessionalsSection`, `AdminBehindTheScenesSection`, `AdminReviewsSection`, `AdminUsersSection`; peças reaproveitáveis `AdminStatusMessage`, `AdminDeleteButton` e `AdminPagination`.
 
 ## Regras
 
@@ -32,6 +34,7 @@ Modais existentes: `MovieDetailModal` (ficha técnica e avaliações), `Professi
 - Busca global leva para a aba `catalogo`.
 - Toda tela que carrega dado tem estado de carregando, de erro com "tentar de novo" e de lista vazia.
 - Favoritos: `localStorage`, chave `rolliude_favorites_v1`. Leitura e escrita protegidas com try/catch.
+- Sessão: hook `useAuth`; token no `localStorage` (`rolliude_auth_v1`, só via `getStoredToken`/`storeToken`/`clearStoredToken` de `api.ts`). O `request()` envia `Authorization: Bearer` e, em 401 com token, limpa a sessão via `setUnauthorizedHandler`. Botão de escrita só aparece para admin. Papel do usuário sempre via `USER_ROLES` de `src/data/mockData.ts`, nunca string solta.
 
 ## Comandos
 

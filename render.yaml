@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: rolliude-play-api
+    runtime: node
+    plan: free
+    region: ohio
+    rootDir: Rolliude-backend
+    buildCommand: yarn install --frozen-lockfile && npx prisma generate && yarn build
+    startCommand: yarn start
+    healthCheckPath: /api/docs/openapi.json
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: KAFKA_ENABLED
+        value: "false"

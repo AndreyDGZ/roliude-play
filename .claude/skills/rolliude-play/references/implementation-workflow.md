@@ -98,6 +98,9 @@ Antes de dar a implementação como pronta, releia esta seção e confira o cód
 | Contrato HTTP | `src/modules/docs/openapi.ts` | OpenAPI gerado do Zod |
 | Eventos e Kafka | `src/shared/events/` | `eventBus`, `releaseEventSchema`, `RELEASE_EVENT_TYPE` |
 | Janela e paginação de notificações | `src/modules/notifications/notification.schema.ts` | `NOTIFICATIONS_WINDOW_DAYS`, `MISSED_NOTIFICATIONS_LIMIT` |
+| Autenticação e permissão | `src/shared/auth/` | `signAccessToken`, `authenticate`, `requireAdmin`, `adminOnly`, `authenticatedUserSelect` |
+| Senha | `src/shared/auth/password.ts` | tamanho mínimo e máximo, rounds, hash e comparação |
+| Papéis e resposta de usuário | `src/modules/auth/auth.schema.ts`, `auth.mapper.ts`; enum `PapelUsuario` | `PAPEIS_USUARIO`, `toUserResponse` |
 
 #### Fontes da verdade: `Rolliude-front`
 
@@ -108,6 +111,9 @@ Antes de dar a implementação como pronta, releia esta seção e confira o cód
 | Listas estáticas | `src/data/mockData.ts` | `STATES_LIST`, `MUNICIPALITIES_LIST`, `GENRES_LIST` |
 | Lançamentos e tag "Novo" | `src/data/releases.ts` | `NEW_RELEASE_WINDOW_DAYS`, `isNewRelease`, `formatReleaseTime` |
 | Notificações | `src/hooks/useNotifications.ts` | `useNotifications` |
+| Sessão e login | `src/hooks/useAuth.ts`, `src/services/api.ts` | `useAuth`, `getStoredToken`, `storeToken`, `clearStoredToken`, `setUnauthorizedHandler` |
+| Papéis, funções e tipos de bastidores | `src/data/mockData.ts` | `USER_ROLES`, `PROFESSIONAL_ROLES`, `BEHIND_THE_SCENES_TYPES` |
+| Abas | `src/types/index.ts` | `AppTab` |
 | Tokens visuais | `src/index.css` | bloco `@theme` |
 | Marca e padrão cordel | `src/components/Logo.tsx`, `CordelPattern.tsx` | `Logo`, `CordelPattern` |
 
@@ -147,7 +153,7 @@ grep -E '^(PORT|DATABASE_URL)=' .env
 3. Libere a porta 3333 (Windows): `netstat -ano | findstr :3333` e `taskkill /PID <pid> /F /T` para cada PID encontrado.
 4. Suba em segundo plano (Bash com `run_in_background`): `cd Rolliude-backend && yarn dev > "$TEMP/rolliude-backend-dev.log" 2>&1`.
 5. Espere a porta escutar (`curl -s http://localhost:3333/api/docs/openapi.json` respondendo). Se não subir, leia o log, corrija e recomece do passo 3.
-6. Dispare `curl` reais contra exatamente as rotas da task, com payload realista e também um payload inválido (confirma o 400 com `errors: [{ field, message }]`). Ainda não há login: rotas não pedem token. Problema encontrado: corrija seguindo a REGRA MÁXIMA e repita.
+6. Dispare `curl` reais contra exatamente as rotas da task, com payload realista e também um payload inválido (confirma o 400 com `errors: [{ field, message }]`). Rota protegida: faça login (`POST /api/auth/login`, admin do `.env`) e envie `Authorization: Bearer <token>`; confirme também o 401 sem token e o 403 com usuário comum. Problema encontrado: corrija seguindo a REGRA MÁXIMA e repita.
 7. **Derrube o backend, sempre, com sucesso ou falha:** pare a tarefa em segundo plano e rode de novo `netstat -ano | findstr :3333` + `taskkill /PID <pid> /F /T`.
 8. **Confirme que parou:** `netstat -ano | findstr :3333` tem que voltar vazio. Nunca deixe o backend rodando ao fim.
 9. Anuncie: "✅ Validação HTTP: `<método> <rota>` respondeu como esperado e o servidor foi desligado." (liste todas).
