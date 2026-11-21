@@ -45,6 +45,9 @@ Lista única de ferramentas do Rolliúde Play. Versões conferidas nos `package.
 |---|---|
 | Node `20` (`.nvmrc` na raiz), `engines: node >=20` | runtime |
 | Yarn `1.22.22` | único gerenciador de pacotes; npm não é usado |
+| `render.yaml` na raiz | blueprint do backend no Render free (decisão 015) |
+| Cloudflare Pages + `wrangler` | hospedagem do front (decisão 015) |
+| Neon | Postgres gerenciado de produção (decisão 015) |
 | `docker-compose.yml` na raiz | sobe postgres, kafka (KRaft, 9092 externo e 29092 interno), kafka-ui (8080), backend (3333) e frontend (3000) |
 | GitHub Actions `.github/workflows/ci.yml` | checks em push e PR para `master`: front (`yarn lint`, `yarn build`) e back (`format:check`, `typecheck`, `prisma:validate`, `build`) |
 | Prettier (`.prettierrc.json`) e `.editorconfig` na raiz | formatação |
