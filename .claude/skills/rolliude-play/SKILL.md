@@ -79,7 +79,7 @@ Fundo `#120D0A`, superfície `#23130B`, borda `#442315`, texto `#FAF6EE`, primá
 - CI do backend roda `format:check` e `typecheck`, não o `yarn lint` completo; o reviewer roda `yarn lint` localmente para compensar.
 - Bloco `@theme` criado em `src/index.css`; ainda há hex avulsos em componentes não tocados. Corrigir por arquivo tocado.
 - `tsconfig.json` do front sem `strict`; `any` em `CatalogView.tsx` e `MovieDetailModal.tsx`; comentários do scaffold em vários arquivos.
-- Herança do Google AI Studio no front: nome de pacote `react-example`, README do AI Studio, `metadata.json`, `tsx` e `esbuild` sem uso, script `clean` citando `server.js`, front sem `.nvmrc`/`engines`.
+- Herança do Google AI Studio no front: nome de pacote `react-example`, README do AI Studio, `metadata.json`, `tsx` e `esbuild` sem uso, script `clean` citando `server.js`, front sem `engines` (o Yarn já está fixado em `packageManager`).
 - Fontes Outfit e Plus Jakarta Sans carregadas sem uso.
 - Recuperação de senha (decisão 006) e rate limit do login ainda não implementados.
 - Leitura de notificação ainda por dispositivo (decisão 013), não por `usuarioId`.
