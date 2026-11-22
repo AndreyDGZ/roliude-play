@@ -113,6 +113,7 @@ Antes de dar a implementação como pronta, releia esta seção e confira o cód
 | Notificações | `src/hooks/useNotifications.ts` | `useNotifications` |
 | Sessão e login | `src/hooks/useAuth.ts`, `src/services/api.ts` | `useAuth`, `getStoredToken`, `storeToken`, `clearStoredToken`, `setUnauthorizedHandler` |
 | Papéis, funções e tipos de bastidores | `src/data/mockData.ts` | `USER_ROLES`, `PROFESSIONAL_ROLES`, `BEHIND_THE_SCENES_TYPES` |
+| Classificação, regiões e país do cadastro de filme | `src/data/mockData.ts` | `AGE_RATING_OPTIONS`, `REGIONS_LIST`, `DEFAULT_COUNTRY` |
 | Abas | `src/types/index.ts` | `AppTab` |
 | Tokens visuais | `src/index.css` | bloco `@theme` |
 | Marca e padrão cordel | `src/components/Logo.tsx`, `CordelPattern.tsx` | `Logo`, `CordelPattern` |
