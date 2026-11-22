@@ -18,6 +18,7 @@ import { NotificationBell } from './components/NotificationBell';
 import { ReleaseToast } from './components/ReleaseToast';
 import { useAuth } from './hooks/useAuth';
 import { useNotifications } from './hooks/useNotifications';
+import { useFavorites } from './hooks/useFavorites';
 import { USER_ROLES } from './data/mockData';
 import { AppNotification, AppTab, Movie, Professional, BehindTheScenesItem, Review, User } from './types';
 import {
@@ -72,16 +73,6 @@ export default function App() {
     loadData();
   }, []);
 
-  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('rolliude_favorites_v1');
-      if (saved) return JSON.parse(saved);
-    } catch (error) {
-      console.warn('Erro ao carregar favoritos', error);
-    }
-    return ['filme-auto-compadecida', 'filme-aruanda'];
-  });
-
   const [selectedMovieForDetail, setSelectedMovieForDetail] = useState<Movie | null>(null);
   const [selectedMediaForPlay, setSelectedMediaForPlay] = useState<Movie | BehindTheScenesItem | null>(null);
   const [selectedProfessional, setSelectedProfessional] = useState<Professional | null>(null);
@@ -112,25 +103,13 @@ export default function App() {
 
   const { notifications, naoLidas, toasts, markAsRead, markAllAsRead, dismissToast } = useNotifications(handleRelease);
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('rolliude_favorites_v1', JSON.stringify(favoriteIds));
-    } catch (error) {
-      console.warn('Erro ao salvar favoritos', error);
-    }
-  }, [favoriteIds]);
+  const { favoriteIds, favoriteMovies, toggleFavorite, removeFavorite } = useFavorites(movies);
 
   const handleSearchChange = (query: string) => {
     setSearchQuery(query);
     if (query.trim() && activeTab !== 'catalogo') {
       setActiveTab('catalogo');
     }
-  };
-
-  const handleToggleFavorite = (movieId: string) => {
-    setFavoriteIds((prev) =>
-      prev.includes(movieId) ? prev.filter((favoriteId) => favoriteId !== movieId) : [...prev, movieId]
-    );
   };
 
   const handleSelectProfessionalByName = (name: string) => {
@@ -176,7 +155,7 @@ export default function App() {
     await deleteMovie(movieId);
     setMovies((previous) => previous.filter((movie) => movie.id !== movieId));
     setBtsItems((previous) => previous.filter((item) => item.filmeId !== movieId));
-    setFavoriteIds((previous) => previous.filter((favoriteId) => favoriteId !== movieId));
+    removeFavorite(movieId);
   };
 
   const handleCreateProfessional = async (payload: ProfessionalPayload) => {
@@ -276,7 +255,7 @@ export default function App() {
         setActiveTab={setActiveTab}
         searchQuery={searchQuery}
         setSearchQuery={handleSearchChange}
-        favoritesCount={favoriteIds.length}
+        favoritesCount={favoriteMovies.length}
         currentUser={user}
         isAdmin={isAdmin}
         onOpenAddModal={() => handleOpenMovieForm()}
@@ -303,7 +282,7 @@ export default function App() {
                 onPlay={(movie) => setSelectedMediaForPlay(movie)}
                 onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
                 isFavorite={favoriteIds.includes(heroMovie.id)}
-                onToggleFavorite={handleToggleFavorite}
+                onToggleFavorite={toggleFavorite}
               />
             )}
 
@@ -313,7 +292,7 @@ export default function App() {
                 onPlay={(movie) => setSelectedMediaForPlay(movie)}
                 onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
                 favoriteIds={favoriteIds}
-                onToggleFavorite={handleToggleFavorite}
+                onToggleFavorite={toggleFavorite}
                 onExploreCategory={() => setActiveTab('curadoria')}
               />
             </div>
@@ -326,7 +305,7 @@ export default function App() {
             onPlay={(movie) => setSelectedMediaForPlay(movie)}
             onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
             favoriteIds={favoriteIds}
-            onToggleFavorite={handleToggleFavorite}
+            onToggleFavorite={toggleFavorite}
             initialSearchQuery={searchQuery}
           />
         )}
@@ -337,7 +316,7 @@ export default function App() {
             onPlay={(movie) => setSelectedMediaForPlay(movie)}
             onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
             favoriteIds={favoriteIds}
-            onToggleFavorite={handleToggleFavorite}
+            onToggleFavorite={toggleFavorite}
           />
         )}
 
@@ -364,7 +343,7 @@ export default function App() {
             favoriteIds={favoriteIds}
             onPlay={(movie) => setSelectedMediaForPlay(movie)}
             onOpenDetails={(movie) => setSelectedMovieForDetail(movie)}
-            onToggleFavorite={handleToggleFavorite}
+            onToggleFavorite={toggleFavorite}
             onGoToCatalog={() => setActiveTab('catalogo')}
           />
         )}
@@ -398,7 +377,7 @@ export default function App() {
           onClose={() => setSelectedMovieForDetail(null)}
           onPlay={(movie) => setSelectedMediaForPlay(movie)}
           isFavorite={favoriteIds.includes(selectedMovieForDetail.id)}
-          onToggleFavorite={handleToggleFavorite}
+          onToggleFavorite={toggleFavorite}
           onSelectProfessionalName={handleSelectProfessionalByName}
           onOpenBehindTheScenes={(bts) => setSelectedMediaForPlay(bts)}
           allBtsItems={btsItems}
