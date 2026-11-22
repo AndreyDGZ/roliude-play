@@ -205,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-brand-accent'}`} />
                 <span>{item.label}</span>
                 {item.count !== undefined && item.count > 0 && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                  <span className={`min-w-4 h-4 px-1 text-[10px] font-bold rounded-full flex items-center justify-center ${
                     isActive ? 'bg-black/30 text-white' : 'bg-brand-accent text-white'
                   }`}>
                     {item.count}
