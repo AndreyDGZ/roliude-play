@@ -33,7 +33,7 @@ Painel admin: `AdminPanelView` com as seções `AdminOverviewSection`, `AdminMov
 - Tipos de domínio em `src/types/index.ts`, com nomes de campo em português (`titulo`, `sinopse`), handlers em inglês (`handleToggleFavorite`).
 - Busca global leva para a aba `catalogo`.
 - Toda tela que carrega dado tem estado de carregando, de erro com "tentar de novo" e de lista vazia.
-- Favoritos: `localStorage`, chave `rolliude_favorites_v1`. Leitura e escrita protegidas com try/catch.
+- Favoritos: hook `useFavorites` em `src/hooks/useFavorites.ts`, `localStorage` na chave `rolliude_favorites_v1`, leitura validada e escrita protegidas com try/catch. Contadores usam `favoriteMovies` (favoritos que existem no catálogo), nunca a lista crua de IDs.
 - Sessão: hook `useAuth`; token no `localStorage` (`rolliude_auth_v1`, só via `getStoredToken`/`storeToken`/`clearStoredToken` de `api.ts`). O `request()` envia `Authorization: Bearer` e, em 401 com token, limpa a sessão via `setUnauthorizedHandler`. Botão de escrita só aparece para admin. Papel do usuário sempre via `USER_ROLES` de `src/data/mockData.ts`, nunca string solta.
 
 ## Comandos

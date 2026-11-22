@@ -39,7 +39,7 @@ d) **Padrões de UI já adotados (reaproveitar, nunca reinventar):**
 - Toda tela que carrega dado tem estado de carregando, de erro com "tentar de novo" e de lista vazia.
 - Detalhe abre em modal (`MovieDetailModal`, `ProfessionalModal`), não em tela nova.
 - HTTP só por `src/services/api.ts`: `request<Tipo>()`, `ApiError`, tipo `Api*` convertido por `map*`.
-- Favoritos em `localStorage` com try/catch.
+- Favoritos via `useFavorites` (`localStorage` com try/catch).
 - Acessibilidade: foco visível, `aria-label` em português em botão só com ícone, `alt` em imagem.
 
 ## 5. 💻 Implementar
@@ -111,6 +111,7 @@ Antes de dar a implementação como pronta, releia esta seção e confira o cód
 | Listas estáticas | `src/data/mockData.ts` | `STATES_LIST`, `MUNICIPALITIES_LIST`, `GENRES_LIST` |
 | Lançamentos e tag "Novo" | `src/data/releases.ts` | `NEW_RELEASE_WINDOW_DAYS`, `isNewRelease`, `formatReleaseTime` |
 | Notificações | `src/hooks/useNotifications.ts` | `useNotifications` |
+| Favoritos | `src/hooks/useFavorites.ts` | `useFavorites`, `FavoritesState` |
 | Sessão e login | `src/hooks/useAuth.ts`, `src/services/api.ts` | `useAuth`, `getStoredToken`, `storeToken`, `clearStoredToken`, `setUnauthorizedHandler` |
 | Papéis, funções e tipos de bastidores | `src/data/mockData.ts` | `USER_ROLES`, `PROFESSIONAL_ROLES`, `BEHIND_THE_SCENES_TYPES` |
 | Classificação, regiões e país do cadastro de filme | `src/data/mockData.ts` | `AGE_RATING_OPTIONS`, `REGIONS_LIST`, `DEFAULT_COUNTRY` |
