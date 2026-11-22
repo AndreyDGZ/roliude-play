@@ -279,7 +279,7 @@ export interface CreateMoviePayload {
   premios: string[];
   curiosidades: string[];
   destaqueCuradoria?: boolean;
-  curadoriaTag?: string;
+  curadoriaTag?: string | null;
   popularidade?: number;
 }
 

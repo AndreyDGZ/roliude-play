@@ -1,4 +1,4 @@
-import { BehindTheScenesItem, Professional, UserRole } from '../types';
+import { AgeRating, BehindTheScenesItem, Professional, Region, UserRole } from '../types';
 
 export const MUNICIPALITIES_LIST = [
   'Cabaceiras',
@@ -61,3 +61,16 @@ export const USER_ROLES = {
   usuario: 'USUARIO',
   admin: 'ADMIN'
 } as const satisfies Record<string, UserRole>;
+
+export const DEFAULT_COUNTRY = 'Brasil';
+
+export const REGIONS_LIST: Region[] = ['Nordeste', 'Sudeste', 'Centro-Oeste', 'Norte', 'Sul'];
+
+export const AGE_RATING_OPTIONS: { value: AgeRating; label: string }[] = [
+  { value: 'Livre', label: 'Livre' },
+  { value: '10', label: '10 anos' },
+  { value: '12', label: '12 anos' },
+  { value: '14', label: '14 anos' },
+  { value: '16', label: '16 anos' },
+  { value: '18', label: '18 anos' }
+];

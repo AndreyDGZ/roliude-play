@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, PlusCircle, Pencil, Sparkles, Check } from 'lucide-react';
 import { AgeRating, Movie, Region } from '../types';
 import { ApiError, CreateMoviePayload } from '../services/api';
+import { AGE_RATING_OPTIONS, DEFAULT_COUNTRY, REGIONS_LIST } from '../data/mockData';
 
 interface AdminAddMovieModalProps {
   initialMovie?: Movie;
@@ -9,26 +10,6 @@ interface AdminAddMovieModalProps {
   onCreateMovie: (payload: CreateMoviePayload) => Promise<void>;
   onUpdateMovie: (movieId: string, payload: Partial<CreateMoviePayload>) => Promise<void>;
 }
-
-type MovieFormFields = Pick<
-  CreateMoviePayload,
-  | 'titulo'
-  | 'sinopse'
-  | 'posterUrl'
-  | 'ano'
-  | 'duracaoMinutos'
-  | 'genero'
-  | 'classificacaoIndicativa'
-  | 'localizacao'
-  | 'direcao'
-  | 'roteiro'
-  | 'producao'
-  | 'elenco'
-  | 'fotografia'
-  | 'trilhaSonora'
-  | 'produtora'
-  | 'curadoriaTag'
->;
 
 type PresetName = 'campina' | 'cabaceiras' | 'doc';
 
@@ -51,9 +32,19 @@ interface FormState {
   trilhaSonora: string;
   curadoriaTag: string;
   posterUrl: string;
+  backdropUrl: string;
+  videoUrl: string;
+  trailerUrl: string;
+  produtora: string;
+  premiosText: string;
+  curiosidadesText: string;
+  destaqueCuradoria: boolean;
+  popularidade: number;
 }
 
-const SAMPLE_VIDEO_URL = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+const MAX_URL_LENGTH = 2048;
+const MIN_POPULARITY = 0;
+const MAX_POPULARITY = 100;
 
 const DEFAULT_FORM: FormState = {
   titulo: '',
@@ -73,7 +64,15 @@ const DEFAULT_FORM: FormState = {
   fotografia: 'Walter Carvalho',
   trilhaSonora: 'Sivuca e Quinteto da Paraíba',
   curadoriaTag: 'Cinema Paraibano',
-  posterUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80'
+  posterUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+  backdropUrl: '',
+  videoUrl: '',
+  trailerUrl: '',
+  produtora: 'Produtora Borborema',
+  premiosText: '',
+  curiosidadesText: '',
+  destaqueCuradoria: true,
+  popularidade: 85
 };
 
 const PRESETS: Record<PresetName, Partial<FormState>> = {
@@ -91,6 +90,7 @@ const PRESETS: Record<PresetName, Partial<FormState>> = {
     direcao: 'Marcus Vilar, Bertrand Lira',
     roteiro: 'Marcus Vilar',
     producao: 'UEPB Cine Lab',
+    produtora: 'UEPB Cine Lab',
     elencoText: 'Mestre Biliu de Campina (Ele mesmo), Zezita Matos (Narradora)',
     fotografia: 'Beto Martins',
     trilhaSonora: 'Mestre Biliu de Campina e Carlos Malta',
@@ -111,6 +111,7 @@ const PRESETS: Record<PresetName, Partial<FormState>> = {
     direcao: 'Torquato Joel',
     roteiro: 'Torquato Joel, W. J. Solha',
     producao: 'Roliúde Produções Cariri',
+    produtora: 'Roliúde Produções Cariri',
     elencoText: 'Marcélia Cartaxo (Dona Sebastiana), Nanego Lira (Vicente)',
     fotografia: 'Mauro Pinheiro Jr.',
     trilhaSonora: 'Quinteto de Cordas da Paraíba',
@@ -131,6 +132,7 @@ const PRESETS: Record<PresetName, Partial<FormState>> = {
     direcao: 'Coletivo Comunicurtas',
     roteiro: 'Pesquisadores da Paraíba',
     producao: 'Cinema da Borborema',
+    produtora: 'Cinema da Borborema',
     elencoText: 'Feirantes de Campina Grande (Eles mesmos)',
     fotografia: 'João Carlos Beltrão',
     trilhaSonora: 'Pífano e Sanfona Tradicionais',
@@ -145,17 +147,6 @@ const PRESET_BUTTONS: { name: PresetName; label: string }[] = [
   { name: 'doc', label: 'Documentário Feira' }
 ];
 
-const AGE_RATING_OPTIONS: { value: AgeRating; label: string }[] = [
-  { value: 'Livre', label: 'Livre' },
-  { value: '10', label: '10 anos' },
-  { value: '12', label: '12 anos' },
-  { value: '14', label: '14 anos' },
-  { value: '16', label: '16 anos' },
-  { value: '18', label: '18 anos' }
-];
-
-const REGION_OPTIONS: Region[] = ['Nordeste', 'Sudeste', 'Centro-Oeste', 'Norte', 'Sul'];
-
 const fieldClassName =
   'w-full px-3 py-1.5 rounded-xl bg-brand-surface border border-brand-border text-brand-text focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent';
 const compactFieldClassName =
@@ -167,6 +158,13 @@ function splitList(text: string): string[] {
     .split(',')
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
+}
+
+function splitLines(text: string): string[] {
+  return text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 }
 
 function parseCast(text: string): CreateMoviePayload['elenco'] {
@@ -196,21 +194,36 @@ function toFormState(movie: Movie): FormState {
     fotografia: movie.fotografia,
     trilhaSonora: movie.trilhaSonora,
     curadoriaTag: movie.curadoriaTag ?? '',
-    posterUrl: movie.posterUrl
+    posterUrl: movie.posterUrl,
+    backdropUrl: movie.backdropUrl,
+    videoUrl: movie.videoUrl,
+    trailerUrl: movie.trailerUrl,
+    produtora: movie.produtora,
+    premiosText: movie.premios.join('\n'),
+    curiosidadesText: movie.curiosidades.join('\n'),
+    destaqueCuradoria: movie.destaqueCuradoria ?? false,
+    popularidade: movie.popularidade
   };
 }
 
-function toMovieFormFields(form: FormState): MovieFormFields {
+function toMovieFormFields(form: FormState): CreateMoviePayload {
+  const posterUrl = form.posterUrl.trim();
+  const videoUrl = form.videoUrl.trim();
+  const curadoriaTag = form.curadoriaTag.trim();
+
   return {
     titulo: form.titulo.trim(),
     sinopse: form.sinopse.trim(),
-    posterUrl: form.posterUrl.trim(),
+    posterUrl,
+    backdropUrl: form.backdropUrl.trim() || posterUrl,
+    videoUrl,
+    trailerUrl: form.trailerUrl.trim() || videoUrl,
     ano: Number(form.ano),
     duracaoMinutos: Number(form.duracaoMinutos),
     genero: splitList(form.generoText),
     classificacaoIndicativa: form.classificacao,
     localizacao: {
-      pais: 'Brasil',
+      pais: DEFAULT_COUNTRY,
       regiao: form.regiao,
       estado: form.estado.trim(),
       estadoSigla: form.estadoSigla.trim(),
@@ -222,27 +235,18 @@ function toMovieFormFields(form: FormState): MovieFormFields {
     elenco: parseCast(form.elencoText),
     fotografia: form.fotografia.trim(),
     trilhaSonora: form.trilhaSonora.trim(),
-    produtora: form.producao.trim(),
-    curadoriaTag: form.curadoriaTag.trim() || 'Novidade no Catálogo'
+    produtora: form.produtora.trim(),
+    premios: splitLines(form.premiosText),
+    curiosidades: splitLines(form.curiosidadesText),
+    destaqueCuradoria: form.destaqueCuradoria,
+    curadoriaTag: curadoriaTag || null,
+    popularidade: Number(form.popularidade)
   };
 }
 
-function toNewMoviePayload(fields: MovieFormFields): CreateMoviePayload {
-  return {
-    ...fields,
-    backdropUrl: fields.posterUrl,
-    trailerUrl: SAMPLE_VIDEO_URL,
-    videoUrl: SAMPLE_VIDEO_URL,
-    premios: ['Obra catalogada com apoio da curadoria Rolliude Play'],
-    curiosidades: ['Cadastrado via painel administrativo de gestão de acervo regional.'],
-    destaqueCuradoria: true,
-    popularidade: 85
-  };
-}
-
-function pickChangedFields(current: MovieFormFields, original: MovieFormFields): Partial<CreateMoviePayload> {
+function pickChangedFields(current: CreateMoviePayload, original: CreateMoviePayload): Partial<CreateMoviePayload> {
   const changedEntries = Object.entries(current).filter(
-    ([key, value]) => JSON.stringify(value) !== JSON.stringify(original[key as keyof MovieFormFields])
+    ([key, value]) => JSON.stringify(value) !== JSON.stringify(original[key as keyof CreateMoviePayload])
   );
 
   return Object.fromEntries(changedEntries);
@@ -268,9 +272,9 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
     setForm((previous) => ({ ...previous, ...PRESETS[preset] }));
   };
 
-  const saveMovie = async (fields: MovieFormFields) => {
+  const saveMovie = async (fields: CreateMoviePayload) => {
     if (!initialMovie) {
-      await onCreateMovie(toNewMoviePayload(fields));
+      await onCreateMovie(fields);
       return;
     }
 
@@ -374,8 +378,52 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
                 value={form.posterUrl}
                 onChange={(event) => updateField('posterUrl', event.target.value)}
                 required
+                maxLength={MAX_URL_LENGTH}
                 className={fieldClassName}
               />
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-brand-surface border border-brand-border space-y-2">
+            <span className="font-bold text-brand-accent uppercase tracking-wider block">Mídia</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <div>
+                <label htmlFor="movie-video" className="block text-brand-text-muted text-[10px]">URL do Vídeo (.mp4)</label>
+                <input
+                  id="movie-video"
+                  type="url"
+                  value={form.videoUrl}
+                  onChange={(event) => updateField('videoUrl', event.target.value)}
+                  placeholder="https://archive.org/download/..."
+                  required
+                  maxLength={MAX_URL_LENGTH}
+                  className={compactFieldClassName}
+                />
+              </div>
+              <div>
+                <label htmlFor="movie-trailer" className="block text-brand-text-muted text-[10px]">URL do Trailer (opcional)</label>
+                <input
+                  id="movie-trailer"
+                  type="url"
+                  value={form.trailerUrl}
+                  onChange={(event) => updateField('trailerUrl', event.target.value)}
+                  placeholder="Vazio usa o vídeo"
+                  maxLength={MAX_URL_LENGTH}
+                  className={compactFieldClassName}
+                />
+              </div>
+              <div>
+                <label htmlFor="movie-backdrop" className="block text-brand-text-muted text-[10px]">URL do Fundo (opcional)</label>
+                <input
+                  id="movie-backdrop"
+                  type="url"
+                  value={form.backdropUrl}
+                  onChange={(event) => updateField('backdropUrl', event.target.value)}
+                  placeholder="Vazio usa o pôster"
+                  maxLength={MAX_URL_LENGTH}
+                  className={compactFieldClassName}
+                />
+              </div>
             </div>
           </div>
 
@@ -405,7 +453,7 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
                   onChange={(event) => updateField('regiao', event.target.value as Region)}
                   className={compactFieldClassName}
                 >
-                  {REGION_OPTIONS.map((region) => (
+                  {REGIONS_LIST.map((region) => (
                     <option key={region} value={region}>{region}</option>
                   ))}
                 </select>
@@ -461,6 +509,7 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
                 type="number"
                 value={form.duracaoMinutos}
                 onChange={(event) => updateField('duracaoMinutos', Number(event.target.value))}
+                min={1}
                 className={fieldClassName}
               />
             </div>
@@ -523,7 +572,7 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
               />
             </div>
             <div>
-              <label htmlFor="movie-producao" className={labelClassName}>Produtora</label>
+              <label htmlFor="movie-producao" className={labelClassName}>Produção</label>
               <input
                 id="movie-producao"
                 type="text"
@@ -564,6 +613,68 @@ export const AdminAddMovieModal: React.FC<AdminAddMovieModalProps> = ({
                 type="text"
                 value={form.trilhaSonora}
                 onChange={(event) => updateField('trilhaSonora', event.target.value)}
+                className={fieldClassName}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label htmlFor="movie-produtora" className={labelClassName}>Produtora (empresa)</label>
+              <input
+                id="movie-produtora"
+                type="text"
+                value={form.produtora}
+                onChange={(event) => updateField('produtora', event.target.value)}
+                required
+                className={fieldClassName}
+              />
+            </div>
+            <div>
+              <label htmlFor="movie-popularidade" className={labelClassName}>Popularidade (0 a 100)</label>
+              <input
+                id="movie-popularidade"
+                type="number"
+                value={form.popularidade}
+                onChange={(event) => updateField('popularidade', Number(event.target.value))}
+                min={MIN_POPULARITY}
+                max={MAX_POPULARITY}
+                step={1}
+                className={fieldClassName}
+              />
+            </div>
+            <div className="flex items-end">
+              <label htmlFor="movie-destaque" className="flex items-center space-x-2 text-brand-text-soft font-semibold">
+                <input
+                  id="movie-destaque"
+                  type="checkbox"
+                  checked={form.destaqueCuradoria}
+                  onChange={(event) => updateField('destaqueCuradoria', event.target.checked)}
+                  className="accent-brand-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent"
+                />
+                <span>Destaque na curadoria</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="movie-premios" className={labelClassName}>Prêmios (um por linha)</label>
+              <textarea
+                id="movie-premios"
+                rows={3}
+                value={form.premiosText}
+                onChange={(event) => updateField('premiosText', event.target.value)}
+                className={fieldClassName}
+              />
+            </div>
+            <div>
+              <label htmlFor="movie-curiosidades" className={labelClassName}>Curiosidades (uma por linha)</label>
+              <textarea
+                id="movie-curiosidades"
+                rows={3}
+                value={form.curiosidadesText}
+                onChange={(event) => updateField('curiosidadesText', event.target.value)}
                 className={fieldClassName}
               />
             </div>
